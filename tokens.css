@@ -1,0 +1,302 @@
+/* =========================================================================
+   Design tokens — Sentinel-styled.
+   Dark only. No light mode. Vivid green accent. Sora throughout.
+   Source: README.md inside Moscovium0894/otto-accounting (the "Sentinel AI"
+   styling prompt). Applied verbatim, then extended with semantic helpers.
+   ========================================================================= */
+
+/* ---- Font: Sora ---- */
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* ===== Color — HSL custom properties (dark only) ===== */
+  --background:           0 0% 10%;     /* dark charcoal */
+  --foreground:           0 0% 96%;     /* near-white */
+  --primary:              119 99% 46%;  /* vivid green */
+  --primary-foreground:   0 0% 4%;      /* near-black */
+  --secondary:            0 0% 18%;
+  --secondary-foreground: 0 0% 96%;
+  --muted:                0 0% 16%;
+  --muted-foreground:     0 0% 60%;
+  --accent:               119 99% 46%;  /* same green */
+  --accent-foreground:    0 0% 4%;
+  --destructive:          0 84% 60%;
+  --border:               0 0% 20%;
+  --input:                0 0% 20%;
+  --ring:                 119 99% 46%;
+  --radius:               0.5rem;
+  --nav-button:           0 0% 18%;
+  --hero-bg:              0 0% 8%;      /* darkest, nearly black */
+
+  /* ===== Tokens as ready-to-use colors ===== */
+  --c-bg:        hsl(var(--background));
+  --c-fg:        hsl(var(--foreground));
+  --c-fg-80:     hsl(var(--foreground) / 0.8);
+  --c-fg-60:     hsl(var(--foreground) / 0.6);
+  --c-primary:   hsl(var(--primary));
+  --c-primary-fg:hsl(var(--primary-foreground));
+  --c-muted:     hsl(var(--muted));
+  --c-muted-fg:  hsl(var(--muted-foreground));
+  --c-muted-fg-60: hsl(var(--muted-foreground) / 0.6);
+  --c-border:    hsl(var(--border));
+  --c-hero-bg:   hsl(var(--hero-bg));
+  --c-nav-btn:   hsl(var(--nav-button));
+  --c-nav-btn-80:hsl(var(--nav-button) / 0.8);
+  --c-destructive: hsl(var(--destructive));
+
+  /* ===== Type ===== */
+  --font-sans: 'Sora', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Fluid sizing matches the Sentinel hero spec */
+  --text-hero:      clamp(3rem,    8vw,   6rem);     /* hero h1 */
+  --text-subhead:   clamp(1.125rem, 2.5vw, 1.875rem); /* hero subhead */
+  --text-desc:      clamp(0.875rem, 1.5vw, 1.25rem); /* hero description */
+  --text-h2:        clamp(2rem, 4.5vw, 3.5rem);
+  --text-h3:        1.375rem;
+  --text-body:      1rem;
+  --text-small:     0.875rem;
+  --text-tiny:      0.75rem;
+
+  --leading-hero:   1.05;
+  --leading-tight:  1.15;
+  --leading-body:   1.55;
+
+  --tracking-hero:  -0.05em;
+  --tracking-tight: -0.02em;
+  --tracking-wide:  0.05em;
+  --tracking-widest:0.16em;
+
+  /* ===== Spacing ===== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* ===== Radii (Sentinel uses 0.5rem default + sharp rounded-sm on hero CTAs) ===== */
+  --radius-sm: 2px;
+  --radius-md: 0.5rem;   /* = 8px, Sentinel default */
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* ===== Shadows / glow ===== */
+  --shadow-card: 0 1px 0 hsl(var(--border)), 0 10px 30px -12px rgba(0,0,0,0.6);
+  --glow-primary: 0 0 0 1px hsl(var(--primary) / 0.4), 0 0 24px -4px hsl(var(--primary) / 0.35);
+
+  /* ===== Motion (verbatim from the spec) ===== */
+  --ease-fade-up: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fade-up: 0.7s;
+  --t-fade-in: 0.5s;
+}
+
+/* =========================================================================
+   Animations (Sentinel keyframes, verbatim)
+   ========================================================================= */
+@keyframes fade-up {
+  0%   { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+@keyframes fade-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+.animate-fade-up {
+  opacity: 0;
+  animation: fade-up var(--t-fade-up) var(--ease-fade-up) forwards;
+}
+.animate-fade-in {
+  opacity: 0;
+  animation: fade-in var(--t-fade-in) ease-out forwards;
+}
+
+/* =========================================================================
+   Semantic element defaults
+   ========================================================================= */
+html, body {
+  background: var(--c-hero-bg);
+  color: var(--c-fg);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: var(--tracking-hero);
+  line-height: var(--leading-hero);
+  color: var(--c-fg);
+  text-wrap: balance;
+}
+h1 { font-size: var(--text-hero); text-transform: uppercase; }
+h2 { font-size: var(--text-h2); letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); text-transform: uppercase; }
+h3 { font-size: var(--text-h3); letter-spacing: var(--tracking-tight); line-height: 1.2; font-weight: 600; text-transform: none; }
+
+p {
+  margin: 0;
+  color: var(--c-fg-80);
+  line-height: var(--leading-body);
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--c-fg);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+a:hover { color: var(--c-primary); }
+
+.eyebrow,
+.label-track {
+  font-size: var(--text-tiny);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  color: var(--c-muted-fg);
+  font-weight: 500;
+}
+
+.muted { color: var(--c-muted-fg); }
+.text-primary { color: var(--c-primary); }
+.bg-hero-bg { background: var(--c-hero-bg); }
+.bg-bg { background: var(--c-bg); }
+.bg-muted { background: var(--c-muted); }
+.bg-primary { background: var(--c-primary); color: var(--c-primary-fg); }
+
+/* Buttons — Sentinel button vocabulary */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--text-small);
+  padding: 12px 24px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1;
+  transition: all 200ms ease;
+}
+.btn:active { transform: scale(0.97); }
+
+.btn--primary {
+  background: var(--c-primary);
+  color: var(--c-primary-fg);
+}
+.btn--primary:hover { filter: brightness(1.1); color: var(--c-primary-fg); }
+
+.btn--white {
+  background: #fff;
+  color: var(--c-bg);
+}
+.btn--white:hover { filter: brightness(0.9); color: var(--c-bg); }
+
+.btn--nav {
+  background: var(--c-nav-btn);
+  color: var(--c-fg);
+  font-size: var(--text-tiny);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+}
+.btn--nav:hover { background: var(--c-nav-btn-80); color: var(--c-fg); }
+
+.btn--outline {
+  background: transparent;
+  color: var(--c-fg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+}
+.btn--outline:hover { border-color: var(--c-primary); color: var(--c-primary); }
+
+/* Input */
+.input {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  padding: 12px 14px;
+  background: hsl(var(--input));
+  color: var(--c-fg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+  width: 100%;
+}
+.input::placeholder { color: var(--c-muted-fg); }
+.input:focus {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 1px hsl(var(--ring) / 0.6);
+}
+
+/* Card */
+.card {
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  font-size: var(--text-tiny);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: var(--c-muted);
+  color: var(--c-muted-fg);
+  border: 1px solid var(--c-border);
+}
+.badge--primary {
+  background: hsl(var(--primary) / 0.12);
+  color: var(--c-primary);
+  border-color: hsl(var(--primary) / 0.3);
+}
+.badge--destructive {
+  background: hsl(var(--destructive) / 0.12);
+  color: var(--c-destructive);
+  border-color: hsl(var(--destructive) / 0.3);
+}
+
+/* Numerals */
+.num, .money {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+.money--neg { color: var(--c-destructive); }
+.money--pos { color: var(--c-primary); }
+
+/* Stagger helpers — apply with style={{ animationDelay: '0.2s' }} */
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.55s; }
+.delay-4 { animation-delay: 0.7s; }
+.delay-5 { animation-delay: 0.85s; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up, .animate-fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
