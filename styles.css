@@ -94,7 +94,6 @@ img, svg, video { display: block; max-width: 100%; }
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background: var(--bg);    /* dark fallback while video is still loading */
 }
 .bg-video video {
   position: absolute;

@@ -1,6 +1,6 @@
-# Otto — landing site
+# The Growthway — landing site
 
-Cinematic dark landing page for Otto, an AI-native bookkeeping platform for
+Cinematic dark landing page for The Growthway, an AI-native bookkeeping platform for
 independent restaurants and pubs. Static HTML / CSS / vanilla JS — no build
 step.
 
