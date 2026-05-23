@@ -64,11 +64,15 @@ button { font-family: inherit; }
    to the nearest slide as the user scrolls. scroll-snap-stop: always
    prevents skipping past a slide.
    ========================================================================= */
-html { scroll-snap-type: y mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+html { scroll-behavior: auto; scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
+/* Touch devices and reduced-motion users get a native CSS scroll-snap
+   fallback instead of the custom inertial scroller. */
+@media (prefers-reduced-motion: reduce), (hover: none) and (pointer: coarse) {
+  html { scroll-snap-type: y mandatory; }
+  .snap-slide { scroll-snap-align: start; }
+}
 .snap-slide {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   position: relative;
   width: 100%;
   min-height: 100vh;
@@ -145,23 +149,8 @@ html::-webkit-scrollbar { display: none; }
 }
 .dots__btn:hover .dots__lbl { opacity: 1; }
 
-.slide-tag {
-  position: fixed; left: 28px; bottom: 28px; z-index: 80;
-  display: flex; align-items: center; gap: 12px;
-  font-size: 10px; text-transform: uppercase; letter-spacing: 0.22em;
-  color: hsl(var(--muted-foreground)); font-weight: 600;
-  background: hsl(var(--hero-bg) / 0.7);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid hsl(var(--border)); padding: 8px 14px; border-radius: 2px;
-}
-.slide-tag .num { color: hsl(var(--primary)); font-weight: 700; }
-.slide-tag .pulse {
-  width: 6px; height: 6px; border-radius: 50%; background: hsl(var(--primary));
-  box-shadow: 0 0 8px hsl(var(--primary) / 0.7);
-  animation: pulse-dot 1.6s ease-in-out infinite;
-}
 @media (max-width: 700px) {
-  .dots, .slide-tag { display: none; }
+  .dots { display: none; }
 }
 
 /* Scroll hint on hero */
@@ -1017,7 +1006,9 @@ html::-webkit-scrollbar { display: none; }
 @media (max-width: 900px) { .footer { padding: 40px 24px 20px; } .footer__grid { grid-template-columns: 1fr; gap: 24px; } .cta { padding: 60px 24px 0; } }
 
 /* Final slide is taller — let CTA + footer stack inside its 100vh */
-.snap-slide.slide--last { height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+.snap-slide.slide--last { justify-content: center; }
+.snap-slide.slide--last .cta { padding: 80px 64px; flex: 1; display: flex; align-items: center; justify-content: center; }
+.snap-slide.slide--last .cta__inner { gap: 24px; }
 
 /* =========================================================================
    Marquee strip
@@ -1155,6 +1146,81 @@ html::-webkit-scrollbar { display: none; }
 
 /* Tweaks panel host position */
 #tweaks-root { z-index: 95; position: relative; }
+
+/* =========================================================================
+   Warp overlay (fast-scroll easter egg)
+   ========================================================================= */
+.warp {
+  position: fixed; inset: 0; z-index: 200; pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+.warp.is-on { opacity: 1; }
+.warp__lines {
+  position: absolute; inset: -10%;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 6px,
+      hsl(var(--primary) / 0.18) 6px,
+      hsl(var(--primary) / 0.18) 7px
+    );
+  mask-image: radial-gradient(ellipse at center, transparent 12%, black 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, transparent 12%, black 70%);
+  opacity: 0;
+}
+.warp.is-on .warp__lines { animation: warp-lines 760ms cubic-bezier(0.7, 0, 0.2, 1) forwards; }
+@keyframes warp-lines {
+  0%   { transform: scale(0.5); opacity: 0; filter: blur(8px); }
+  35%  { opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; filter: blur(0px); }
+}
+.warp__slash {
+  position: absolute; top: 50%; left: -10%; right: -10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary)) 30%, #fff 50%, hsl(var(--primary)) 70%, transparent);
+  box-shadow: 0 0 28px hsl(var(--primary)), 0 0 60px hsl(var(--primary));
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+}
+.warp.is-on .warp__slash { animation: warp-slash 760ms cubic-bezier(0.85, 0, 0.15, 1) forwards; }
+@keyframes warp-slash {
+  0%   { transform: translateY(-50%) scaleX(0); transform-origin: left center; opacity: 1; }
+  45%  { transform: translateY(-50%) scaleX(1); transform-origin: left center; opacity: 1; }
+  55%  { transform: translateY(-50%) scaleX(1); transform-origin: right center; opacity: 1; }
+  100% { transform: translateY(-50%) scaleX(0); transform-origin: right center; opacity: 0; }
+}
+.warp__flash {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, hsl(var(--primary) / 0.35), transparent 60%);
+  opacity: 0;
+}
+.warp.is-on .warp__flash { animation: warp-flash 760ms ease-out forwards; }
+@keyframes warp-flash {
+  0%   { opacity: 0; }
+  40%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+.is-warp .particles span { animation-duration: 1.4s !important; }
+.is-warp .btn--primary { box-shadow: 0 0 40px 4px hsl(var(--primary) / 0.7); }
+
+/* Hint arrow at the bottom of the CTA slide pointing to the footer below */
+.cta__more {
+  margin-top: 24px;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.22em; font-weight: 600;
+  color: hsl(var(--muted-foreground));
+  display: inline-flex; align-items: center; gap: 10px;
+  opacity: 0.7;
+}
+.cta__more .arrow {
+  display: inline-block; width: 12px; height: 12px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg);
+  animation: float-y 2.4s ease-in-out infinite;
+}
 </style>
 </head>
 <body>
@@ -1169,10 +1235,11 @@ html::-webkit-scrollbar { display: none; }
 <!-- Side dot navigation -->
 <nav class="dots" id="dots" aria-label="Section navigation"></nav>
 
-<!-- Bottom-left slide indicator -->
-<div class="slide-tag" id="slideTag" aria-live="polite">
-  <span class="pulse"></span>
-  <span><span class="num" id="slideNum">01</span> / <span id="slideName">Hero</span></span>
+<!-- Fast-scroll warp overlay -->
+<div class="warp" id="warp" aria-hidden="true">
+  <div class="warp__lines"></div>
+  <div class="warp__slash"></div>
+  <div class="warp__flash"></div>
 </div>
 
 <!-- ============================================================ NAV -->
@@ -1625,7 +1692,7 @@ html::-webkit-scrollbar { display: none; }
 </section>
 </section>
 
-<!-- ============================================================ CTA + FOOTER -->
+<!-- ============================================================ CTA -->
 <section class="snap-slide slide--last" data-snap data-name="Book a call">
 <section class="cta" id="book" data-screen-label="08 Book a call" style="--bgx:50%;--bgy:30%">
   <div class="cta__inner reveal reveal--scale">
@@ -1637,9 +1704,14 @@ html::-webkit-scrollbar { display: none; }
       <a href="mailto:hello@otto.bk" class="btn btn--primary">Book a Call</a>
       <a href="#how" class="btn btn--outline">See how it works</a>
     </div>
+    <div class="cta__more" aria-hidden="true"><span>Scroll for site map</span><span class="arrow"></span></div>
   </div>
 </section>
+</section>
 
+</main><!-- /deck -->
+
+<!-- ============================================================ FOOTER (outside the deck) -->
 <footer class="footer" data-screen-label="Footer">
   <div class="footer__grid">
     <div class="footer__brand">
@@ -1682,9 +1754,6 @@ html::-webkit-scrollbar { display: none; }
     <span>Bookkeeping services · not a substitute for a qualified accountant</span>
   </div>
 </footer>
-</section>
-
-</main><!-- /deck -->
 
 <!-- Tweaks mount -->
 <div id="tweaks-root"></div>
@@ -1722,9 +1791,8 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 });
 
 /* =========================================================================
-   Slide tracking via IntersectionObserver — native scroll-snap handles
-   the snapping itself; this just maintains is-active for animations,
-   progress bar, dots, and slide tag.
+   Slide tracking — keeps is-active on the right slide for reveals,
+   progress bar, dots, and nav blur.
    ========================================================================= */
 (function trackSlides() {
   const slides = [...document.querySelectorAll('[data-snap]')];
@@ -1736,7 +1804,7 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
     b.className = 'dots__btn';
     b.setAttribute('aria-label', `Go to ${s.getAttribute('data-name')}`);
     b.innerHTML = `<span class="dots__lbl">${s.getAttribute('data-name')}</span>`;
-    b.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth' }));
+    b.addEventListener('click', () => window.__ottoScrollTo && window.__ottoScrollTo(s));
     dotsEl.appendChild(b);
   });
 
@@ -1747,8 +1815,6 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
       const inner = s.firstElementChild;
       if (inner) inner.classList.toggle('is-active', isAct);
     });
-    document.getElementById('slideName').textContent = slides[idx].getAttribute('data-name') || '';
-    document.getElementById('slideNum').textContent = String(idx + 1).padStart(2, '0');
     document.getElementById('progressFill').style.width = ((idx + 1) / slides.length * 100) + '%';
     document.querySelectorAll('.dots__btn').forEach((b, i) => b.classList.toggle('is-active', i === idx));
     document.getElementById('topnav').classList.toggle('is-scrolled', idx > 0);
@@ -1763,28 +1829,215 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
       const idx = slides.indexOf(best);
       if (idx >= 0) setActive(idx);
     }
-  }, { threshold: [0.35, 0.55, 0.75] });
+  }, { threshold: [0.3, 0.5, 0.7] });
   slides.forEach((s) => io.observe(s));
 
-  // Forward wheel from inside the Spline canvas to the page
-  const spline = document.querySelector('.hero__spline');
-  if (spline) {
-    spline.addEventListener('wheel', (e) => {
-      window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
-      e.preventDefault();
-    }, { passive: false, capture: true });
-    let lastY = null;
-    spline.addEventListener('touchstart', (e) => { lastY = e.touches[0].clientY; }, { passive: true });
-    spline.addEventListener('touchmove', (e) => {
-      if (lastY == null) return;
-      const y = e.touches[0].clientY;
-      window.scrollBy({ top: lastY - y, behavior: 'auto' });
-      lastY = y;
-    }, { passive: true });
-    spline.addEventListener('touchend', () => { lastY = null; }, { passive: true });
+  setActive(0);
+  window.__ottoSlides = slides;
+})();
+
+/* =========================================================================
+   Inertial scroller — replaces native scroll-snap with a damped lerp.
+   Input always moves `targetY`; each frame `currentY` eases toward it.
+   When input stops, `targetY` snaps to the nearest slide top so the user
+   can never settle off-card. Fast-flick to the bottom triggers the warp.
+   ========================================================================= */
+(function inertialScroll() {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (reduced || isTouch) {
+    window.__ottoScrollTo = (el) => el.scrollIntoView({ behavior: 'smooth' });
+    return;
   }
 
-  setActive(0);
+  const slides = window.__ottoSlides || [...document.querySelectorAll('[data-snap]')];
+  const warpEl = document.getElementById('warp');
+
+  let targetY = window.scrollY;
+  let currentY = window.scrollY;
+  const lerp = 0.085;
+  const maxLead = () => window.innerHeight * 0.85;
+  let lastInputAt = 0;
+  let warping = false;
+
+  // Velocity tracking for warp trigger
+  const recent = []; // {t, dy}
+  const RECENT_MS = 240;
+
+  function maxScroll() {
+    return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  }
+
+  function clampLead() {
+    const lead = targetY - currentY;
+    const cap = maxLead();
+    if (lead > cap) targetY = currentY + cap;
+    else if (lead < -cap) targetY = currentY - cap;
+    targetY = Math.max(0, Math.min(maxScroll(), targetY));
+  }
+
+  function nearestSlideTop(y) {
+    let bestY = 0, bestD = Infinity;
+    for (const s of slides) {
+      const sy = s.offsetTop;
+      const d = Math.abs(sy - y);
+      if (d < bestD) { bestD = d; bestY = sy; }
+    }
+    return bestY;
+  }
+
+  function snapToNearest() {
+    // Only snap to slide tops while within the deck. Allow free scroll
+    // into the footer (below the last slide's bottom).
+    const last = slides[slides.length - 1];
+    const deckBottom = last.offsetTop + last.offsetHeight;
+    if (currentY >= deckBottom - 8) return;
+    targetY = Math.min(nearestSlideTop(currentY), deckBottom - 8);
+  }
+
+  let rafQueued = false;
+  function tick() {
+    rafQueued = true;
+    const dy = targetY - currentY;
+    if (Math.abs(dy) > 0.4) {
+      currentY += dy * lerp;
+      window.scrollTo(0, currentY);
+    } else {
+      currentY = targetY;
+      window.scrollTo(0, currentY);
+    }
+    // After user has stopped feeding input for ~120ms, ease to nearest slide top.
+    if (!warping && performance.now() - lastInputAt > 120 && Math.abs(targetY - currentY) < 2) {
+      snapToNearest();
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  function noteInput(dy) {
+    lastInputAt = performance.now();
+    const now = lastInputAt;
+    recent.push({ t: now, dy: Math.abs(dy) });
+    while (recent.length && now - recent[0].t > RECENT_MS) recent.shift();
+    const sum = recent.reduce((a, r) => a + r.dy, 0);
+    // Warp trigger: strong downward velocity, must be past slide 2, and
+    // not already warping.
+    if (!warping && dy > 0 && sum > 2400) {
+      const slideH = window.innerHeight;
+      if (currentY > slideH * 1.2) triggerWarp();
+    }
+  }
+
+  function handleWheel(e) {
+    if (warping) { e.preventDefault(); return; }
+    e.preventDefault();
+    targetY += e.deltaY;
+    clampLead();
+    noteInput(e.deltaY);
+  }
+  window.addEventListener('wheel', handleWheel, { passive: false });
+  // Spline canvas captures pointer events so it can react to the mouse;
+  // forward wheel/touch to the scroller in capture-phase so the page
+  // still scrolls while the cursor is over the hero.
+  const spline = document.querySelector('.hero__spline');
+  if (spline) {
+    spline.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+    let splineTouchY = null;
+    spline.addEventListener('touchstart', (e) => { splineTouchY = e.touches[0].clientY; }, { passive: true, capture: true });
+    spline.addEventListener('touchmove', (e) => {
+      if (splineTouchY == null) return;
+      const y = e.touches[0].clientY;
+      const dy = splineTouchY - y;
+      splineTouchY = y;
+      if (warping) return;
+      targetY += dy * 1.6; clampLead(); noteInput(dy);
+    }, { passive: true, capture: true });
+    spline.addEventListener('touchend', () => { splineTouchY = null; }, { passive: true, capture: true });
+  }
+
+  // Touch
+  let lastTouchY = null;
+  window.addEventListener('touchstart', (e) => { lastTouchY = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (lastTouchY == null) return;
+    const y = e.touches[0].clientY;
+    const dy = lastTouchY - y;
+    lastTouchY = y;
+    if (warping) return;
+    targetY += dy * 1.6;
+    clampLead();
+    noteInput(dy);
+  }, { passive: true });
+  window.addEventListener('touchend', () => { lastTouchY = null; }, { passive: true });
+
+  // Keyboard
+  window.addEventListener('keydown', (e) => {
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    const slideH = window.innerHeight;
+    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
+      e.preventDefault();
+      const next = (slides.find((s) => s.offsetTop > currentY + 4) || slides[slides.length - 1]).offsetTop;
+      targetY = next; lastInputAt = performance.now();
+    } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
+      e.preventDefault();
+      const prevs = slides.filter((s) => s.offsetTop < currentY - 4);
+      const prev = prevs.length ? prevs[prevs.length - 1].offsetTop : 0;
+      targetY = prev; lastInputAt = performance.now();
+    } else if (e.key === 'Home') { e.preventDefault(); targetY = 0; lastInputAt = performance.now(); }
+      else if (e.key === 'End')  { e.preventDefault(); targetY = maxScroll(); lastInputAt = performance.now(); }
+  });
+
+  // Programmatic scroll API for nav/dot clicks
+  window.__ottoScrollTo = (el) => {
+    if (!el) return;
+    targetY = Math.min(maxScroll(), el.offsetTop);
+    lastInputAt = performance.now();
+  };
+
+  // Anchor link interception
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const href = a.getAttribute('href');
+    if (!href || href === '#') return;
+    const target = document.querySelector(href);
+    if (!target) return;
+    const slide = target.closest('[data-snap]') || target;
+    e.preventDefault();
+    window.__ottoScrollTo(slide);
+  });
+
+  // Warp sequence — fast-scroll easter egg
+  function triggerWarp() {
+    warping = true;
+    document.body.classList.add('is-warp');
+    warpEl.classList.add('is-on');
+    const start = currentY;
+    const last = slides[slides.length - 1];
+    const end = last.offsetTop;
+    const dur = 720;
+    const t0 = performance.now();
+    const ease = (t) => {
+      // cubic-bezier(0.85, 0, 0.15, 1) approximation
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+    function step(now) {
+      const t = Math.min(1, (now - t0) / dur);
+      const v = start + (end - start) * ease(t);
+      targetY = v;
+      currentY = v;
+      window.scrollTo(0, v);
+      if (t < 1) requestAnimationFrame(step);
+      else {
+        setTimeout(() => {
+          warpEl.classList.remove('is-on');
+          document.body.classList.remove('is-warp');
+          warping = false;
+        }, 240);
+      }
+    }
+    requestAnimationFrame(step);
+  }
 })();
 
 /* =========================================================================
@@ -1887,11 +2140,13 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 })();
 
 /* =========================================================================
-   Magnet effect on primary CTAs — subtle cursor-attracted translation
+   Magnet effect — only on hero buttons. On other slides the magnet-pull
+   on a green primary CTA can read as "a green blob following the cursor",
+   which we want to avoid off the hero.
    ========================================================================= */
 (function magnetButtons() {
-  document.querySelectorAll('.btn--primary, .btn--white, .btn--outline').forEach((btn) => {
-    const strength = 0.25;
+  document.querySelectorAll('.hero .btn').forEach((btn) => {
+    const strength = 0.22;
     btn.addEventListener('pointermove', (e) => {
       const r = btn.getBoundingClientRect();
       const dx = (e.clientX - (r.left + r.width / 2)) * strength;
