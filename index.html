@@ -726,7 +726,7 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
     if (animating) return;
     currentIdx = idx;
     pastDeck = false;
-    animateScroll(slides[idx].offsetTop, dur || 950);
+    animateScroll(slides[idx].offsetTop, dur || 650);
   }
 
   function tryAdvance(dir) {
@@ -787,72 +787,42 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
     spline.addEventListener('wheel', handleWheel, { passive: false, capture: true });
   }
 
-  // ---- touch (iOS) — YouTube-Shorts-style scrub.
-  // Finger drags the page directly (with resistance past the half-slide
-  // threshold so it never overshoots). On release, commit to next/prev if
-  // the drag passed ~18% of the viewport, else snap back.
-  // Listeners are on the window with capture: true so the Spline canvas
-  // and any other child element can't swallow the gesture.
-  let tStartY = null, tStartT = 0, tStartScroll = 0, tMoved = 0;
+  // ---- touch — one swipe = one slide. No real-time scrubbing
+  //              (the previous scrub model felt glitchy on iPhone because
+  //              it fought the browser's compositor). We just track the
+  //              swipe distance and on release fire the smooth animator.
+  // Listeners on window with capture:true so child elements (Spline,
+  // buttons) can't swallow the gesture.
+  let tStartY = null, tStartT = 0;
   window.addEventListener('touchstart', (e) => {
     if (animating) return;
     tStartY = e.touches[0].clientY;
     tStartT = performance.now();
-    tStartScroll = window.scrollY;
-    tMoved = 0;
   }, { passive: true, capture: true });
+  // touchmove is non-passive so we can preventDefault the browser's
+  // native scroll without it competing with our animation. We never
+  // call scrollTo during the swipe — the page is still until release.
   window.addEventListener('touchmove', (e) => {
-    if (tStartY == null) { return; }
-    if (animating) { e.preventDefault(); return; }
-    const y = e.touches[0].clientY;
-    const dy = tStartY - y;
-    tMoved = dy;
-    // Rubber-band past one viewport's worth of drag
-    const vh = window.innerHeight;
-    const maxDrag = vh * 0.95;
-    const eased = Math.sign(dy) * (Math.abs(dy) <= maxDrag
-      ? Math.abs(dy)
-      : maxDrag + (Math.abs(dy) - maxDrag) * 0.25);
-    window.scrollTo(0, tStartScroll + eased);
+    if (tStartY == null) return;
     e.preventDefault();
   }, { passive: false, capture: true });
-  window.addEventListener('touchend', () => {
+  window.addEventListener('touchend', (e) => {
     if (tStartY == null) return;
+    const endY = e.changedTouches[0].clientY;
+    const dy = tStartY - endY;
     const dt = performance.now() - tStartT;
-    const dy = tMoved;
-    const vel = Math.abs(dy) / Math.max(1, dt);  // px/ms
+    const vel = Math.abs(dy) / Math.max(1, dt); // px/ms
     tStartY = null;
-    // Strong fling downward past slide 2 → warp
-    if (dy > 0 && vel > 1.4 && currentIdx >= 2) { triggerWarp(); return; }
-    const commitDist = window.innerHeight * 0.18;
-    const commitVel = 0.45;
-    if (Math.abs(dy) > commitDist || vel > commitVel) {
-      // commit to next/prev; animate from the current scrubbed scrollY
-      const dir = dy > 0 ? 1 : -1;
-      const targetIdx = Math.max(0, Math.min(slides.length - 1, currentIdx + dir));
-      if (targetIdx !== currentIdx) {
-        currentIdx = targetIdx;
-        animateScroll(slides[targetIdx].offsetTop, 480);
-      } else if (dir > 0 && !pastDeck) {
-        pastDeck = true; animateScroll(maxScroll(), 480);
-      } else if (dir < 0 && pastDeck) {
-        pastDeck = false; animateScroll(slides[slides.length - 1].offsetTop, 480);
-      } else {
-        animateScroll(slides[currentIdx].offsetTop, 320);
-      }
-    } else {
-      // snap back to current
-      const back = pastDeck ? maxScroll() : slides[currentIdx].offsetTop;
-      animateScroll(back, 320);
+    // ignore taps
+    if (Math.abs(dy) < 12 && vel < 0.05) return;
+    // Hard fling downward past slide 2 → warp
+    if (dy > 0 && vel > 1.6 && currentIdx >= 2) { triggerWarp(); return; }
+    // Otherwise: any swipe with reasonable distance OR velocity advances one card.
+    if (Math.abs(dy) > 40 || vel > 0.35) {
+      tryAdvance(dy > 0 ? 1 : -1);
     }
   }, { passive: true, capture: true });
-  // Safety net: cancelled touches snap back
-  window.addEventListener('touchcancel', () => {
-    if (tStartY == null) return;
-    tStartY = null;
-    const back = pastDeck ? maxScroll() : slides[currentIdx].offsetTop;
-    animateScroll(back, 280);
-  }, { passive: true, capture: true });
+  window.addEventListener('touchcancel', () => { tStartY = null; }, { passive: true, capture: true });
 
   // ---- keyboard ----
   window.addEventListener('keydown', (e) => {
@@ -1031,20 +1001,9 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
    On small viewports, skip the Spline scene — it's a ~1MB asset that
    tanks first paint on phones. Fall back to the CSS "pools" backdrop.
    ========================================================================= */
-(function mobileSplineOff() {
-  // Below 900px (and on touch devices) we drop the ~1MB Spline scene
-  // and use the CSS pools backdrop instead. This also removes the
-  // Spline canvas's touch absorption, which was preventing the hero
-  // flick from advancing the deck on iPhone.
-  const small = window.matchMedia('(max-width: 900px)').matches;
-  const coarse = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-  if (small || coarse) {
-    const hero = document.getElementById('hero');
-    if (hero) hero.setAttribute('data-bg', 'pools');
-    const sv = document.querySelector('.hero__spline');
-    if (sv) sv.remove();
-  }
-})();
+// (mobile Spline removal removed — Spline now loads on every device.
+//  Touch absorption is handled at the CSS layer with pointer-events:none
+//  on coarse-pointer devices, see styles.css.)
 
 /* =========================================================================
    Magnet effect — only on hero buttons. On other slides the magnet-pull
