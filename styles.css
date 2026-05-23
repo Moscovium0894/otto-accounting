@@ -2256,3 +2256,55 @@ html.is-mobile #book .cta__ctas .btn--outline { display: inline-flex !important;
 
 /* Slightly bigger global mobile h2 so titles feel substantial */
 html.is-mobile .section__h2 { font-size: clamp(1.5rem, 6.5vw, 2.05rem); }
+
+/* =========================================================================
+   MOBILE — enforce identical card height across the entire deck.
+   Every snap target is exactly one viewport tall and uses the same
+   flex-column + justify-content:center pattern so content always sits
+   in the same vertical band on every card.
+   ========================================================================= */
+
+/* Every snap-slide is exactly 100svh, no exceptions */
+html.is-mobile .snap-slide,
+html.is-mobile .snap-slide.slide--last {
+  height: 100vh;
+  height: 100svh;
+  min-height: 0;
+  max-height: 100svh;
+  overflow: hidden;
+}
+
+/* Every inner section uses the SAME layout — flex column, centered,
+   identical padding so the title block lands at the same y on every
+   card */
+html.is-mobile .snap-slide > .hero,
+html.is-mobile .snap-slide > .section,
+html.is-mobile .snap-slide > .cta {
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+  padding: 84px 22px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* Hero used to bottom-align — switch to the same centered layout */
+html.is-mobile .snap-slide > .hero { align-items: flex-start; }
+html.is-mobile .hero__content {
+  padding: 0;
+  max-width: 100%;
+  width: 100%;
+  pointer-events: auto;
+}
+
+/* The cta wrapper sometimes wraps the cta__inner in its own layer.
+   Make sure the inner block uses the same centering rules. */
+html.is-mobile .snap-slide.slide--last .cta { padding: 84px 22px 28px; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; }
+html.is-mobile .snap-slide.slide--last .cta__inner { width: 100%; max-width: 480px; text-align: center; }
+
+/* Belt-and-braces: any element that tries to grow taller than the snap
+   box gets capped. */
+html.is-mobile .snap-slide * { max-height: 100%; }
