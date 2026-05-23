@@ -2948,3 +2948,118 @@ html.is-mobile .snap-slide > .cta {
 html.is-mobile .hero__ctas {
   left: 18px !important; right: 18px !important;
 }
+
+/* =========================================================================
+   MOBILE — flat & solid. No Liquid Glass anywhere. No side margins.
+   Solid buttons.
+   ========================================================================= */
+
+/* No backdrop-filter anywhere on mobile */
+html.is-mobile *,
+html.is-mobile *::before,
+html.is-mobile *::after {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Nav — flat, solid; transparent over the hero, solid dark once
+   scrolled. No border, no shadow, no glass. */
+html.is-mobile .nav,
+html.is-mobile .nav.is-scrolled {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important; right: 0 !important;
+  padding: 14px 16px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+html.is-mobile .nav.is-scrolled {
+  background: hsl(0 0% 6%) !important;
+}
+html.is-mobile .nav::after,
+html.is-mobile .nav::before { display: none !important; content: '' !important; }
+
+/* Hamburger stays minimal (no box) */
+html.is-mobile .navburger {
+  position: fixed !important;
+  top: 14px !important;
+  right: 16px !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  gap: 6px !important;
+}
+
+/* Menu — solid dark, no blur */
+html.is-mobile .navsheet {
+  background: hsl(0 0% 6%) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 96px 24px 32px !important;
+}
+html.is-mobile .navsheet a {
+  background: transparent !important;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.08) !important;
+}
+
+/* All primary buttons — solid white, black text, no glow / blur */
+html.is-mobile .btn--primary {
+  background: #fff !important;
+  color: #000 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  animation: none !important;
+}
+
+/* Hero CTAs — solid: primary white, secondary solid dark grey */
+html.is-mobile .hero__ctas .btn--primary {
+  background: #fff !important;
+  color: #000 !important;
+}
+html.is-mobile .hero__ctas .btn--white {
+  background: hsl(0 0% 18%) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html.is-mobile .hero__ctas .btn--primary::after,
+html.is-mobile .hero__ctas .btn--primary::before,
+html.is-mobile .hero__ctas .btn--white::after,
+html.is-mobile .hero__ctas .btn--white::before { display: none !important; content: '' !important; }
+
+/* Menu's primary CTA — solid white pill */
+html.is-mobile .navsheet .btn--primary {
+  background: #fff !important;
+  color: #000 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* No side margins on the deck and cards — content goes edge-to-edge */
+html.is-mobile .snap-slide,
+html.is-mobile .snap-slide > .hero,
+html.is-mobile .snap-slide > .section,
+html.is-mobile .snap-slide > .cta {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+html.is-mobile .hero__content,
+html.is-mobile .section__inner,
+html.is-mobile .cta__inner {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+/* Hero CTAs sit edge-to-edge (no left/right inset) */
+html.is-mobile .hero__ctas {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 24px !important;
+  padding: 0 18px;
+}
