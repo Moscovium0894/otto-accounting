@@ -479,7 +479,12 @@ html::-webkit-scrollbar { display: none; }
   z-index: 0; opacity: 0;
   animation: fade-in 1.4s 0.2s ease-out forwards;
   pointer-events: auto;
-  touch-action: pan-y;
+  touch-action: none;
+}
+/* On touch devices the Spline canvas mustn't absorb the gesture — it
+   would block the deck from advancing. Visual only here. */
+@media (hover: none) and (pointer: coarse) {
+  .hero[data-bg="spline"] .hero__spline { pointer-events: none; }
 }
 .hero[data-bg="spline"] .hero__spline spline-viewer {
   width: 100%; height: 100%; display: block;
