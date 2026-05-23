@@ -78,28 +78,30 @@ img, svg, video { display: block; max-width: 100%; }
    ========================================================================= */
 
 /* ---- Background video ----
-   Sized to the LARGE viewport (lvh / lvw) so it always covers the maximum
-   possible screen area — including the strip behind the translucent iOS
-   Safari URL bar. Without this, position:fixed elements size to the SMALL
-   viewport (svh) by default and the body's dark fill shows through where
-   the URL bar overlays the page, reading as a grey rectangle.
-   Top/left also pinned to the unsafe edges and shifted UP by the top
-   safe-area inset so the video reaches the very top of the screen under
-   the status bar / notch. */
+   The wrapper must always cover the maximum possible screen area — the
+   strip behind the translucent iOS Safari URL bar especially. Layered
+   fallbacks: start at vh (universal), then upgrade to dvh, then lvh.
+   Browsers that don't understand a unit silently drop that declaration
+   and the previous one wins, so the wrapper is never 0-height. */
 .bg-video {
   position: fixed;
-  top: 0; left: 0;
+  top: 0; left: 0; right: 0;
   width: 100vw;
-  height: 100lvh;
-  min-height: 100dvh;     /* fallback for browsers without lvh */
+  height: 100vh;            /* baseline — every browser */
+  height: 100dvh;           /* upgrade — dynamic */
+  height: 100lvh;           /* upgrade — large (covers behind URL bar) */
+  min-height: 100vh;        /* never collapse */
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  background: var(--bg);    /* dark fallback while video is still loading */
 }
 .bg-video video {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%; min-height: 100%;
+  width: auto; height: auto;
   object-fit: cover;
   pointer-events: none;
 }
@@ -224,9 +226,9 @@ img, svg, video { display: block; max-width: 100%; }
 .ghost-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.32); }
 .ghost-btn .chevron { width: 14px; height: 14px; }
 
-/* The "Begin" pill — centered in the nav, a polished glass capsule with
-   a live cyan pulse dot. Sized just larger than the surrounding nav
-   shapes so it reads as the primary nudge without shouting. */
+/* The "Begin" pill — centered in the mobile nav, blue tinted glass with
+   a live cyan pulse dot. Sized to read as the primary nudge without
+   shouting. Brand blue tint over a glassy capsule, white label. */
 .begin-pill {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 18px 9px 14px;
@@ -237,21 +239,20 @@ img, svg, video { display: block; max-width: 100%; }
   text-transform: uppercase;
   color: #fff;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+    linear-gradient(180deg, rgba(96, 165, 250, 0.32) 0%, rgba(37, 99, 235, 0.22) 100%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
           backdrop-filter: blur(20px) saturate(180%);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.16),
-    inset 0 1px 0 rgba(255,255,255,0.30),
-    0 8px 24px -10px rgba(0,0,0,0.55);
+    inset 0 0 0 1px rgba(147, 197, 253, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    0 10px 28px -10px rgba(59, 130, 246, 0.55);
   transition: transform 180ms var(--ease-spring),
               background 200ms ease,
               box-shadow 200ms ease;
 }
 .begin-pill__label {
-  background: linear-gradient(180deg, #ffffff 0%, #d8e8ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  color: transparent;
+  color: #fff;
+  text-shadow: 0 0 14px rgba(147, 197, 253, 0.55);
 }
 .begin-pill__dot {
   width: 7px; height: 7px;
@@ -261,11 +262,12 @@ img, svg, video { display: block; max-width: 100%; }
   animation: pulse 2.6s var(--ease-out) infinite;
 }
 .begin-pill:hover {
-  background: linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0.06));
+  background:
+    linear-gradient(180deg, rgba(96, 165, 250, 0.42) 0%, rgba(37, 99, 235, 0.32) 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.24),
-    inset 0 1px 0 rgba(255,255,255,0.40),
-    0 14px 32px -14px rgba(164,244,253,0.45);
+    inset 0 0 0 1px rgba(147, 197, 253, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    0 16px 36px -14px rgba(59, 130, 246, 0.7);
   transform: translate(-50%, -50%) scale(1.04);
 }
 .begin-pill:active { transform: translate(-50%, -50%) scale(0.97); }
