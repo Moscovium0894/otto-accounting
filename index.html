@@ -10,15 +10,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Spline 3D viewer (desktop only — skip the ~1MB download on phones) -->
-<script>
-if (!document.documentElement.classList.contains('is-mobile')) {
-  const s = document.createElement('script');
-  s.type = 'module';
-  s.src = 'https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js';
-  document.head.appendChild(s);
-}
-</script>
+<!-- Spline 3D viewer (loads on every device) -->
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js"></script>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -93,29 +86,6 @@ if (!document.documentElement.classList.contains('is-mobile')) {
   <div class="pool-a"></div>
   <div class="pool-b"></div>
   <div class="hero__grid"></div>
-
-  <!-- Mobile-only animated hero canvas (CSS-only, GPU-cheap).
-       Replaces the Spline scene on iPhone. -->
-  <div class="m-hero" aria-hidden="true">
-    <svg class="m-hero__mark" viewBox="0 0 64 64" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-      <g stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round">
-        <circle cx="22" cy="32" r="14"/>
-        <circle cx="42" cy="32" r="14"/>
-      </g>
-    </svg>
-    <div class="m-hero__sweep"></div>
-    <svg class="m-hero__chart" viewBox="0 0 320 120" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="mChartFill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%"   stop-color="hsl(var(--primary))" stop-opacity="0.35"/>
-          <stop offset="100%" stop-color="hsl(var(--primary))" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      <path class="m-hero__chart-fill" d="M0,90 L0,90 L24,86 L48,82 L72,72 L96,76 L120,62 L144,66 L168,52 L192,56 L216,40 L240,44 L264,28 L288,32 L320,12 L320,120 L0,120 Z" fill="url(#mChartFill)"/>
-      <path class="m-hero__chart-line" d="M0,90 L24,86 L48,82 L72,72 L96,76 L120,62 L144,66 L168,52 L192,56 L216,40 L240,44 L264,28 L288,32 L320,12" />
-    </svg>
-    <div class="m-hero__rule"></div>
-  </div>
 
   <!-- Floating orbs -->
   <div class="orb orb--a" aria-hidden="true"></div>
@@ -1034,12 +1004,20 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 /* =========================================================================
    Mobile-only — sticky Book-a-Call appears after scrolling past the hero.
    ========================================================================= */
-/* On mobile we yank the Spline element so its custom element doesn't
-   sit idle in the DOM (the viewer script never loaded on mobile). */
-(function dropSplineOnMobile() {
+/* Mobile: pause Spline rendering when the hero is off-screen so the
+   WebGL canvas isn't burning frames while the user is on other cards.
+   `display:none` removes it from the layout/compositor entirely. */
+(function pauseSplineOffScreen() {
   if (!document.documentElement.classList.contains('is-mobile')) return;
   const sv = document.querySelector('.hero__spline');
-  if (sv) sv.remove();
+  const hero = document.getElementById('hero');
+  if (!sv || !hero) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      sv.style.display = e.isIntersecting ? '' : 'none';
+    });
+  }, { threshold: 0 });
+  io.observe(hero);
 })();
 
 (function stickyCta() {
