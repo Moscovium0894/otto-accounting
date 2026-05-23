@@ -20,7 +20,11 @@
 
 <!-- Global background video -->
 <div class="bg-video">
-  <video autoplay loop muted playsinline preload="auto"
+  <!-- Two stacked video elements for a seamless cross-fade loop.
+       JS swaps which one is "primary" ~0.6s before the active video ends. -->
+  <video class="bg-video__a is-on" autoplay muted playsinline preload="auto"
+    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
+  <video class="bg-video__b" muted playsinline preload="auto"
     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
   <div class="bg-video__veil"></div>
 </div>
@@ -423,21 +427,53 @@
   // Loop-seam fade on the background video — dim to 0 over the last 0.4s
   // and back to 1 over the first 0.4s of each loop so the hard cut in
   // the source isn't visible.
-  (function loopFade(){
-    const bgV = document.querySelector('.bg-video video');
-    if (!bgV) return;
-    const FADE = 0.4;
-    function dim(){
-      const d = bgV.duration;
-      if (!isFinite(d) || d <= 1) { bgV.style.opacity = '1'; return; }
-      const t = bgV.currentTime;
-      let o = 1;
-      if (t < FADE)          o = Math.max(0, t / FADE);
-      else if (d - t < FADE) o = Math.max(0, (d - t) / FADE);
-      bgV.style.opacity = o.toFixed(3);
+  // Seamless cross-fade loop. Two stacked <video> elements play the same
+  // clip; the inactive one is queued at currentTime 0. Roughly 0.6s
+  // before the active video ends, we kick off the inactive one and
+  // swap their .is-on classes — CSS opacity transitions handle the
+  // crossfade. Neither video ever hits its own loop seam.
+  (function crossfadeLoop(){
+    const a = document.querySelector('.bg-video__a');
+    const b = document.querySelector('.bg-video__b');
+    if (!a || !b) return;
+    a.loop = false; b.loop = false;
+    let active = a, queued = b;
+    let switching = false;
+
+    function ready(v){ return v.readyState >= 2 && isFinite(v.duration) && v.duration > 0; }
+
+    // Make sure the queued video is paused at the start, primed.
+    queued.addEventListener('loadedmetadata', () => { try { queued.currentTime = 0; } catch (e) {} queued.pause(); }, { once: true });
+
+    function tick(){
+      if (!ready(active)) { requestAnimationFrame(tick); return; }
+      const r = active.duration - active.currentTime;
+      if (!switching && r < 0.6) {
+        switching = true;
+        if (ready(queued)) {
+          try { queued.currentTime = 0; } catch (e) {}
+          const p = queued.play();
+          if (p && p.catch) p.catch(()=>{});
+          // Fire the crossfade on the next frame so the play() call has started.
+          requestAnimationFrame(() => {
+            active.classList.remove('is-on');
+            queued.classList.add('is-on');
+          });
+          // After the fade completes, reset the now-inactive video.
+          setTimeout(() => {
+            try { active.pause(); active.currentTime = 0; } catch (e) {}
+            const tmp = active; active = queued; queued = tmp;
+            switching = false;
+          }, 700);
+        } else {
+          switching = false;
+        }
+      }
+      requestAnimationFrame(tick);
     }
-    bgV.style.transition = 'none';
-    bgV.addEventListener('timeupdate', dim);
+    // Kick the loop once the active video has metadata
+    if (ready(a)) tick();
+    else a.addEventListener('loadedmetadata', tick, { once: true });
   })();
 
   // (Headline colour effect handled in CSS — gradient + shimmer.)
