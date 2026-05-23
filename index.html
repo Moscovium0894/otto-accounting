@@ -92,25 +92,7 @@
     <div class="hero__inner">
       <h1 class="hero__h1">
         <span class="hero__line">Your books.</span>
-        <span class="hero__line shiny" role="img" aria-label="Revitalised.">
-          <svg class="shiny__svg" viewBox="0 0 800 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-            <defs>
-              <clipPath id="revitClip" clipPathUnits="userSpaceOnUse">
-                <text x="400" y="130" text-anchor="middle"
-                      font-family="Inter, system-ui, sans-serif"
-                      font-weight="600" font-size="148"
-                      letter-spacing="-7">Revitalised.</text>
-              </clipPath>
-            </defs>
-            <foreignObject x="0" y="0" width="800" height="170" clip-path="url(#revitClip)">
-              <video xmlns="http://www.w3.org/1999/xhtml"
-                     class="shiny__video"
-                     autoplay loop muted playsinline preload="auto"
-                     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
-            </foreignObject>
-          </svg>
-          <span class="shiny__sr">Revitalised.</span>
-        </span>
+        <span class="hero__line shiny">Revitalised.</span>
       </h1>
       <p class="hero__sub">
         Otto is a live, AI-assisted bookkeeping platform for independent
@@ -445,38 +427,24 @@
     onScroll();
   })();
 
-  // Keep the foreground "Revitalised" video in lock-step with the
-  // page background video so the colours and motion match. Both videos
-  // also crossfade near the loop seam so the cut isn't visible.
-  (function syncAndLoopFade(){
+  // Loop-seam fade on the background video — dim to 0 over the last 0.4s
+  // and back to 1 over the first 0.4s of each loop so the hard cut in
+  // the source isn't visible.
+  (function loopFade(){
     const bgV = document.querySelector('.bg-video video');
-    const fgV = document.querySelector('.shiny__video');
     if (!bgV) return;
-    const sync = () => { try { fgV.currentTime = bgV.currentTime; } catch (e) {} };
-    if (fgV) {
-      bgV.addEventListener('play',  sync);
-      bgV.addEventListener('seeked', sync);
-      if (!bgV.paused) sync();
-      setInterval(sync, 4000);
-    }
-    // Loop-seam fade: dim each video over the first and last 0.4s so the
-    // jump at the loop boundary isn't visible. Source's natural cut is
-    // masked by the fade.
     const FADE = 0.4;
-    function dimNearSeam(v){
-      const d = v.duration;
-      if (!isFinite(d) || d <= 1) { v.style.opacity = '1'; return; }
-      const t = v.currentTime;
+    function dim(){
+      const d = bgV.duration;
+      if (!isFinite(d) || d <= 1) { bgV.style.opacity = '1'; return; }
+      const t = bgV.currentTime;
       let o = 1;
-      if (t < FADE)            o = Math.max(0, t / FADE);
-      else if (d - t < FADE)   o = Math.max(0, (d - t) / FADE);
-      v.style.opacity = o.toFixed(3);
+      if (t < FADE)          o = Math.max(0, t / FADE);
+      else if (d - t < FADE) o = Math.max(0, (d - t) / FADE);
+      bgV.style.opacity = o.toFixed(3);
     }
-    [bgV, fgV].forEach(v => {
-      if (!v) return;
-      v.style.transition = 'none';
-      v.addEventListener('timeupdate', () => dimNearSeam(v));
-    });
+    bgV.style.transition = 'none';
+    bgV.addEventListener('timeupdate', dim);
   })();
 </script>
 </body>
