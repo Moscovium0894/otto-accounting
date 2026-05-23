@@ -2308,3 +2308,36 @@ html.is-mobile .snap-slide.slide--last .cta__inner { width: 100%; max-width: 480
 /* Belt-and-braces: any element that tries to grow taller than the snap
    box gets capped. */
 html.is-mobile .snap-slide * { max-height: 100%; }
+
+/* =========================================================================
+   MOBILE — anchor the title at the top of every card so visual y is
+   identical across the deck. Body content flows below; if the card has
+   less content, the empty space sits at the bottom instead of recentring
+   the title. This is what makes the deck feel like 'one container,
+   different content' instead of varying card sizes.
+   ========================================================================= */
+html.is-mobile #deck { height: 100vh; height: 100svh; height: 100dvh; }
+html.is-mobile .snap-slide,
+html.is-mobile .snap-slide.slide--last {
+  height: 100vh; height: 100svh; height: 100dvh;
+  min-height: 100svh; min-height: 100dvh;
+  max-height: 100dvh;
+}
+html.is-mobile .snap-slide > .hero,
+html.is-mobile .snap-slide > .section,
+html.is-mobile .snap-slide > .cta {
+  height: 100%;
+  padding: 80px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;  /* anchor to top, not center */
+  align-items: stretch;
+}
+/* The CTA was centered (text-align middle); keep that look but keep the
+   anchored-top behaviour so the heading sits where every other slide's
+   heading sits. */
+html.is-mobile .snap-slide.slide--last .cta { align-items: center; text-align: center; }
+
+/* Body container that lets short cards leave empty space at the bottom
+   rather than pulling the title back up */
+html.is-mobile .section__inner { width: 100%; flex: 0 0 auto; }
