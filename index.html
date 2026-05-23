@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Otto — Live bookkeeping for restaurants</title>
+<!-- Set is-mobile before anything renders so the right layout is used from frame 1. -->
+<script>(function(){try{if(matchMedia('(max-width:740px)').matches||(matchMedia('(hover:none)').matches&&matchMedia('(pointer:coarse)').matches)){document.documentElement.classList.add('is-mobile');}}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -21,6 +23,8 @@
 
 <!-- Ambient layers -->
 <div class="grain" aria-hidden="true"></div>
+<!-- Sticky bottom Book-a-Call (mobile only). JS toggles .is-on after hero scrolls past. -->
+<a href="#book" class="sticky-cta" id="stickyCta" aria-hidden="true">Book a Call →</a>
 <div class="particles" id="particles" aria-hidden="true"></div>
 
 <!-- Top progress bar -->
@@ -599,23 +603,26 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 (function trackSlides() {
   const slides = [...document.querySelectorAll('[data-snap]')];
   if (!slides.length) return;
+  const mobile = document.documentElement.classList.contains('is-mobile');
 
-  const dotsEl = document.getElementById('dots');
-  const dotsLeftEl = document.getElementById('dotsLeft');
-  slides.forEach((s, i) => {
-    const make = (clickable) => {
-      const b = document.createElement('button');
-      b.className = 'dots__btn';
-      b.style.setProperty('--i', i);
-      b.setAttribute('aria-label', `Go to ${s.getAttribute('data-name')}`);
-      b.innerHTML = `<span class="dots__lbl">${s.getAttribute('data-name')}</span>`;
-      if (clickable) b.addEventListener('click', () => window.__ottoScrollTo && window.__ottoScrollTo(s));
-      else { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
-      return b;
-    };
-    dotsEl.appendChild(make(true));
-    if (dotsLeftEl) dotsLeftEl.appendChild(make(false));
-  });
+  if (!mobile) {
+    const dotsEl = document.getElementById('dots');
+    const dotsLeftEl = document.getElementById('dotsLeft');
+    slides.forEach((s, i) => {
+      const make = (clickable) => {
+        const b = document.createElement('button');
+        b.className = 'dots__btn';
+        b.style.setProperty('--i', i);
+        b.setAttribute('aria-label', `Go to ${s.getAttribute('data-name')}`);
+        b.innerHTML = `<span class="dots__lbl">${s.getAttribute('data-name')}</span>`;
+        if (clickable) b.addEventListener('click', () => window.__ottoScrollTo && window.__ottoScrollTo(s));
+        else { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
+        return b;
+      };
+      dotsEl.appendChild(make(true));
+      if (dotsLeftEl) dotsLeftEl.appendChild(make(false));
+    });
+  }
 
   function setActive(idx) {
     slides.forEach((s, i) => {
@@ -657,6 +664,13 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
    ========================================================================= */
 (function cardStepScroller() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mobile = document.documentElement.classList.contains('is-mobile');
+  if (mobile) {
+    // Mobile uses a totally different layout (natural document flow with
+    // native scrolling) — no custom deck logic at all.
+    window.__ottoScrollTo = (el) => el && el.scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
   const slides = window.__ottoSlides || [...document.querySelectorAll('[data-snap]')];
   if (!slides.length) return;
 
@@ -881,6 +895,8 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 (function spawnParticles() {
   const host = document.getElementById('particles');
   if (!host) return;
+  // Mobile: skip particles entirely — they were eating frames.
+  if (document.documentElement.classList.contains('is-mobile')) return;
   const N = 22;
   for (let i = 0; i < N; i++) {
     const s = document.createElement('span');
@@ -975,6 +991,23 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 })();
 
 /* =========================================================================
+   Mobile-only — sticky Book-a-Call appears after scrolling past the hero.
+   ========================================================================= */
+(function stickyCta() {
+  if (!document.documentElement.classList.contains('is-mobile')) return;
+  const cta = document.getElementById('stickyCta');
+  const hero = document.getElementById('hero');
+  if (!cta || !hero) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      // Hide while hero is in view; show once we've scrolled past it.
+      cta.classList.toggle('is-on', !e.isIntersecting);
+    });
+  }, { threshold: 0, rootMargin: '-50% 0px 0px 0px' });
+  io.observe(hero);
+})();
+
+/* =========================================================================
    Mobile nav — hamburger toggles a full-screen sheet. Sheet closes on
    link click. The sheet links each get a per-item delay via --ni.
    ========================================================================= */
@@ -1011,6 +1044,7 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
    which we want to avoid off the hero.
    ========================================================================= */
 (function magnetButtons() {
+  if (document.documentElement.classList.contains('is-mobile')) return;
   document.querySelectorAll('.hero .btn').forEach((btn) => {
     const strength = 0.22;
     btn.addEventListener('pointermove', (e) => {
@@ -1091,6 +1125,7 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
    Tilt effect on cards (.dash, .person, .price)
    ========================================================================= */
 (function tiltCards() {
+  if (document.documentElement.classList.contains('is-mobile')) return;
   document.querySelectorAll('.person, .dash, .price').forEach((card) => {
     const max = 6;
     card.addEventListener('pointermove', (e) => {
