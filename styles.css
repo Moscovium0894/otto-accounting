@@ -1423,3 +1423,70 @@ html.page-mode .page { padding-bottom: env(safe-area-inset-bottom); }
 /* Belt-and-braces: hide the watermark even if any stale markup ever
    sneaks back in. */
 .c3-watermark-container { display: none !important; }
+
+/* =========================================================================
+   Adaptive sizing + centred cards.
+   Every snap card / section now centers its content both axes and uses
+   clamp()-based fonts that scale with viewport height as well as width,
+   so each slide fits within the screen comfortably on any device.
+   ========================================================================= */
+.snap-slide {
+  align-items: center !important;
+  justify-content: center !important;
+}
+.snap-slide > .hero,
+.snap-slide > .section,
+.snap-slide > .cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  max-height: 100dvh;
+}
+
+/* Adaptive type — scales with min(viewport-width, viewport-height) */
+.hero__h1     { font-size: clamp(2.2rem, min(8vw, 9dvh), 4.4rem); line-height: 0.96; }
+.section__h2,
+.triage__copy h2 { font-size: clamp(1.7rem, min(5.2vw, 6dvh), 3rem); line-height: 1.04; }
+.hero__sub    { font-size: clamp(0.95rem, min(2.4vw, 2.4dvh), 1.05rem); }
+.lead, .hero__note { font-size: clamp(0.85rem, min(1.8vw, 1.9dvh), 1rem); }
+
+/* The triage section: now centered (no left-anchored copy), fits one
+   viewport with the card stacked under the headline on smaller screens. */
+.triage {
+  grid-template-columns: 1fr;
+  text-align: center;
+  gap: clamp(20px, 4vh, 36px);
+  max-width: 56rem;
+}
+.triage__copy { align-items: center; display: flex; flex-direction: column; }
+.triage__copy .lead { margin-left: auto; margin-right: auto; }
+.chips { justify-content: center; }
+.triage__card { width: 100%; max-width: 28rem; margin: 0 auto; }
+@media (min-width: 1024px) {
+  /* Desktop still uses a 2-col layout, but content is centered inside
+     each column instead of left-anchored. */
+  .triage { grid-template-columns: 1fr 1fr; text-align: left; }
+  .triage__copy { align-items: flex-start; }
+  .triage__copy .lead { margin-left: 0; margin-right: 0; }
+  .chips { justify-content: flex-start; }
+  .triage__card { max-width: 100%; }
+}
+
+/* Shorter screens: dial paddings down so nothing clips */
+@media (max-height: 760px) {
+  .section, .hero, .c3-pricing-section, .section--final { padding-top: 64px; padding-bottom: 24px; }
+  .dashmock__body { height: clamp(280px, 56dvh, 460px); }
+  .quotes figure { padding: 16px; }
+  .quotes blockquote { font-size: 12.5px; }
+  .c3-card { min-height: 460px; padding: 36px 22px; }
+  .c3-tier-large { font-size: 2.2rem; }
+}
+@media (max-height: 620px) {
+  .hero__sub, .lead { display: none; }
+  .triage__head, .chips { display: none; }
+  .dashmock__body { height: clamp(220px, 50dvh, 360px); }
+}
