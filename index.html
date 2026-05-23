@@ -1011,12 +1011,13 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
   if (!document.documentElement.classList.contains('is-mobile')) return;
   const sv = document.querySelector('.hero__spline');
   const hero = document.getElementById('hero');
+  const deck = document.getElementById('deck');
   if (!sv || !hero) return;
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       sv.style.display = e.isIntersecting ? '' : 'none';
     });
-  }, { threshold: 0 });
+  }, { root: deck || null, threshold: 0 });
   io.observe(hero);
 })();
 
@@ -1024,13 +1025,14 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
   if (!document.documentElement.classList.contains('is-mobile')) return;
   const cta = document.getElementById('stickyCta');
   const hero = document.getElementById('hero');
+  const deck = document.getElementById('deck');
   if (!cta || !hero) return;
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       // Hide while hero is in view; show once we've scrolled past it.
       cta.classList.toggle('is-on', !e.isIntersecting);
     });
-  }, { threshold: 0, rootMargin: '-50% 0px 0px 0px' });
+  }, { root: deck || null, threshold: 0, rootMargin: '-50% 0px 0px 0px' });
   io.observe(hero);
 })();
 
