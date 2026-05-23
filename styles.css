@@ -211,7 +211,9 @@ button { font-family: inherit; cursor: pointer; }
    ========================================================================= */
 #deck {
   position: relative;
-  z-index: 10;
+  /* No z-index here on purpose — z-index would create a stacking
+     context that prevents mix-blend-mode on the "Revitalised" text
+     from reaching the page background video below the deck. */
   height: 100vh;
   height: 100svh;
   overflow-y: scroll;
@@ -1490,3 +1492,35 @@ html.page-mode .page { padding-bottom: env(safe-area-inset-bottom); }
   .triage__head, .chips { display: none; }
   .dashmock__body { height: clamp(220px, 50dvh, 360px); }
 }
+
+/* "Revitalised" — make the lighten-blend effect more visible.
+   - Slightly bolder so the colour is more present.
+   - Add a soft drop-shadow that survives the blend (drop-shadow is
+     applied after blending so it always shows).
+   - Local thinning of the veil right behind the hero text area so the
+     video's bright ribbons can win the lighten comparison and turn the
+     letters cyan/white as they pass. */
+.hero__h1 .shiny {
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+/* Thin the veil only in the hero band so the headline picks up the
+   actual video brightness while body sections elsewhere stay readable. */
+.hero {
+  position: relative;
+  isolation: auto;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  /* Inverse mask: PUSH BACK the global veil over the hero. A subtle
+     radial highlight at the centre of the hero brightens the visible
+     video behind the headline. */
+  background: radial-gradient(ellipse 60% 50% at 50% 55%,
+    rgba(255,255,255,0.12) 0%,
+    rgba(255,255,255,0)   70%);
+  mix-blend-mode: screen;
+  z-index: 0;
+}
+.hero__inner { position: relative; z-index: 1; }
