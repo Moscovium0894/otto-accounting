@@ -2779,3 +2779,172 @@ html.is-mobile .snap-slide > .section,
 html.is-mobile .snap-slide > .cta {
   padding-top: 76px;
 }
+
+/* =========================================================================
+   MOBILE — clean redesign of nav / hamburger / menu, and neutral grey
+   for every primary button (the green "Book a Call" everywhere).
+   Also fixes left/right edge cut-off by removing the fixed-position pill
+   that was overlapping content.
+   ========================================================================= */
+
+/* ---- Navbar — minimal, full-width, transparent.
+        No pill, no border, no card. Just the logo on the left, hamburger
+        on the right, floating over the page. A 14px blur appears once
+        you've scrolled past the hero so the content behind it stays
+        readable. ---- */
+html.is-mobile .nav,
+html.is-mobile .nav.is-scrolled {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  padding: 14px 20px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  z-index: 90 !important;
+}
+html.is-mobile .nav.is-scrolled {
+  background: linear-gradient(180deg, hsl(0 0% 6% / 0.55) 0%, hsl(0 0% 6% / 0) 100%) !important;
+}
+html.is-mobile .nav::after { display: none !important; }
+html.is-mobile .nav__wordmark { font-size: 14px; letter-spacing: 0.18em; }
+html.is-mobile .nav__mark { width: 24px; height: 24px; }
+
+/* ---- Hamburger — three thin lines, no box, no border ---- */
+html.is-mobile .navburger {
+  position: fixed !important;
+  top: 14px !important;
+  right: 20px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  gap: 6px !important;
+}
+html.is-mobile .navburger span {
+  width: 22px !important;
+  height: 1.5px !important;
+  background: hsl(var(--foreground)) !important;
+  border-radius: 1px;
+}
+html.is-mobile .navburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7.5px) rotate(45deg) !important; }
+html.is-mobile .navburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg) !important; }
+
+/* ---- Menu — flat full-screen overlay, big-typography centered links.
+        Plain dark fill (no glass), so the menu reads like the
+        contents page of an app. Each link is a big tap target. ---- */
+html.is-mobile .navsheet {
+  position: fixed !important;
+  inset: 0 !important;
+  background: hsl(0 0% 6% / 0.98) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 100px 32px 48px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+}
+html.is-mobile .navsheet a {
+  font-size: 1.6rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.015em !important;
+  text-transform: none !important;
+  color: hsl(var(--foreground)) !important;
+  padding: 18px 0 !important;
+  border-bottom: 1px solid hsl(0 0% 100% / 0.06) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+html.is-mobile .navsheet a::after {
+  content: '→';
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: hsl(var(--muted-foreground));
+}
+html.is-mobile .navsheet .btn--primary {
+  margin-top: auto !important;
+  font-size: 14px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  padding: 18px 22px !important;
+  border-radius: 14px !important;
+  background: hsl(0 0% 100% / 0.92) !important;
+  color: hsl(0 0% 6%) !important;
+  border: 0 !important;
+  box-shadow: 0 12px 28px -10px hsl(0 0% 0% / 0.5) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center;
+}
+html.is-mobile .navsheet .btn--primary::after { display: none !important; content: '' !important; }
+
+/* ---- Every primary CTA on the page (hero, CTA slide, navsheet) is
+        the same neutral white-glass button — no green anywhere. ---- */
+html.is-mobile .btn--primary {
+  background: linear-gradient(180deg,
+    hsl(0 0% 100% / 0.92) 0%,
+    hsl(0 0% 100% / 0.82) 100%) !important;
+  color: hsl(0 0% 6%) !important;
+  border: 0 !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.6),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.1),
+    0 12px 30px -10px hsl(0 0% 0% / 0.45),
+    0 2px 4px hsl(0 0% 0% / 0.2) !important;
+  text-shadow: none !important;
+  animation: none !important;
+}
+html.is-mobile .btn--primary::after,
+html.is-mobile .btn--primary::before { display: none !important; content: '' !important; }
+
+/* Hero CTAs sit at the bottom, neutral glass, no green anywhere */
+html.is-mobile .hero__ctas .btn--primary {
+  background: linear-gradient(180deg,
+    hsl(0 0% 100% / 0.96) 0%,
+    hsl(0 0% 100% / 0.86) 100%) !important;
+  color: hsl(0 0% 6%) !important;
+}
+html.is-mobile .hero__ctas .btn--white {
+  background: linear-gradient(180deg,
+    hsl(0 0% 100% / 0.10) 0%,
+    hsl(0 0% 100% / 0.04) 100%) !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(0 0% 100% / 0.18) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.22),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.18),
+    0 12px 30px -10px hsl(0 0% 0% / 0.4) !important;
+}
+
+/* ---- Edge fix: cap section padding-side so content isn't clipped
+        on narrow phones; let the snap-slide be edge-to-edge. ---- */
+html.is-mobile .snap-slide,
+html.is-mobile .snap-slide > .hero,
+html.is-mobile .snap-slide > .section,
+html.is-mobile .snap-slide > .cta {
+  padding-left: 18px !important;
+  padding-right: 18px !important;
+  padding-top: 72px !important;
+}
+html.is-mobile .hero__ctas {
+  left: 18px !important; right: 18px !important;
+}
