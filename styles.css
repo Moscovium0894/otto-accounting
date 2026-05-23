@@ -2341,3 +2341,43 @@ html.is-mobile .snap-slide.slide--last .cta { align-items: center; text-align: c
 /* Body container that lets short cards leave empty space at the bottom
    rather than pulling the title back up */
 html.is-mobile .section__inner { width: 100%; flex: 0 0 auto; }
+
+/* =========================================================================
+   MOBILE — same inner content box on every card.
+   The card height is the viewport. The inner content frame (.hero__content
+   / .section__inner / .cta__inner) is locked to the same fixed size on
+   every card — `calc(100dvh - 116px)` — so the content stage is identical
+   from slide to slide and only what's inside it changes.
+   ========================================================================= */
+:root { --mobile-frame-offset: 116px; }
+
+html.is-mobile .snap-slide > .hero,
+html.is-mobile .snap-slide > .section,
+html.is-mobile .snap-slide > .cta {
+  height: 100%;
+  padding: 80px 22px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+html.is-mobile .hero__content,
+html.is-mobile .section__inner,
+html.is-mobile .cta__inner {
+  width: 100%;
+  height: calc(100dvh - var(--mobile-frame-offset));
+  max-height: calc(100dvh - var(--mobile-frame-offset));
+  min-height: calc(100dvh - var(--mobile-frame-offset));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+/* CTA stays centered horizontally + uses the same height frame */
+html.is-mobile .snap-slide.slide--last .cta__inner {
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
