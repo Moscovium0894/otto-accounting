@@ -1510,3 +1510,241 @@ html.page-mode body { overflow-x: hidden; }
 /* Allow finger panning within the mobile nav sheet even though the rest of
    the document uses touch-action: none. */
 .navsheet { touch-action: pan-y; overflow-y: auto; }
+
+/* =========================================================================
+   MOBILE REBUILD (html.is-mobile) — Apple/iPhone-first.
+   Each section is laid out differently from desktop; native browser scroll
+   handles everything; heavy effects are cut.
+   ========================================================================= */
+html.is-mobile, html.is-mobile body {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  touch-action: auto;
+  overscroll-behavior: auto;
+  scroll-behavior: smooth;
+}
+html.is-mobile body { overflow-x: hidden; overflow-y: visible; }
+
+/* Kill the desk-only effects that were tanking the framerate */
+html.is-mobile .particles,
+html.is-mobile .orb,
+html.is-mobile .progress,
+html.is-mobile .dots,
+html.is-mobile .dots--left,
+html.is-mobile .warp,
+html.is-mobile .scroll-hint,
+html.is-mobile .marquee,
+html.is-mobile .cta__more {
+  display: none !important;
+}
+html.is-mobile .grain { opacity: 0.05; }
+
+/* Spline stays — visible only, not a touch sink */
+html.is-mobile .hero[data-bg="spline"] .hero__spline { pointer-events: none; }
+
+/* The deck is no longer a deck — every slide is a normal vertical block */
+html.is-mobile .snap-slide,
+html.is-mobile .hero,
+html.is-mobile .section {
+  position: relative;
+  height: auto !important;
+  min-height: 0;
+  overflow: visible;
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
+}
+
+/* HERO — tall enough to feel like a real intro, content bottom-anchored,
+   big stacked headline, two CTAs full-width, trust line below */
+html.is-mobile .hero {
+  min-height: 96svh;
+  padding: 0;
+  display: flex; align-items: flex-end;
+}
+html.is-mobile .hero__content {
+  pointer-events: auto;
+  max-width: 100%;
+  padding: 6rem 22px 36px;
+}
+html.is-mobile .hero__eyebrow { font-size: 10px; padding: 5px 10px; margin-bottom: 18px; }
+html.is-mobile .hero__h1 {
+  font-size: clamp(2.6rem, 13vw, 4rem);
+  line-height: 0.98; letter-spacing: -0.045em;
+  margin-bottom: 14px;
+}
+html.is-mobile .hero__sub { font-size: 1.05rem; margin-bottom: 14px; }
+html.is-mobile .hero__desc {
+  font-size: 0.92rem; line-height: 1.55; max-width: 32ch; margin-bottom: 18px;
+}
+html.is-mobile .hero__ctas { flex-direction: column; align-items: stretch; gap: 10px; }
+html.is-mobile .hero__ctas .btn { width: 100%; padding: 16px; font-size: 14px; }
+html.is-mobile .hero__trust { font-size: 9.5px; gap: 8px; margin-top: 16px; }
+
+/* SECTIONS — natural flow, tighter rhythm */
+html.is-mobile .section {
+  padding: 72px 22px 60px;
+  height: auto;
+}
+html.is-mobile .section__inner { max-width: 100%; }
+html.is-mobile .section__head { margin-bottom: 32px; }
+html.is-mobile .section__eyebrow { font-size: 10px; padding-left: 28px; margin-bottom: 14px; }
+html.is-mobile .section__eyebrow::before { width: 18px; }
+html.is-mobile .section__h2 {
+  font-size: clamp(1.7rem, 7.5vw, 2.4rem);
+  line-height: 1.05; letter-spacing: -0.025em;
+}
+html.is-mobile .section__lead { font-size: 0.95rem; line-height: 1.55; margin-top: 14px; }
+
+/* HOW — vertical timeline, big numbered circles, line down the left */
+html.is-mobile .steps {
+  grid-template-columns: 1fr;
+  gap: 24px;
+  position: relative;
+  padding-left: 14px;
+}
+html.is-mobile .steps::before {
+  content: ''; position: absolute; left: 17px; top: 18px; bottom: 18px;
+  width: 1px; background: linear-gradient(180deg,
+    hsl(var(--primary) / 0.6) 0%,
+    hsl(var(--primary) / 0.6) 50%,
+    hsl(var(--primary) / 0.2) 100%);
+}
+html.is-mobile .step {
+  border-top: 0;
+  padding: 0 0 0 36px;
+  position: relative;
+}
+html.is-mobile .step::before { display: none; }
+html.is-mobile .step__n {
+  margin-bottom: 10px;
+  font-size: 9.5px; letter-spacing: 0.18em;
+}
+html.is-mobile .step__n .glyph {
+  position: absolute; left: -14px; top: -6px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: hsl(var(--background));
+  border: 2px solid hsl(var(--primary));
+  color: hsl(var(--primary)); font-weight: 700;
+  font-size: 12px;
+  box-shadow: 0 0 0 4px hsl(var(--hero-bg));
+}
+html.is-mobile .step__title { font-size: 1.05rem; margin-bottom: 10px; }
+html.is-mobile .step__body { font-size: 13px; }
+
+/* NUMBERS — phone-sized dashboard, stacked */
+html.is-mobile .dash-wrap { grid-template-columns: 1fr; gap: 22px; }
+html.is-mobile .dash-side h3 { font-size: 1.05rem; }
+html.is-mobile .dash-side p { font-size: 13px; max-width: none; }
+html.is-mobile .dash-side ul { gap: 10px; }
+html.is-mobile .dash-side li { font-size: 13px; }
+html.is-mobile .dash {
+  padding: 16px;
+  border-radius: 14px;
+  transform: none !important;
+  box-shadow: 0 12px 30px -12px rgba(0,0,0,0.5);
+}
+html.is-mobile .dash__title { font-size: 0.98rem; }
+html.is-mobile .dash__sub { font-size: 9.5px; }
+html.is-mobile .dash__table td { padding: 8px 0; font-size: 13px; }
+html.is-mobile .dash__total td { font-size: 14px; padding-top: 12px; }
+html.is-mobile .dash__kpis { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+html.is-mobile .dash__kpi { padding: 10px; }
+html.is-mobile .dash__kpi-val { font-size: 1.1rem; }
+html.is-mobile .dash__kpi-delta { font-size: 9px; }
+html.is-mobile .dash__live-h { font-size: 9px; }
+html.is-mobile .tick-row { grid-template-columns: 44px 1fr auto; gap: 8px; font-size: 11.5px; padding: 6px 0; }
+html.is-mobile .tick-row .time { font-size: 9.5px; }
+html.is-mobile .sparkline { display: none; }
+
+/* COMPARE — stack vertically, Otto card always second + highlighted */
+html.is-mobile .compare {
+  grid-template-columns: 1fr;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  gap: 14px;
+  display: flex; flex-direction: column;
+}
+html.is-mobile .compare::before { display: none; }
+html.is-mobile .compare__col {
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  padding: 22px 22px 18px;
+}
+html.is-mobile .compare--ours { background: hsl(var(--primary) / 0.06); border-color: hsl(var(--primary) / 0.35); }
+html.is-mobile .compare__col + .compare__col { border-left: 1px solid hsl(var(--border)); border-top: 1px solid hsl(var(--border)); }
+html.is-mobile .compare--ours + .compare__col, html.is-mobile .compare__col + .compare--ours { border-color: hsl(var(--primary) / 0.35); }
+html.is-mobile .compare__lbl { font-size: 9.5px; margin-bottom: 8px; }
+html.is-mobile .compare__name { font-size: 1.05rem; margin-bottom: 14px; }
+html.is-mobile .compare__row { grid-template-columns: 92px 1fr; padding: 9px 0; font-size: 12.5px; }
+html.is-mobile .compare__row .k { font-size: 9.5px; }
+
+/* PEOPLE — horizontal swipe carousel */
+html.is-mobile .people {
+  display: flex; grid-template-columns: none;
+  gap: 12px;
+  overflow-x: auto; overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 22px;
+  padding: 4px 22px 14px;
+  margin: 0 -22px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+html.is-mobile .people::-webkit-scrollbar { display: none; }
+html.is-mobile .person {
+  flex: 0 0 82%;
+  scroll-snap-align: start;
+  min-width: 0;
+  transform: none !important;
+}
+html.is-mobile .person__quote { font-size: 12.5px; }
+
+/* PRICING */
+html.is-mobile .price {
+  padding: 24px;
+  border-radius: 14px;
+  transform: none !important;
+}
+html.is-mobile .price__head { flex-direction: column; align-items: stretch; gap: 14px; padding-bottom: 22px; margin-bottom: 22px; }
+html.is-mobile .price__num { font-size: 2.8rem; }
+html.is-mobile .price__list { grid-template-columns: 1fr; gap: 10px; }
+html.is-mobile .price__list li { font-size: 13px; }
+html.is-mobile .price__foot { font-size: 11.5px; padding-top: 18px; margin-top: 22px; }
+
+/* FAQ — single column */
+html.is-mobile .faq { grid-template-columns: 1fr; gap: 0; }
+html.is-mobile .faq__q { font-size: 0.95rem; padding: 15px 0; }
+html.is-mobile .faq__a { font-size: 12.5px; padding-bottom: 16px; }
+
+/* CTA + footer (no longer share a slide; just natural flow) */
+html.is-mobile .cta { padding: 80px 22px 60px; height: auto; }
+html.is-mobile .cta__inner h2 { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+html.is-mobile .cta__inner p { font-size: 0.95rem; }
+html.is-mobile .cta__ctas .btn { width: 100%; }
+html.is-mobile .footer { padding: 48px 22px 22px; margin-top: 0; }
+html.is-mobile .footer__grid { grid-template-columns: 1fr; gap: 26px; }
+html.is-mobile .footer__bottom { margin-top: 28px; padding-top: 18px; font-size: 9.5px; }
+
+/* Sticky-bottom Book a Call — appears after scrolling past hero */
+html.is-mobile .sticky-cta {
+  position: fixed; left: 16px; right: 16px; bottom: 14px;
+  z-index: 85;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 15px 22px;
+  background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+  border-radius: 10px;
+  font-weight: 700; font-size: 14px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  box-shadow: 0 10px 26px -6px hsl(var(--primary) / 0.55), 0 2px 6px rgba(0,0,0,0.3);
+  opacity: 0;
+  transform: translateY(120%);
+  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+html.is-mobile .sticky-cta.is-on { opacity: 1; transform: translateY(0); pointer-events: auto; }
+html:not(.is-mobile) .sticky-cta { display: none; }
