@@ -15,9 +15,6 @@
 </head>
 <body>
 
-<div class="grain" aria-hidden="true"></div>
-<div class="particles" id="particles" aria-hidden="true"></div>
-
 <button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
@@ -34,16 +31,14 @@
 
 <header class="nav is-scrolled" id="topnav">
   <a href="index.html" class="nav__brand" aria-label="Otto — Home">
-    <svg class="nav__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <rect x="0.5" y="0.5" width="63" height="63" rx="6" fill="hsl(0 0% 12%)" stroke="hsl(0 0% 22%)"/>
-      <g stroke="hsl(var(--primary))" stroke-width="3" fill="none" stroke-linecap="round">
-        <circle cx="22" cy="32" r="10"/>
-        <circle cx="42" cy="32" r="10"/>
-      </g>
+    <svg class="logo-mark" viewBox="0 0 256 256" aria-hidden="true">
+      <path fill="currentColor" d="M 0 128 C 70.692 128 128 185.308 128 256 L 64 256 C 64 220.654 35.346 192 0 192 Z M 256 192 C 220.654 192 192 220.654 192 256 L 128 256 C 128 185.308 185.308 128 256 128 Z M 128 0 C 128 70.692 70.692 128 0 128 L 0 64 C 35.346 64 64 35.346 64 0 Z M 192 0 C 192 35.346 220.654 64 256 64 L 256 128 C 185.308 128 128 70.692 128 0 Z"/>
     </svg>
-    <span class="nav__wordmark">Otto</span>
   </a>
-  <a class="brand-pill brand-pill--nav" href="book-a-call.html"><span>Begin</span></a>
+  <a class="begin-pill" href="book-a-call.html" aria-label="Begin with Otto">
+    <span class="begin-pill__dot" aria-hidden="true"></span>
+    <span class="begin-pill__label">Begin</span>
+  </a>
   <nav class="nav__links" aria-label="Primary">
     <a href="how-it-works.html">How it works</a>
     <a href="bookkeepers.html">Bookkeepers</a>
@@ -51,12 +46,12 @@
     <a href="pricing.html">Pricing</a>
     <a href="about.html">About</a>
   </nav>
-  <div class="nav__cta">
-    <a href="book-a-call.html" class="apple-btn">
+  
+    <a href="book-a-call.html" class="apple-btn nav__cta">
       <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
       <span>Book a call</span>
     </a>
-  </div>
+  
 </header>
 
 <main class="page">
@@ -141,13 +136,7 @@
   <div class="footer__grid">
     <div class="footer__brand">
       <a href="index.html" class="nav__brand">
-        <svg class="nav__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-          <rect x="0.5" y="0.5" width="63" height="63" rx="6" fill="hsl(0 0% 12%)" stroke="hsl(0 0% 22%)"/>
-          <g stroke="hsl(var(--primary))" stroke-width="3" fill="none" stroke-linecap="round">
-            <circle cx="22" cy="32" r="10"/><circle cx="42" cy="32" r="10"/>
-          </g>
-        </svg>
-        <span class="nav__wordmark">Otto</span>
+        <svg class="logo-mark" viewBox="0 0 256 256" aria-hidden="true" style="width:24px;height:24px;color:#fff;"><path fill="currentColor" d="M 0 128 C 70.692 128 128 185.308 128 256 L 64 256 C 64 220.654 35.346 192 0 192 Z M 256 192 C 220.654 192 192 220.654 192 256 L 128 256 C 128 185.308 185.308 128 256 128 Z M 128 0 C 128 70.692 70.692 128 0 128 L 0 64 C 35.346 64 64 35.346 64 0 Z M 192 0 C 192 35.346 220.654 64 256 64 L 256 128 C 185.308 128 128 70.692 128 0 Z"/></svg><span style="font-weight:600;color:#fff;">Otto</span>
       </a>
       <p class="footer__tag">Live, human-checked bookkeeping for independent restaurants and pubs.</p>
     </div>
@@ -179,21 +168,6 @@
 </footer>
 
 <script>
-(function(){
-  const host = document.getElementById('particles');
-  if (!host) return;
-  for (let i = 0; i < 18; i++) {
-    const s = document.createElement('span');
-    s.style.left = (Math.random() * 100) + 'vw';
-    const dur = 14 + Math.random() * 22;
-    s.style.width = s.style.height = (2 + Math.random() * 3) + 'px';
-    s.style.setProperty('--dur', dur + 's');
-    s.style.setProperty('--delay', (-Math.random() * dur) + 's');
-    s.style.setProperty('--drift', ((Math.random() * 160 - 80)) + 'px');
-    s.style.opacity = (0.3 + Math.random() * 0.5).toString();
-    host.appendChild(s);
-  }
-})();
 (function(){
   const burger = document.getElementById('navburger');
   const sheet = document.getElementById('navsheet');

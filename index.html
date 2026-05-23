@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#0c0c0c" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <title>Otto — AI-native bookkeeping for restaurants</title>
 <meta name="description" content="Otto is a live, AI-assisted bookkeeping platform for independent restaurants and pubs. Real numbers, every morning, signed by a real bookkeeper." />
 
@@ -13,18 +14,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <!-- Global background video -->
 <div class="bg-video">
-  <!-- Two stacked video elements for a seamless cross-fade loop.
-       JS swaps which one is "primary" ~0.6s before the active video ends. -->
-  <video class="bg-video__a is-on" autoplay muted playsinline preload="auto"
-    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
-  <video class="bg-video__b" muted playsinline preload="auto"
+  <video autoplay loop muted playsinline preload="auto"
     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
   <div class="bg-video__veil"></div>
 </div>
@@ -48,22 +44,22 @@
      ========================================================= -->
 <header class="nav" id="topnav">
   <a class="nav__brand" href="#hero" aria-label="Otto — Home">
-    <svg class="logo-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <g stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round">
-        <circle cx="22" cy="32" r="14"/>
-        <circle cx="42" cy="32" r="14"/>
-      </g>
+    <svg class="logo-mark" viewBox="0 0 256 256" aria-hidden="true">
+      <path fill="currentColor" d="M 0 128 C 70.692 128 128 185.308 128 256 L 64 256 C 64 220.654 35.346 192 0 192 Z M 256 192 C 220.654 192 192 220.654 192 256 L 128 256 C 128 185.308 185.308 128 256 128 Z M 128 0 C 128 70.692 70.692 128 0 128 L 0 64 C 35.346 64 64 35.346 64 0 Z M 192 0 C 192 35.346 220.654 64 256 64 L 256 128 C 185.308 128 128 70.692 128 0 Z"/>
     </svg>
   </a>
-  <a class="brand-pill brand-pill--nav" href="book-a-call.html"><span>Begin</span></a>
+  <a class="begin-pill" href="#book" aria-label="Begin with Otto">
+    <span class="begin-pill__dot" aria-hidden="true"></span>
+    <span class="begin-pill__label">Begin</span>
+  </a>
   <nav class="nav__links" aria-label="Primary">
-    <a href="how-it-works.html">How it works</a>
-    <a href="bookkeepers.html">Bookkeepers</a>
-    <a href="for-accountants.html">For accountants</a>
-    <a href="pricing.html">Pricing</a>
-    <a href="about.html">About</a>
+    <a href="#how">How it works</a>
+    <a href="#triage">Reconcile</a>
+    <a href="#cloud">Customers</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#pricing">Pricing</a>
   </nav>
-  <a href="book-a-call.html" class="apple-btn nav__cta">
+  <a href="#book" class="apple-btn nav__cta">
     <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
     <span>Book a call</span>
     <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
@@ -74,13 +70,14 @@
 </header>
 
 <div class="navsheet" id="navsheet" aria-hidden="true">
-  <a href="how-it-works.html">How it works</a>
+  <a href="#how">How it works</a>
+  <a href="#triage">Reconcile</a>
+  <a href="#cloud">Customers</a>
+  <a href="#testimonials">Reviews</a>
+  <a href="#pricing">Pricing</a>
   <a href="bookkeepers.html">Bookkeepers</a>
   <a href="for-accountants.html">For accountants</a>
-  <a href="integrations.html">Integrations</a>
-  <a href="pricing.html">Pricing</a>
-  <a href="about.html">About</a>
-  <a href="book-a-call.html" class="apple-btn navsheet__cta">
+  <a href="#book" class="apple-btn navsheet__cta">
     <span>Book a call</span>
   </a>
 </div>
@@ -215,7 +212,6 @@
           </div>
           <p>Yesterday was a strong Tuesday — wet sales up 9% on last week, food sales flat. Two large covers in the back room moved the average ticket up.</p>
           <p>Eight supplier invoices have already been coded against the day. Bank reconciliation finished at 04:12. Z-read variance of £2.40 was matched to a void.</p>
-          <p>The £20 cash short on Thursday is the only open question for the week — Marcus thinks it was the tip-out, we will know by tonight.</p>
           <p class="muted">— Otto, on behalf of Sarah Whitlow (bookkeeper)</p>
           <a class="attach"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m21 11-9.5 9.5a5.5 5.5 0 0 1-7.78-7.78L13.34 3.6a3.67 3.67 0 0 1 5.19 5.19l-9.62 9.62a1.83 1.83 0 0 1-2.6-2.6L15.4 7.7"/></svg> week-to-date.pdf</a>
         </div>
@@ -229,6 +225,7 @@
   <section class="section section--triage" id="triage">
     <div class="triage">
       <div class="triage__copy">
+        <p class="eyebrow"><span class="dot"></span>Reconcile<em>AI-native</em></p>
         <h2>Close the books<br/>without closing the venue.</h2>
         <p class="lead">
           Otto reads every till receipt, supplier invoice, and bank line.
@@ -306,14 +303,6 @@
 <!-- 6. PRICING -->
 <section class="snap-slide" data-snap data-name="Pricing">
   <section class="c3-pricing-section" id="pricing">
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-      <filter id="c3-noise-px">
-        <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" stitchTiles="stitch" />
-        <feComponentTransfer><feFuncA type="linear" slope="0.075" /></feComponentTransfer>
-        <feComposite in2="SourceGraphic" operator="in" result="noise" />
-        <feBlend in="SourceGraphic" in2="noise" mode="overlay" />
-      </filter>
-    </svg>
     <div class="c3-grid">
       <article class="c3-card">
         <p class="c3-tier-small">Single site</p>
@@ -415,7 +404,6 @@
     const nav = document.getElementById('topnav');
     const deck = document.getElementById('deck');
     const scroller = (deck && getComputedStyle(deck).overflowY === 'scroll') ? deck : window;
-    const target = scroller === window ? document.documentElement : deck;
     function onScroll(){
       const y = scroller === window ? window.scrollY : deck.scrollTop;
       nav.classList.toggle('is-scrolled', y > 60);
@@ -423,60 +411,6 @@
     scroller.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   })();
-
-  // Loop-seam fade on the background video — dim to 0 over the last 0.4s
-  // and back to 1 over the first 0.4s of each loop so the hard cut in
-  // the source isn't visible.
-  // Seamless cross-fade loop. Two stacked <video> elements play the same
-  // clip; the inactive one is queued at currentTime 0. Roughly 0.6s
-  // before the active video ends, we kick off the inactive one and
-  // swap their .is-on classes — CSS opacity transitions handle the
-  // crossfade. Neither video ever hits its own loop seam.
-  (function crossfadeLoop(){
-    const a = document.querySelector('.bg-video__a');
-    const b = document.querySelector('.bg-video__b');
-    if (!a || !b) return;
-    a.loop = false; b.loop = false;
-    let active = a, queued = b;
-    let switching = false;
-
-    function ready(v){ return v.readyState >= 2 && isFinite(v.duration) && v.duration > 0; }
-
-    // Make sure the queued video is paused at the start, primed.
-    queued.addEventListener('loadedmetadata', () => { try { queued.currentTime = 0; } catch (e) {} queued.pause(); }, { once: true });
-
-    function tick(){
-      if (!ready(active)) { requestAnimationFrame(tick); return; }
-      const r = active.duration - active.currentTime;
-      if (!switching && r < 0.6) {
-        switching = true;
-        if (ready(queued)) {
-          try { queued.currentTime = 0; } catch (e) {}
-          const p = queued.play();
-          if (p && p.catch) p.catch(()=>{});
-          // Fire the crossfade on the next frame so the play() call has started.
-          requestAnimationFrame(() => {
-            active.classList.remove('is-on');
-            queued.classList.add('is-on');
-          });
-          // After the fade completes, reset the now-inactive video.
-          setTimeout(() => {
-            try { active.pause(); active.currentTime = 0; } catch (e) {}
-            const tmp = active; active = queued; queued = tmp;
-            switching = false;
-          }, 700);
-        } else {
-          switching = false;
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-    // Kick the loop once the active video has metadata
-    if (ready(a)) tick();
-    else a.addEventListener('loadedmetadata', tick, { once: true });
-  })();
-
-  // (Headline colour effect handled in CSS — gradient + shimmer.)
 </script>
 </body>
 </html>

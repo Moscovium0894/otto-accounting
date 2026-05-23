@@ -1,22 +1,58 @@
 /* =========================================================================
    OTTO — cinematic dark landing.
-   Brand: a warm chamois cream — distinct from the original blue, distinct
-   from Otto's old green.
+   Single, organised stylesheet. No override stacks.
+
+   Sections
+   --------
+   1.  Tokens
+   2.  Reset + base
+   3.  Layout shell (background video, guides, deck, snap-slide)
+   4.  Components
+        4.1  Liquid glass
+        4.2  Buttons (apple-btn, ghost-btn, begin-pill)
+        4.3  Nav + nav sheet
+   5.  Sections
+        5.1  Hero
+        5.2  Dashboard mockup
+        5.3  Triage
+        5.4  Logo cloud
+        5.5  Testimonials
+        5.6  Pricing
+        5.7  Final CTA
+   6.  Sub-pages (page-mode)
+   7.  Responsive (tablet, desktop, short-screen)
+   8.  Reduced motion
    ========================================================================= */
 
+
+/* =========================================================================
+   1. TOKENS
+   ========================================================================= */
 :root {
-  --bg:        #0c0c0c;
-  --fg:        #ffffff;
-  --muted:     rgba(255,255,255,0.6);
-  --muted-2:   rgba(255,255,255,0.4);
-  --line:      rgba(255,255,255,0.10);
-  --brand:     #e8e4d8;
-  --max:       72rem;
-  --gutter:    1.5rem;
-  --ease-out:  cubic-bezier(.22,1,.36,1);
+  --bg:           #0c0c0c;
+  --fg:           #ffffff;
+  --muted:        rgba(255,255,255,0.65);
+  --muted-2:      rgba(255,255,255,0.42);
+  --line:         rgba(255,255,255,0.10);
+  --brand:        #e8e4d8;
+  --accent:       #A4F4FD;
+  --accent-deep:  #00d2ff;
+
+  --max:          72rem;
+  --gutter:       1.5rem;
+
+  --ease-out:     cubic-bezier(.22,1,.36,1);
+  --ease-spring:  cubic-bezier(.16,1.1,.3,1);
+
+  --nav-h:        72px;
 }
 
+
+/* =========================================================================
+   2. RESET + BASE
+   ========================================================================= */
 *, *::before, *::after { box-sizing: border-box; }
+
 html, body {
   margin: 0;
   background: var(--bg);
@@ -26,31 +62,40 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   letter-spacing: -0.005em;
 }
-html, body { height: 100%; }
-html { overflow: hidden; }
-body { overflow: hidden; min-height: 100vh; }
+html { height: 100%; overflow: hidden; }
+body { height: 100dvh; overflow: hidden; }
+
 ::selection { background: rgba(232,228,216,0.3); }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
+img, svg, video { display: block; max-width: 100%; }
+
 
 /* =========================================================================
-   Background video
+   3. LAYOUT SHELL
    ========================================================================= */
+
+/* ---- Background video ---- */
 .bg-video {
   position: fixed; inset: 0; z-index: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 .bg-video video {
-  width: 100%; height: 100%; object-fit: cover; pointer-events: none;
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  pointer-events: none;
 }
 .bg-video__veil {
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse at center, rgba(12,12,12,0.35) 0%, rgba(12,12,12,0.72) 80%),
-    linear-gradient(180deg, rgba(12,12,12,0.25) 0%, rgba(12,12,12,0.55) 100%);
+    radial-gradient(ellipse at center, rgba(12,12,12,0.30) 0%, rgba(12,12,12,0.70) 80%),
+    linear-gradient(180deg, rgba(12,12,12,0.20) 0%, rgba(12,12,12,0.50) 100%);
+  pointer-events: none;
 }
 
-/* Vertical guide lines */
+/* ---- Vertical guide lines ---- */
 .guide {
   display: none;
   position: fixed; inset-block: 0;
@@ -65,21 +110,63 @@ button { font-family: inherit; cursor: pointer; }
   .guide--right { left: 50%; transform: translateX(calc(-50% + 36rem)); }
 }
 
+/* ---- Deck (scroll-snap container) ---- */
+#deck {
+  position: relative;
+  height: 100dvh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+}
+#deck::-webkit-scrollbar { display: none; }
+
+.snap-slide {
+  position: relative;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Shared inner section primitive */
+.section {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + 8px) 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
 /* =========================================================================
-   Liquid Glass utility
+   4. COMPONENTS
    ========================================================================= */
+
+/* ---- 4.1 Liquid glass utility ---- */
 .liquid-glass {
   position: relative;
   overflow: hidden;
-  background: rgba(255,255,255,0.01);
-  background-blend-mode: luminosity;
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.02);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+          backdrop-filter: blur(6px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
   border: 0;
 }
 .liquid-glass::before {
-  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
   padding: 1.4px;
   background: linear-gradient(180deg,
     rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
@@ -91,9 +178,7 @@ button { font-family: inherit; cursor: pointer; }
   pointer-events: none;
 }
 
-/* =========================================================================
-   Apple-style buttons
-   ========================================================================= */
+/* ---- 4.2 Buttons ---- */
 .apple-btn {
   display: inline-flex; align-items: center; justify-content: center;
   gap: 8px;
@@ -104,11 +189,11 @@ button { font-family: inherit; cursor: pointer; }
   border: 0;
   transition: background 200ms ease, transform 150ms ease;
 }
-.apple-btn:hover { background: rgba(255,255,255,0.9); }
+.apple-btn:hover  { background: rgba(255,255,255,0.9); }
 .apple-btn:active { transform: scale(0.98); }
-.apple-btn .apple-mark { width: 14px; height: 14px; display: inline-block; }
-.apple-btn .chevron { width: 14px; height: 14px; transition: transform 200ms ease; }
-.apple-btn:hover .chevron { transform: translateX(1px); }
+.apple-btn .apple-mark { width: 14px; height: 14px; }
+.apple-btn .chevron    { width: 14px; height: 14px; transition: transform 200ms ease; }
+.apple-btn:hover .chevron { transform: translateX(2px); }
 
 .ghost-btn {
   display: inline-flex; align-items: center; justify-content: center;
@@ -117,68 +202,156 @@ button { font-family: inherit; cursor: pointer; }
   background: transparent; color: #fff;
   font-weight: 500; font-size: 14px;
   padding: 12px 20px;
-  border: 1px solid rgba(255,255,255,0.15);
-  transition: background 200ms ease;
+  border: 1px solid rgba(255,255,255,0.18);
+  transition: background 200ms ease, border-color 200ms ease;
 }
-.ghost-btn:hover { background: rgba(255,255,255,0.05); }
+.ghost-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.32); }
 .ghost-btn .chevron { width: 14px; height: 14px; }
 
-/* =========================================================================
-   NAV
-   ========================================================================= */
+/* The "Begin" pill — centered in the nav, a polished glass capsule with
+   a live cyan pulse dot. Sized just larger than the surrounding nav
+   shapes so it reads as the primary nudge without shouting. */
+.begin-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px 9px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+          backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    0 8px 24px -10px rgba(0,0,0,0.55);
+  transition: transform 180ms var(--ease-spring),
+              background 200ms ease,
+              box-shadow 200ms ease;
+}
+.begin-pill__label {
+  background: linear-gradient(180deg, #ffffff 0%, #d8e8ff 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.begin-pill__dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent), 0 0 2px #fff inset;
+  animation: pulse 2.6s var(--ease-out) infinite;
+}
+.begin-pill:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0.06));
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.40),
+    0 14px 32px -14px rgba(164,244,253,0.45);
+  transform: translate(-50%, -50%) scale(1.04);
+}
+.begin-pill:active { transform: translate(-50%, -50%) scale(0.97); }
+@keyframes pulse {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.86); }
+}
+
+/* ---- 4.3 Nav + nav sheet ---- */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 90;
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px;
   max-width: var(--max); margin: 0 auto;
-  padding: 18px 24px;
+  padding: 16px 24px;
   font-size: 14px;
-  transition: background 300ms ease;
-  border-bottom: 1px solid transparent;
+  transition: background 300ms ease, backdrop-filter 300ms ease;
 }
 .nav.is-scrolled {
-  background: linear-gradient(180deg, rgba(12,12,12,0.7) 0%, rgba(12,12,12,0) 100%);
+  background: linear-gradient(180deg, rgba(12,12,12,0.55) 0%, rgba(12,12,12,0) 100%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+          backdrop-filter: blur(12px) saturate(160%);
 }
-.nav__brand { display: inline-flex; align-items: center; color: #fff; }
-.logo-mark { width: 32px; height: 32px; color: #fff; }
-.nav__links { display: none; gap: 32px; align-items: center; }
+
+.nav__brand {
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(255,255,255,0.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 6px 18px -6px rgba(0,0,0,0.40);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+          backdrop-filter: blur(20px) saturate(180%);
+  flex-shrink: 0;
+}
+.logo-mark { width: 18px; height: 18px; color: #fff; }
+
+.nav__links {
+  display: none;
+  gap: 28px;
+  align-items: center;
+}
 .nav__links a {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.72);
   font-weight: 500; font-size: 14px;
   transition: color 200ms ease;
 }
 .nav__links a:hover { color: #fff; }
+
 .nav__cta { display: none; }
+
 .navburger {
   width: 40px; height: 40px;
-  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
-  border: 1px solid rgba(255,255,255,0.10);
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
   border-radius: 999px;
   background: rgba(255,255,255,0.05);
-  padding: 0;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 6px 18px -6px rgba(0,0,0,0.40);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+          backdrop-filter: blur(20px) saturate(180%);
+  border: 0; padding: 0;
+  flex-shrink: 0;
 }
 .navburger span {
   display: block;
-  width: 18px; height: 1.5px;
+  width: 16px; height: 1.5px;
   background: #fff;
   border-radius: 1px;
-  transition: transform 250ms var(--ease-out), opacity 200ms ease;
+  transition: transform 280ms var(--ease-out), opacity 200ms ease;
 }
-.navburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.navburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .navburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
-.navburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+.navburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.begin-pill {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  z-index: 91;
+}
 
 @media (min-width: 768px) {
   .nav__links { display: flex; }
-  .nav__cta { display: inline-flex; }
-  .navburger { display: none; }
+  .nav__cta   { display: inline-flex; }
+  .navburger  { display: none; }
+  .begin-pill { display: none; }   /* desktop uses the named links instead */
 }
 
+/* ---- Nav sheet (mobile menu) ---- */
 .navsheet {
   position: fixed; inset: 0; z-index: 88;
-  background: #0c0c0c;
+  background: rgba(12,12,12,0.96);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+          backdrop-filter: blur(20px) saturate(180%);
   display: flex; flex-direction: column;
-  padding: 110px 28px 36px;
+  padding: calc(var(--nav-h) + 40px) 28px 36px;
   transform: translateY(-100%);
   transition: transform 380ms var(--ease-out);
   pointer-events: none;
@@ -204,88 +377,37 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 14px !important;
   justify-content: center !important;
 }
-.navsheet__cta::after { content: '' !important; display: none !important; }
+.navsheet__cta::after { display: none !important; }
+
 
 /* =========================================================================
-   DECK
+   5. SECTIONS
    ========================================================================= */
-#deck {
-  position: relative;
-  /* No z-index here on purpose — z-index would create a stacking
-     context that prevents mix-blend-mode on the "Revitalised" text
-     from reaching the page background video below the deck. */
-  height: 100vh;
-  height: 100svh;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  scrollbar-width: none;
-}
-#deck::-webkit-scrollbar { display: none; }
 
-.snap-slide {
-  position: relative;
-  height: 100vh;
-  height: 100svh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-}
-
-.section {
-  width: 100%;
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 96px 24px 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-/* =========================================================================
-   HERO
-   ========================================================================= */
+/* ---- 5.1 Hero ---- */
 .hero {
   width: 100%;
   max-width: var(--max);
   margin: 0 auto;
-  padding: 96px 24px 48px;
+  padding: calc(var(--nav-h) + 8px) 24px 24px;
   display: flex; flex-direction: column; align-items: center;
   text-align: center;
 }
-.hero__inner { max-width: 38rem; display: flex; flex-direction: column; align-items: center; }
+.hero__inner {
+  max-width: 38rem;
+  display: flex; flex-direction: column; align-items: center;
+}
 .hero__h1 {
-  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-size: clamp(2.4rem, min(8vw, 9dvh), 4.6rem);
   font-weight: 600;
   letter-spacing: -0.04em;
-  line-height: 0.95;
+  line-height: 0.96;
   margin: 0;
   display: flex; flex-direction: column;
 }
 .hero__line { display: block; }
-/* "Revitalised" — solid brand blue with `mix-blend-mode: lighten`.
-   How that gives the requested effect:
-   - `lighten` blends each text pixel with whatever sits underneath
-     (the looping background video, plus its veil) and keeps the
-     LIGHTER of the two channels.
-   - Over the dark page, brand blue is lighter than the dark, so the
-     text reads as brand blue (the "normal" state).
-   - When a bright cyan/blue ribbon in the video passes underneath,
-     those video pixels are *lighter* than the brand blue, so they
-     win — the text effectively turns white/near-white over that
-     region, only for as long as the ribbon is there.
-   Result: the text colour reacts live to the video, no JS needed. */
-/* "Revitalised" — restored to the original cinematic gradient text-fill
-   that this design started with: deep-navy stops bookend a cyan/blue
-   centre, animated as a slow chrome sheen across the word. */
+
+/* "Revitalised" — animated chrome sheen */
 .hero__h1 .shiny {
   background-image: linear-gradient(to right,
     #091020  0%,
@@ -302,48 +424,79 @@ button { font-family: inherit; cursor: pointer; }
   -webkit-text-fill-color: transparent;
   filter: url(#c3-noise);
   animation: shiny 6s linear infinite;
-  mix-blend-mode: normal;
+  font-weight: 600;
+  letter-spacing: -0.04em;
 }
 @keyframes shiny {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .hero__h1 .shiny { animation: none !important; }
-}
+
 .hero__sub {
   margin: 28px 0 0;
   max-width: 28rem;
   color: var(--muted);
-  font-size: 16px;
+  font-size: clamp(0.95rem, min(2.2vw, 2.2dvh), 1.05rem);
   line-height: 1.55;
 }
 .hero__cta {
   display: flex; flex-direction: column; align-items: center; gap: 12px;
   margin-top: 32px;
 }
-.hero__note { font-size: 12px; color: var(--muted-2); margin: 0; }
+.hero__note {
+  font-size: clamp(0.78rem, min(1.6vw, 1.7dvh), 0.85rem);
+  color: var(--muted-2);
+  margin: 0;
+}
 
-/* =========================================================================
-   DASHBOARD MOCKUP
-   ========================================================================= */
-.section--mockup { padding: 80px 24px 48px; }
+/* Hero spotlight — thin the global veil just behind the headline so the
+   video's bright ribbons can win the lighten comparison. */
+.hero { position: relative; isolation: auto; }
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%,
+    rgba(255,255,255,0.12) 0%,
+    rgba(255,255,255,0)   70%);
+  mix-blend-mode: screen;
+  z-index: 0;
+}
+.hero__inner { position: relative; z-index: 1; }
+
+/* ---- 5.2 Dashboard mockup ---- */
+.section--mockup {
+  padding: calc(var(--nav-h) + 8px) 16px 16px;
+  max-width: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
 .dashmock {
   position: relative;
-  width: 100%; max-width: var(--max);
-  border-radius: 20px;
-  background: rgba(14,16,20,0.9);
-  -webkit-backdrop-filter: blur(24px);
-  backdrop-filter: blur(24px);
+  width: 100%;
+  max-width: var(--max);
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  background: rgba(14,16,20,0.78);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+          backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    inset 0 0 0 1px var(--line),
+    0 40px 80px -30px rgba(0,0,0,0.6);
   overflow: hidden;
-  border: 1px solid var(--line);
-  box-shadow: 0 40px 80px -30px rgba(0,0,0,0.6);
 }
 .dashmock__bar {
   display: flex; align-items: center; gap: 8px;
   padding: 12px 16px;
   border-bottom: 1px solid var(--line);
   position: relative;
+  flex-shrink: 0;
 }
 .tl { width: 12px; height: 12px; border-radius: 50%; }
 .tl--red    { background: #ff5f57; }
@@ -356,71 +509,111 @@ button { font-family: inherit; cursor: pointer; }
 .dashmock__body {
   display: grid;
   grid-template-columns: 3fr 4fr 5fr;
-  height: clamp(360px, 60vh, 520px);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
+
 .dashmock__side {
   border-right: 1px solid var(--line);
-  background: rgba(0,0,0,0.3);
   padding: 16px;
-  font-size: 12px;
+  font-size: 13px;
   display: flex; flex-direction: column; gap: 12px;
   text-align: left;
+  overflow: hidden;
 }
 .dashmock__compose {
   display: inline-flex; align-items: center; gap: 8px;
   background: #fff; color: #000;
   border: 0; border-radius: 8px;
-  font-weight: 600; font-size: 12px;
-  padding: 8px 12px;
+  font-weight: 600; font-size: 13px;
+  padding: 10px 14px;
+  flex-shrink: 0;
 }
 .dashmock__compose .i { width: 14px; height: 14px; }
 .dashmock__nav { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .dashmock__nav li {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 8px; border-radius: 6px;
-  color: rgba(255,255,255,0.6);
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: 6px;
+  color: rgba(255,255,255,0.62);
+  font-size: 13px;
 }
 .dashmock__nav li.active { background: rgba(255,255,255,0.10); color: #fff; }
-.dashmock__nav .dot { width: 6px; height: 6px; border-radius: 50%; background: #A4F4FD; }
-.dashmock__nav em { margin-left: auto; font-style: normal; opacity: 0.5; font-size: 10px; }
+.dashmock__nav .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.dashmock__nav em { margin-left: auto; font-style: normal; opacity: 0.55; font-size: 11px; }
 .dashmock__labels p {
-  font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em;
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em;
   color: var(--muted-2); margin: 12px 0 6px;
 }
 .dashmock__labels ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-.dashmock__labels li { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.7); padding: 4px 8px; }
+.dashmock__labels li {
+  display: flex; align-items: center; gap: 10px;
+  color: rgba(255,255,255,0.72);
+  padding: 5px 10px;
+  font-size: 13px;
+}
 .ld { width: 7px; height: 7px; border-radius: 50%; }
 
-.dashmock__list { border-right: 1px solid var(--line); display: flex; flex-direction: column; text-align: left; }
+.dashmock__list {
+  border-right: 1px solid var(--line);
+  display: flex; flex-direction: column;
+  text-align: left;
+  overflow: hidden;
+  min-height: 0;
+}
 .dashmock__search {
   display: flex; align-items: center; gap: 8px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--line);
+  padding: 14px 18px;
   color: var(--muted-2);
-  font-size: 12px;
+  font-size: 13px;
+  flex-shrink: 0;
 }
 .dashmock__search .i { width: 14px; height: 14px; }
-.dashmock__list ul { list-style: none; margin: 0; padding: 0; overflow-y: auto; }
+.dashmock__list ul {
+  list-style: none; margin: 0; padding: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
 .msg {
   display: grid;
   grid-template-columns: 1fr auto;
   column-gap: 8px; row-gap: 2px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--line);
+  padding: 12px 18px;
+  border-top: 1px solid var(--line);
   cursor: pointer;
   transition: background 150ms ease;
 }
-.msg:hover { background: rgba(255,255,255,0.02); }
+.msg:hover  { background: rgba(255,255,255,0.02); }
 .msg.active { background: rgba(255,255,255,0.04); }
-.msg__name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+.msg__name {
+  font-size: 13.5px; font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
 .msg.unread .msg__name { color: #fff; }
-.msg__time { font-size: 11px; color: var(--muted-2); }
-.msg__sub { font-size: 12px; color: rgba(255,255,255,0.7); grid-column: 1 / -1; }
+.msg__time { font-size: 11.5px; color: var(--muted-2); }
+.msg__sub  { font-size: 12.5px; color: rgba(255,255,255,0.72); grid-column: 1 / -1; }
 .msg.unread .msg__sub { color: #fff; font-weight: 500; }
-.msg__pre { font-size: 11px; color: var(--muted-2); grid-column: 1 / -1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg__pre  {
+  font-size: 11.5px; color: var(--muted-2);
+  grid-column: 1 / -1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 
-.dashmock__reader { padding: 18px 22px; overflow-y: auto; font-size: 13px; color: rgba(255,255,255,0.8); text-align: left; }
-.dashmock__toolbar { display: flex; align-items: center; gap: 4px; margin-bottom: 16px; }
+.dashmock__reader {
+  padding: 22px 26px;
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.82);
+  text-align: left;
+  overflow: hidden;
+  min-height: 0;
+  display: flex; flex-direction: column;
+}
+.dashmock__toolbar {
+  display: flex; align-items: center; gap: 4px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
 .dashmock__toolbar button {
   width: 28px; height: 28px;
   display: inline-flex; align-items: center; justify-content: center;
@@ -429,18 +622,24 @@ button { font-family: inherit; cursor: pointer; }
   color: rgba(255,255,255,0.6);
   transition: background 150ms ease, color 150ms ease;
 }
-.dashmock__toolbar button:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.dashmock__toolbar button:hover { background: rgba(255,255,255,0.06); color: #fff; }
 .dashmock__toolbar .i { width: 14px; height: 14px; }
 .dashmock__toolbar .more { margin-left: auto; }
-.dashmock__reader h3 { font-size: 16px; font-weight: 600; margin: 0 0 12px; color: #fff; }
+
+.dashmock__reader h3 {
+  font-size: 1rem; font-weight: 600;
+  margin: 0 0 14px; color: #fff;
+  flex-shrink: 0;
+}
 .dashmock__from {
   display: flex; align-items: center; gap: 10px;
   margin-bottom: 16px;
   font-size: 12px; color: var(--muted-2);
+  flex-shrink: 0;
 }
 .avatar {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: linear-gradient(135deg, #00d2ff, #0B2551);
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-deep), #0B2551);
   color: #fff; font-weight: 700;
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 12px;
@@ -449,7 +648,7 @@ button { font-family: inherit; cursor: pointer; }
 .pill {
   margin-left: auto;
   font-size: 10px; padding: 3px 8px; border-radius: 999px;
-  background: rgba(164,244,253,0.10); color: #A4F4FD;
+  background: rgba(164,244,253,0.10); color: var(--accent);
   border: 1px solid rgba(164,244,253,0.25);
   text-transform: uppercase; letter-spacing: 0.12em;
 }
@@ -459,46 +658,42 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 10px;
   background: rgba(164,244,253,0.05);
   border: 1px solid rgba(164,244,253,0.15);
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+  flex-shrink: 0;
 }
 .dashmock__sum .i { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
-.dashmock__sum-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: #A4F4FD; margin: 0 0 4px; font-weight: 600; }
+.dashmock__sum-h {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--accent); margin: 0 0 4px; font-weight: 600;
+}
 .dashmock__sum p { margin: 0; font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.5; }
-.dashmock__reader p { line-height: 1.6; margin: 0 0 12px; }
+.dashmock__reader p { line-height: 1.6; margin: 0 0 10px; font-size: 13px; }
 .dashmock__reader p.muted { color: var(--muted-2); }
 .attach {
   display: inline-flex; align-items: center; gap: 6px;
+  align-self: flex-start;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--line);
-  padding: 6px 12px; border-radius: 999px;
+  padding: 7px 14px; border-radius: 999px;
   font-size: 12px; color: rgba(255,255,255,0.85);
+  margin-top: auto;
 }
 .attach .i { width: 14px; height: 14px; }
 
-@media (max-width: 900px) {
-  .dashmock__body { grid-template-columns: 1fr; height: auto; }
-  .dashmock__side { display: none; }
-  .dashmock__list { display: none; }
-  .dashmock__reader { padding: 18px; }
-}
-
-/* =========================================================================
-   RECONCILE / TRIAGE
-   ========================================================================= */
-.section--triage { padding: 80px 24px 48px; }
+/* ---- 5.3 Triage ---- */
+.section--triage { padding: calc(var(--nav-h) + 8px) 24px 24px; }
 .triage {
   width: 100%;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 64px;
-  align-items: center;
   max-width: var(--max);
   margin: 0 auto;
-  text-align: left;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(20px, 4vh, 36px);
+  align-items: center;
+  text-align: center;
 }
-.triage__copy h2 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 600; letter-spacing: -0.03em;
-  line-height: 1.02; margin: 20px 0 0;
+.triage__copy {
+  display: flex; flex-direction: column; align-items: center;
 }
 .eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
@@ -515,31 +710,47 @@ button { font-family: inherit; cursor: pointer; }
   border: 1px solid var(--line);
   margin-left: 4px;
 }
+.triage__copy h2 {
+  font-size: clamp(1.8rem, min(5.2vw, 6dvh), 3rem);
+  font-weight: 600; letter-spacing: -0.03em;
+  line-height: 1.04;
+  margin: 20px 0 0;
+}
 .lead {
-  margin: 24px 0 0;
+  margin: 22px auto 0;
   color: var(--muted);
-  font-size: 16px; line-height: 1.6;
+  font-size: clamp(0.95rem, min(1.9vw, 2dvh), 1.05rem);
+  line-height: 1.6;
   max-width: 28rem;
 }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.chips {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 22px;
+  justify-content: center;
+}
 .chips span {
-  font-size: 12px; color: rgba(255,255,255,0.7);
+  font-size: 12px; color: rgba(255,255,255,0.72);
   padding: 6px 12px; border-radius: 999px;
   border: 1px solid var(--line);
   background: rgba(255,255,255,0.03);
 }
 .triage__card {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
   border-radius: 16px;
   padding: 20px;
 }
 .triage__head {
   font-size: 12px; color: var(--muted);
   margin: 0 0 14px; padding-left: 4px;
+  text-align: left;
 }
 .triage__row {
   border-radius: 10px;
   padding: 12px 14px;
   margin-bottom: 10px;
+  text-align: left;
 }
 .triage__row:last-child { margin-bottom: 0; }
 .triage__row > div {
@@ -547,23 +758,19 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: 4px;
 }
 .triage__row strong { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
-.triage__row .ct { font-size: 13px; font-weight: 600; }
-.triage__row p { margin: 0; font-size: 11.5px; color: var(--muted-2); line-height: 1.5; }
-
-@media (max-width: 900px) {
-  .triage { grid-template-columns: 1fr; gap: 28px; }
+.triage__row .ct    { font-size: 13px; font-weight: 600; }
+.triage__row p {
+  margin: 0; font-size: 11.5px; color: var(--muted-2); line-height: 1.5;
 }
 
-/* =========================================================================
-   LOGO CLOUD
-   ========================================================================= */
-.section--cloud { padding: 80px 24px; }
+/* ---- 5.4 Logo cloud ---- */
+.section--cloud { padding: calc(var(--nav-h) + 16px) 24px 24px; }
 .kicker {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.22em;
   color: var(--muted-2);
-  margin: 0 0 36px;
+  margin: 0 0 32px;
 }
 .cloud {
   list-style: none; margin: 0; padding: 0;
@@ -581,15 +788,16 @@ button { font-family: inherit; cursor: pointer; }
   transition: color 200ms ease;
 }
 .cloud li:hover { color: #fff; }
-@media (min-width: 640px) { .cloud { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 640px)  { .cloud { grid-template-columns: repeat(4, 1fr); } }
 @media (min-width: 1024px) { .cloud { grid-template-columns: repeat(8, 1fr); } }
 
-/* =========================================================================
-   TESTIMONIALS
-   ========================================================================= */
-.section--testimonials { padding: 80px 24px; border-top: 1px solid var(--line); }
+/* ---- 5.5 Testimonials ---- */
+.section--testimonials {
+  padding: calc(var(--nav-h) + 16px) 24px 24px;
+}
 .quotes {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
   width: 100%; max-width: var(--max);
 }
 .quotes figure {
@@ -601,7 +809,7 @@ button { font-family: inherit; cursor: pointer; }
 .quotes blockquote {
   margin: 0;
   font-size: 14px; line-height: 1.6;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.82);
 }
 .quotes figcaption {
   margin: 22px 0 0; padding: 18px 0 0;
@@ -609,7 +817,7 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; flex-direction: column; gap: 4px;
 }
 .quotes figcaption strong { font-size: 13px; font-weight: 600; color: #fff; }
-.quotes figcaption span { font-size: 11px; color: var(--muted-2); }
+.quotes figcaption span   { font-size: 11px; color: var(--muted-2); }
 .quotes figcaption .org {
   font-size: 11px; font-weight: 600; color: #fff;
   letter-spacing: 0.14em;
@@ -617,51 +825,28 @@ button { font-family: inherit; cursor: pointer; }
 }
 @media (max-width: 900px) { .quotes { grid-template-columns: 1fr; } }
 
-/* =========================================================================
-   PRICING
-   ========================================================================= */
+/* ---- 5.6 Pricing ---- */
 .c3-pricing-section {
   position: relative;
   width: 100%;
-  padding: 40px 20px 80px;
+  padding: calc(var(--nav-h) + 24px) 20px 24px;
   display: flex; flex-direction: column; align-items: center;
   overflow-x: hidden;
 }
-.c3-watermark-container {
-  position: relative; width: 100%; max-width: 1100px;
-  text-align: center; margin-top: 40px;
-  z-index: 2;
-}
-.c3-watermark-main {
-  font-size: 9rem; font-weight: 800;
-  line-height: 0.9; letter-spacing: -0.05em;
-  filter: url(#c3-noise-px);
-  display: flex; flex-direction: column; align-items: center;
-}
-.c3-watermark-line-1 { color: #fff; }
-.c3-watermark-line-2 {
-  background: linear-gradient(to right, #091020 0%, #0B2551 25%, #A4F4FD 65%, #00d2ff 100%);
-  -webkit-background-clip: text; background-clip: text;
-  color: transparent; -webkit-text-fill-color: transparent;
-}
 .c3-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 20px;
   width: 100%; max-width: 1100px;
-  margin-top: 60px;
-  transform: translateX(20px);
-  position: relative; z-index: 3;
 }
 .c3-card {
-  background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.4));
-  -webkit-backdrop-filter: blur(14px) brightness(0.91);
-  backdrop-filter: blur(14px) brightness(0.91);
-  border: 1px solid rgba(255,255,255,1);
-  border-radius: 44px;
-  padding: 50px 24px;
-  min-height: 580px;
+  background: linear-gradient(135deg, rgba(0,0,0,0.55), rgba(0,0,0,0.30));
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+          backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 28px;
+  padding: 36px 24px;
   display: flex; flex-direction: column;
-  transition: all 0.6s var(--ease-out);
+  transition: transform .5s var(--ease-out), border-color .5s ease, background .5s ease;
   overflow: hidden;
   position: relative;
   text-align: left;
@@ -669,103 +854,88 @@ button { font-family: inherit; cursor: pointer; }
 .c3-card::before {
   content: ''; position: absolute; inset: 0;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 50%);
   pointer-events: none;
 }
 .c3-card:hover {
-  background: rgba(15,15,15,0.6);
-  border-color: rgba(34,211,238,0.7);
-  transform: translateY(-12px) scale(1.01);
+  background: linear-gradient(135deg, rgba(0,0,0,0.65), rgba(0,0,0,0.40));
+  border-color: rgba(164,244,253,0.55);
+  transform: translateY(-6px);
 }
-.c3-card-pro { background: linear-gradient(135deg, rgba(0,0,0,0.85), rgba(0,0,0,0.55)); }
-.c3-tier-small { font-size: 1.1rem; font-weight: 400; color: rgba(255,255,255,0.6); margin: 0; }
+.c3-card-pro { background: linear-gradient(135deg, rgba(0,0,0,0.75), rgba(0,0,0,0.45)); }
+.c3-tier-small { font-size: 1rem; font-weight: 400; color: rgba(255,255,255,0.6); margin: 0; }
 .c3-tier-large {
-  font-size: 2.8rem; font-weight: 500;
+  font-size: 2.4rem; font-weight: 500;
   letter-spacing: -0.02em; color: #fff;
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px;
 }
-.c3-tier-large .per { font-size: 0.85rem; font-weight: 400; color: var(--muted-2); }
-.c3-desc { font-size: 0.88rem; color: rgba(255,255,255,0.45); min-height: 3.2em; margin: 16px 0 40px; line-height: 1.5; }
+.c3-tier-large .per { font-size: 0.78rem; font-weight: 400; color: var(--muted-2); }
+.c3-desc {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  min-height: 3em;
+  margin: 14px 0 24px;
+  line-height: 1.55;
+}
 .c3-list { list-style: none; margin: 0; padding: 0; }
 .c3-list li {
-  display: flex; align-items: flex-start; gap: 14px;
-  font-size: 0.92rem;
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 0.88rem;
   color: rgba(255,255,255,0.8);
-  margin-bottom: 18px;
+  margin-bottom: 14px;
   line-height: 1.4;
 }
 .c3-check {
-  width: 28px; height: 28px;
+  width: 24px; height: 24px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.12);
   display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.c3-check svg { width: 14px; height: 14px; }
+.c3-check svg { width: 12px; height: 12px; }
 .c3-btn {
   background: #fff; color: #000;
-  padding: 10px 32px;
-  border-radius: 100px;
+  padding: 11px 32px;
+  border-radius: 999px;
   font-weight: 600; font-size: 0.88rem;
   margin-top: auto;
   border: 0;
   align-self: center;
-  transition: all 0.3s var(--ease-out);
+  transition: transform 220ms var(--ease-out), box-shadow 220ms ease, background 220ms ease;
   text-decoration: none;
 }
 .c3-btn:hover {
-  background: #f5f5f5;
-  transform: scale(1.02);
-  box-shadow: 0 8px 24px rgba(255,255,255,0.15);
+  background: #f7f7f7;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px -12px rgba(255,255,255,0.25);
 }
 .c3-toggle-wrap {
-  display: flex; align-items: center; justify-content: flex-end; gap: 12px;
-  width: 100%; max-width: 1100px; margin-top: 32px; padding-right: 20px;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; max-width: 1100px;
+  margin-top: 24px;
 }
 .c3-toggle-lbl { font-size: 13px; color: rgba(255,255,255,0.7); }
 .c3-toggle {
-  width: 52px; height: 28px;
-  background: #fff; border-radius: 100px;
+  width: 48px; height: 26px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
   position: relative; cursor: pointer; border: 0;
-  transition: background 0.3s cubic-bezier(.4,0,.2,1);
   padding: 0;
+  transition: background 220ms ease;
 }
 .c3-toggle-knob {
   width: 20px; height: 20px;
-  background: #000;
+  background: #fff;
   border-radius: 50%;
-  position: absolute; top: 4px; left: 4px;
-  transition: all 0.3s cubic-bezier(.4,0,.2,1);
+  position: absolute; top: 3px; left: 3px;
+  transition: transform 220ms var(--ease-spring);
 }
-.c3-toggle.active { background: rgba(255,255,255,0.2); }
-.c3-toggle.active .c3-toggle-knob { transform: translateX(24px); background: #fff; }
+.c3-toggle.active { background: var(--accent); }
+.c3-toggle.active .c3-toggle-knob { transform: translateX(22px); }
 
-@media (max-width: 1024px) {
-  .c3-watermark-main { font-size: 3.5rem; filter: none; }
-  .c3-watermark-line-2 { background: none; -webkit-text-fill-color: #00d2ff; color: #00d2ff; }
-  .c3-grid {
-    display: flex; overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    transform: none;
-    width: 100vw; padding: 0 20px;
-    gap: 16px;
-    scrollbar-width: none;
-  }
-  .c3-grid::-webkit-scrollbar { display: none; }
-  .c3-card {
-    flex: 0 0 320px;
-    scroll-snap-align: center;
-    min-height: 520px;
-    padding: 40px 22px;
-  }
-  .c3-toggle-wrap { justify-content: center; padding-right: 0; }
-}
-
-/* =========================================================================
-   FINAL CTA
-   ========================================================================= */
-.section--final { padding: 80px 24px; }
+/* ---- 5.7 Final CTA ---- */
+.section--final { padding: calc(var(--nav-h) + 16px) 24px 24px; }
 .final {
   position: relative;
   width: 100%; max-width: var(--max);
@@ -776,12 +946,12 @@ button { font-family: inherit; cursor: pointer; }
 }
 .final__glow {
   position: absolute; inset: 0;
-  background: radial-gradient(600px circle at 50% 0%, rgba(255,255,255,0.15), transparent 70%);
-  opacity: 0.3;
+  background: radial-gradient(600px circle at 50% 0%, rgba(255,255,255,0.18), transparent 70%);
+  opacity: 0.4;
   pointer-events: none;
 }
 .final h2 {
-  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-size: clamp(2rem, min(6vw, 6dvh), 3.5rem);
   font-weight: 600; letter-spacing: -0.03em; line-height: 1.02;
   margin: 0;
   position: relative;
@@ -799,8 +969,9 @@ button { font-family: inherit; cursor: pointer; }
   position: relative; flex-wrap: wrap; justify-content: center;
 }
 
+
 /* =========================================================================
-   Sub-page (page-mode) — normal scrolling, used by /bookkeepers etc.
+   6. SUB-PAGES (page-mode)
    ========================================================================= */
 html.page-mode { overflow-y: auto; height: auto; }
 html.page-mode body { overflow-y: visible; height: auto; }
@@ -808,7 +979,16 @@ html.page-mode #deck,
 html.page-mode .snap-slide,
 html.page-mode .bg-video,
 html.page-mode .guide { display: none; }
-html.page-mode .nav { position: fixed; background: transparent; border: 0 !important; }
+html.page-mode .nav {
+  position: fixed;
+  background: transparent;
+  border: 0 !important;
+}
+html.page-mode .nav.is-scrolled {
+  background: rgba(12,12,12,0.5);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+          backdrop-filter: blur(14px) saturate(160%);
+}
 
 .page { background: var(--bg); min-height: 100vh; padding-top: 96px; }
 .page__hero { padding: 96px 24px 64px; border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
@@ -927,7 +1107,6 @@ html.page-mode .nav { position: fixed; background: transparent; border: 0 !impor
 .calc__total .per { font-size: 0.95rem; color: var(--muted-2); font-weight: 300; }
 .calc__per-site { font-size: 12px; color: var(--muted-2); margin-top: 8px; }
 
-/* Buttons on sub-pages (keep classes used in /bookkeepers etc.) */
 html.page-mode .btn--primary {
   display: inline-flex; align-items: center; gap: 8px;
   background: #fff; color: #000; border: 0; border-radius: 999px;
@@ -940,13 +1119,6 @@ html.page-mode .btn--outline {
   padding: 12px 22px; font-weight: 500; font-size: 14px;
 }
 
-/* Hide remnants from older builds */
-.grain, .particles, .dots, .dots--left, .dots--right,
-.progress, .slide-tag, .scroll-hint,
-.marquee, .sticky-cta, .cta__more, .warp, .orb,
-#tweaks-root { display: none !important; }
-
-/* Existing sub-pages also use particles + svg-tick. Restore minimal styles. */
 .svg-tick {
   width: 18px; height: 18px; flex-shrink: 0;
   background: rgba(255,255,255,0.10);
@@ -987,152 +1159,7 @@ html.page-mode .btn--outline {
   .price__list { grid-template-columns: 1fr; }
 }
 
-.btn { font-family: inherit; }
-
-/* =========================================================================
-   Mobile adjustments
-   ========================================================================= */
-@media (max-width: 740px) {
-  .nav { padding: 14px 18px; }
-  .hero { padding: 100px 18px 36px; }
-  .hero__h1 { font-size: clamp(2.2rem, 10vw, 3rem); }
-  .hero__sub { font-size: 14px; margin-top: 20px; }
-  .hero__cta { margin-top: 24px; }
-  .section { padding: 80px 18px 36px; }
-  .section--mockup { padding: 80px 18px 36px; }
-  .dashmock { border-radius: 14px; }
-  .triage__copy h2 { font-size: clamp(1.8rem, 7vw, 2.4rem); }
-  .lead { font-size: 14px; }
-  .triage__card { padding: 16px; }
-  .quotes figure { padding: 18px; }
-  .c3-grid { margin-top: 28px; }
-  .c3-tier-large { font-size: 2.2rem; }
-  .final { padding: 40px 22px; border-radius: 20px; }
-  .final h2 { font-size: clamp(1.8rem, 8vw, 2.4rem); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shiny__video { animation: none !important; }
-  #deck { scroll-behavior: auto; scroll-snap-type: none; }
-}
-
-/* =========================================================================
-   POLISH PASS — remove the grey block around the dashboard mockup's
-   search bar, keep cards centered, and unlock natural scrolling on
-   desktop (snap is mobile-only now).
-   ========================================================================= */
-
-/* Dashmock — drop the heavy grey side panel + border around the search.
-   The mockup now reads as a single dark card, not a 3-column app shell. */
-.dashmock__side { background: transparent !important; }
-.dashmock__list { border-right: 0 !important; }
-.dashmock__search {
-  border-bottom: 0 !important;
-  background: transparent !important;
-  padding: 12px 16px !important;
-}
-.dashmock__bar { background: transparent; }
-
-/* Keep card contents centered in their snap-slide (defensive — confirms
-   no inherited left-alignment is winning) */
-.snap-slide {
-  align-items: center !important;
-  justify-content: center !important;
-}
-.section, .hero, .c3-pricing-section, .section--final {
-  margin-left: auto; margin-right: auto;
-}
-
-/* =========================================================================
-   DESKTOP (>= 1024px) — natural scrolling, bigger type, more breathing
-   room. Snap is disabled; the deck becomes a regular document.
-   ========================================================================= */
-@media (min-width: 1024px) {
-  html, body { overflow-y: auto !important; overflow-x: hidden; height: auto !important; }
-  body { min-height: 100vh; }
-  #deck {
-    position: static !important;
-    height: auto !important;
-    overflow: visible !important;
-    scroll-snap-type: none !important;
-  }
-  .snap-slide {
-    height: auto !important;
-    min-height: 100vh;
-    scroll-snap-align: none !important;
-    scroll-snap-stop: normal !important;
-    padding: 80px 0;
-  }
-
-  /* Stretchier hero */
-  .hero { padding: 120px 24px 96px; max-width: 64rem; }
-  .hero__inner { max-width: 44rem; }
-  .hero__h1 { font-size: clamp(3.5rem, 7vw, 5.5rem); line-height: 0.95; }
-  .hero__sub { max-width: 32rem; font-size: 17px; margin-top: 32px; }
-  .hero__cta { margin-top: 40px; }
-
-  /* Dashmock — wider, taller, more impressive */
-  .section--mockup { padding: 80px 24px 96px; }
-  .dashmock { border-radius: 22px; max-width: 78rem; }
-  .dashmock__body { height: clamp(440px, 64vh, 600px); }
-
-  /* Triage — more breathing room */
-  .section--triage { padding: 96px 24px 96px; }
-  .triage { gap: 88px; max-width: 78rem; }
-  .triage__copy h2 { font-size: clamp(2.4rem, 4vw, 3.4rem); }
-  .triage__copy .lead { max-width: 32rem; }
-
-  /* Logo cloud — spread out and a hair larger */
-  .section--cloud { padding: 80px 24px; }
-  .cloud { max-width: 78rem; gap: 24px 40px; }
-  .cloud li { font-size: 15px; }
-
-  /* Testimonials — wider quotes */
-  .section--testimonials { padding: 96px 24px; }
-  .quotes { max-width: 78rem; gap: 20px; }
-  .quotes figure { padding: 28px; }
-  .quotes blockquote { font-size: 15px; }
-
-  /* Pricing — bigger watermark headline at full effect */
-  .c3-pricing-section { padding: 96px 24px 120px; }
-  .c3-watermark-main { font-size: 10rem; }
-  .c3-grid { gap: 28px; }
-
-  /* Final CTA — bigger */
-  .section--final { padding: 96px 24px 120px; }
-  .final { padding: 80px 48px; border-radius: 32px; }
-  .final h2 { font-size: clamp(2.8rem, 5vw, 4.2rem); }
-  .final p { font-size: 16px; max-width: 36rem; }
-}
-
-/* Tablet sweet-spot — keep snap on phones, disable on tablets too */
-@media (min-width: 900px) and (max-width: 1023px) {
-  html, body { overflow-y: auto !important; overflow-x: hidden; height: auto !important; }
-  #deck {
-    height: auto !important; overflow: visible !important;
-    scroll-snap-type: none !important;
-  }
-  .snap-slide {
-    height: auto !important; min-height: 100vh;
-    scroll-snap-align: none !important; scroll-snap-stop: normal !important;
-    padding: 64px 0;
-  }
-}
-
-/* =========================================================================
-   Drop the page-mode nav border + booking page form styles.
-   ========================================================================= */
-html.page-mode .nav {
-  border-bottom: 0 !important;
-  background: transparent !important;
-}
-html.page-mode .nav.is-scrolled {
-  background: rgba(12,12,12,0.5) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-          backdrop-filter: blur(14px) saturate(160%);
-}
-
-/* Booking page */
+/* Booking page form */
 .booking {
   display: grid; grid-template-columns: 1.4fr 1fr; gap: 56px;
   align-items: start;
@@ -1183,9 +1210,7 @@ html.page-mode .nav.is-scrolled {
   border-radius: 16px;
   padding: 28px;
 }
-.booking__aside h3 {
-  font-size: 1rem; font-weight: 600; margin: 0 0 18px; color: #fff;
-}
+.booking__aside h3 { font-size: 1rem; font-weight: 600; margin: 0 0 18px; color: #fff; }
 .booking__steps {
   list-style: none; padding: 0; margin: 0;
   counter-reset: step;
@@ -1219,513 +1244,187 @@ html.page-mode .nav.is-scrolled {
 }
 .booking__or a { color: #fff; text-decoration: underline; }
 
-/* =========================================================================
-   Nav: glassy circle around the logo (matching the hamburger),
-   centered brand-blue glass "Begin" pill, no extra bottom padding so
-   the background reaches the iOS URL bar.
-   ========================================================================= */
-
-/* The logo wrapper now mirrors the hamburger's pill */
-.nav__brand {
-  width: 40px; height: 40px;
-  display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 999px;
-  background: rgba(255,255,255,0.05);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-          backdrop-filter: blur(20px) saturate(180%);
-  flex-shrink: 0;
+/* Footer (sub-pages) */
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 56px 24px 40px;
+  max-width: var(--max);
+  margin: 0 auto;
+  color: var(--muted);
 }
-.nav__brand .logo-mark { width: 20px; height: 20px; }
-
-/* Center "Begin" pill — brand-blue tinted glass */
-.brand-pill {
-  display: inline-flex; align-items: center; justify-content: center;
-  gap: 6px;
-  padding: 10px 20px;
-  border-radius: 999px;
-  font-size: 12px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.10em;
-  color: #fff;
-  background: rgba(61, 129, 227, 0.22);
-  border: 1px solid rgba(61, 129, 227, 0.45);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-          backdrop-filter: blur(22px) saturate(180%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.22),
-    inset 0 -1px 0 rgba(0,0,0,0.15),
-    0 8px 24px -10px rgba(61,129,227,0.55);
-  transition: background 200ms ease, transform 150ms ease;
+.footer__grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 36px;
 }
-.brand-pill:hover {
-  background: rgba(61, 129, 227, 0.32);
-  border-color: rgba(61, 129, 227, 0.6);
+@media (max-width: 800px) {
+  .footer__grid { grid-template-columns: 1fr 1fr; }
 }
-.brand-pill:active { transform: scale(0.97); }
-.brand-pill--nav {
-  position: absolute;
-  left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: auto;
-  z-index: 91;
+.footer__brand .nav__brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  width: auto; height: auto;
+  background: transparent; box-shadow: none;
+  padding: 0;
 }
-.nav { position: fixed; }  /* already fixed, just being explicit */
-.nav { position: fixed; }
-
-/* The nav is a fixed bar with absolute children inside (logo on left,
-   pill centered, hamburger on right). On wide screens the desktop
-   links + apple-btn are still shown — hide the centered pill there to
-   avoid stacking with the links. */
-@media (min-width: 768px) {
-  .brand-pill--nav { display: none; }
+.footer__tag { font-size: 13px; margin: 14px 0 0; line-height: 1.55; max-width: 30ch; }
+.footer__h {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--muted-2); margin: 0 0 14px; font-weight: 600;
 }
-
-/* Mobile + tablet: drop the bottom inner padding so the dark page
-   background reaches the iOS Safari URL bar (no empty content margin) */
-@media (max-width: 1023px) {
-  html.is-mobile .snap-slide > .hero,
-  html.is-mobile .snap-slide > .section,
-  html.is-mobile .snap-slide > .cta {
-    padding-bottom: 0 !important;
-  }
-  html.is-mobile .hero__content,
-  html.is-mobile .section__inner,
-  html.is-mobile .cta__inner {
-    /* shorter inner frame so the visible content doesn't sit right
-       against the URL bar */
-    height: calc(100dvh - 92px) !important;
-    min-height: calc(100dvh - 92px) !important;
-    max-height: calc(100dvh - 92px) !important;
-  }
+.footer a {
+  display: block;
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  padding: 4px 0;
+  transition: color 200ms ease;
 }
-
-/* =========================================================================
-   Unified nav shapes — logo · "Begin" · hamburger all share one material
-   ========================================================================= */
-.nav__brand,
-.brand-pill,
-.navburger {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
-  -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
-          backdrop-filter: blur(22px) saturate(180%) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
-    0 8px 22px -8px rgba(0, 0, 0, 0.45) !important;
-  border-radius: 999px !important;
-  color: #fff !important;
-}
-.brand-pill {
-  padding: 10px 20px !important;
+.footer a:hover { color: #fff; }
+.footer__legal {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  margin-top: 32px; padding-top: 20px;
   font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.10em;
-  /* faint blue tint on the word itself so the primary action still nudges */
-  color: #cfe2ff !important;
-  text-shadow: 0 0 12px rgba(61, 129, 227, 0.45);
+  color: var(--muted-2);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
 }
-.brand-pill:hover {
-  background: rgba(255, 255, 255, 0.09) !important;
-  border-color: rgba(255, 255, 255, 0.18) !important;
-}
-.brand-pill:active { transform: scale(0.97); }
 
-/* Mobile: remove any inner empty space at the bottom of cards.
-   The inner frame now fills the entire snap-slide (with only a nav-
-   clearance up top). Content stays vertically centered inside it. */
-@media (max-width: 1023px) {
-  html.is-mobile .snap-slide > .hero,
-  html.is-mobile .snap-slide > .section,
-  html.is-mobile .snap-slide > .cta {
-    padding-top: 56px !important;
-    padding-bottom: 0 !important;
-  }
-  html.is-mobile .hero__content,
-  html.is-mobile .section__inner,
-  html.is-mobile .cta__inner {
-    height: 100% !important;
-    min-height: 0 !important;
-    max-height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-  }
-}
+/* Legacy / orphan elements — hide if they sneak back in */
+.grain, .particles, .dots, .dots--left, .dots--right,
+.progress, .slide-tag, .scroll-hint,
+.marquee, .sticky-cta, .cta__more, .warp, .orb,
+.c3-watermark-container, #tweaks-root { display: none !important; }
+
 
 /* =========================================================================
-   Safari URL-bar fix — content should sit seamlessly behind the
-   translucent toolbar with no grey rectangle in between.
+   7. RESPONSIVE
    ========================================================================= */
-html { overflow: visible; height: 100%; }
-body { overflow: hidden; min-height: 100dvh; height: 100dvh; }
 
-/* Switch every snap-target/viewport-height usage to 100dvh so the
-   layout adapts as the Safari URL bar collapses or expands. */
-#deck {
-  height: 100dvh !important;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  /* Reserve the safe-area at the bottom inside the scroll container,
-     not as an empty outer block. */
-  padding-bottom: env(safe-area-inset-bottom);
+/* ---- Mobile dashmock: collapse to reader pane only ---- */
+@media (max-width: 900px) {
+  .dashmock__body { grid-template-columns: 1fr; }
+  .dashmock__side,
+  .dashmock__list { display: none; }
+  .dashmock__reader { padding: 18px 20px; }
 }
-.snap-slide {
-  height: 100dvh !important;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+
+/* ---- Mobile tweaks ---- */
+@media (max-width: 740px) {
+  .nav { padding: 14px 18px; }
+  .hero { padding-left: 18px; padding-right: 18px; }
+  .section,
+  .section--mockup,
+  .section--triage,
+  .section--cloud,
+  .section--testimonials,
+  .section--final,
+  .c3-pricing-section { padding-left: 16px; padding-right: 16px; }
+  .dashmock { border-radius: 12px; }
+  .quotes figure { padding: 18px; }
+  .c3-tier-large { font-size: 2rem; }
+  .final { padding: 40px 22px; border-radius: 20px; }
 }
-.bg-video { inset: 0; }   /* still fixed + behind everything */
 
-/* Sub-pages (page-mode) — restore native vertical scrolling on html so
-   content extends behind the toolbar without any wrapper clipping it. */
-html.page-mode { overflow-y: auto !important; height: auto !important; }
-html.page-mode body { overflow: visible !important; height: auto !important; min-height: 100dvh; }
-html.page-mode .page { padding-bottom: env(safe-area-inset-bottom); }
-
-/* Desktop natural-scroll override stays the same but uses dvh now */
-@media (min-width: 1024px) {
-  html, body { overflow: auto !important; height: auto !important; min-height: 100dvh; }
-  #deck {
-    height: auto !important;
-    overflow: visible !important;
-    scroll-snap-type: none !important;
-    padding-bottom: 0;
+/* ---- Tablet / small desktop: switch pricing to horizontal scroll ---- */
+@media (max-width: 1024px) {
+  .c3-grid {
+    grid-template-columns: none;
+    display: flex; overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    width: 100%; padding: 4px 4px 8px;
+    gap: 14px;
+    scrollbar-width: none;
   }
-  .snap-slide {
-    height: auto !important;
-    min-height: 100dvh;
-    scroll-snap-align: none !important;
+  .c3-grid::-webkit-scrollbar { display: none; }
+  .c3-card {
+    flex: 0 0 300px;
+    scroll-snap-align: center;
+    padding: 30px 22px;
   }
 }
 
-/* =========================================================================
-   Begin pill — blue glass with white text. The other two nav shapes
-   keep the neutral grey glass.
-   ========================================================================= */
-.brand-pill {
-  background: rgba(61, 129, 227, 0.22) !important;
-  border: 1px solid rgba(61, 129, 227, 0.45) !important;
-  color: #fff !important;
-  text-shadow: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
-    0 10px 26px -10px rgba(61, 129, 227, 0.55) !important;
-}
-.brand-pill:hover {
-  background: rgba(61, 129, 227, 0.32) !important;
-  border-color: rgba(61, 129, 227, 0.6) !important;
-}
-
-/* Drop the inset bottom-shadow on every nav shape — that 1px dark line
-   was reading as a black underline under the logo / Begin / hamburger. */
-.nav__brand,
-.brand-pill,
-.navburger {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    0 8px 22px -8px rgba(0, 0, 0, 0.45) !important;
-}
-.brand-pill {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    0 10px 26px -10px rgba(61, 129, 227, 0.55) !important;
-}
-
-/* Belt-and-braces: hide the watermark even if any stale markup ever
-   sneaks back in. */
-.c3-watermark-container { display: none !important; }
-
-/* =========================================================================
-   Adaptive sizing + centred cards.
-   Every snap card / section now centers its content both axes and uses
-   clamp()-based fonts that scale with viewport height as well as width,
-   so each slide fits within the screen comfortably on any device.
-   ========================================================================= */
-.snap-slide {
-  align-items: center !important;
-  justify-content: center !important;
-}
-.snap-slide > .hero,
-.snap-slide > .section,
-.snap-slide > .cta {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  max-height: 100dvh;
-}
-
-/* Adaptive type — scales with min(viewport-width, viewport-height) */
-.hero__h1     { font-size: clamp(2.2rem, min(8vw, 9dvh), 4.4rem); line-height: 0.96; }
-.section__h2,
-.triage__copy h2 { font-size: clamp(1.7rem, min(5.2vw, 6dvh), 3rem); line-height: 1.04; }
-.hero__sub    { font-size: clamp(0.95rem, min(2.4vw, 2.4dvh), 1.05rem); }
-.lead, .hero__note { font-size: clamp(0.85rem, min(1.8vw, 1.9dvh), 1rem); }
-
-/* The triage section: now centered (no left-anchored copy), fits one
-   viewport with the card stacked under the headline on smaller screens. */
-.triage {
-  grid-template-columns: 1fr;
-  text-align: center;
-  gap: clamp(20px, 4vh, 36px);
-  max-width: 56rem;
-}
-.triage__copy { align-items: center; display: flex; flex-direction: column; }
-.triage__copy .lead { margin-left: auto; margin-right: auto; }
-.chips { justify-content: center; }
-.triage__card { width: 100%; max-width: 28rem; margin: 0 auto; }
-@media (min-width: 1024px) {
-  /* Desktop still uses a 2-col layout, but content is centered inside
-     each column instead of left-anchored. */
-  .triage { grid-template-columns: 1fr 1fr; text-align: left; }
-  .triage__copy { align-items: flex-start; }
-  .triage__copy .lead { margin-left: 0; margin-right: 0; }
-  .chips { justify-content: flex-start; }
-  .triage__card { max-width: 100%; }
-}
-
-/* Shorter screens: dial paddings down so nothing clips */
+/* ---- Short screens: dial paddings down so nothing clips ---- */
 @media (max-height: 760px) {
-  .section, .hero, .c3-pricing-section, .section--final { padding-top: 64px; padding-bottom: 24px; }
-  .dashmock__body { height: clamp(280px, 56dvh, 460px); }
+  .hero__sub { margin-top: 18px; }
+  .hero__cta { margin-top: 22px; }
+  .triage__copy h2 { margin-top: 14px; }
+  .lead { margin-top: 16px; }
+  .chips { margin-top: 16px; }
   .quotes figure { padding: 16px; }
-  .quotes blockquote { font-size: 12.5px; }
-  .c3-card { min-height: 460px; padding: 36px 22px; }
-  .c3-tier-large { font-size: 2.2rem; }
+  .quotes blockquote { font-size: 13px; }
+  .c3-card { padding: 28px 22px; }
+  .c3-tier-large { font-size: 2rem; }
+  .c3-desc { margin: 10px 0 16px; min-height: 0; }
+  .c3-list li { margin-bottom: 10px; }
 }
 @media (max-height: 620px) {
   .hero__sub, .lead { display: none; }
   .triage__head, .chips { display: none; }
-  .dashmock__body { height: clamp(220px, 50dvh, 360px); }
 }
 
-/* "Revitalised" — make the lighten-blend effect more visible.
-   - Slightly bolder so the colour is more present.
-   - Add a soft drop-shadow that survives the blend (drop-shadow is
-     applied after blending so it always shows).
-   - Local thinning of the veil right behind the hero text area so the
-     video's bright ribbons can win the lighten comparison and turn the
-     letters cyan/white as they pass. */
-.hero__h1 .shiny {
-  font-weight: 600;
-  letter-spacing: -0.04em;
-}
-/* Thin the veil only in the hero band so the headline picks up the
-   actual video brightness while body sections elsewhere stay readable. */
-.hero {
-  position: relative;
-  isolation: auto;
-}
-.hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  pointer-events: none;
-  /* Inverse mask: PUSH BACK the global veil over the hero. A subtle
-     radial highlight at the centre of the hero brightens the visible
-     video behind the headline. */
-  background: radial-gradient(ellipse 60% 50% at 50% 55%,
-    rgba(255,255,255,0.12) 0%,
-    rgba(255,255,255,0)   70%);
-  mix-blend-mode: screen;
-  z-index: 0;
-}
-.hero__inner { position: relative; z-index: 1; }
-
-/* =========================================================================
-   FINAL FIXES — black line nuked, seamless URL bar, equal heights,
-   dashmock internal scroll disabled.
-   ========================================================================= */
-
-/* Aggressively nuke every possible border/shadow line on every nav
-   surface on every page. */
-.nav,
-.nav.is-scrolled,
-html.page-mode .nav,
-html.page-mode .nav.is-scrolled,
-.nav__brand,
-.brand-pill,
-.navburger {
-  border: 0 !important;
-  border-bottom: 0 !important;
-  outline: 0 !important;
-}
-.nav__brand,
-.brand-pill,
-.navburger {
-  /* Soft outer glow only — no inner bottom line of any kind */
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.18),
-    0 6px 18px -6px rgba(0,0,0,0.4) !important;
-}
-.brand-pill {
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.30),
-    0 8px 20px -8px rgba(61,129,227,0.50) !important;
-}
-/* Slim hairline border using inset shadow instead of border so it can't
-   render as a darker bottom line. */
-.nav__brand,
-.brand-pill,
-.navburger {
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.22),
-    0 6px 18px -6px rgba(0,0,0,0.4) !important;
-}
-.brand-pill {
-  box-shadow:
-    inset 0 0 0 1px rgba(61,129,227,0.45),
-    inset 0 1px 0 rgba(255,255,255,0.35),
-    0 8px 20px -8px rgba(61,129,227,0.50) !important;
-}
-
-/* Seamless behind the iOS URL bar — the body bg used to obscure the
-   fixed video when scrolled past 100dvh. Let the video be the
-   bottom-most paint everywhere; the dark veil over it handles
-   readability. */
-html, body { background: transparent !important; }
-html { background: var(--bg) !important; }   /* keep dark fallback only on html (behind video) */
-
-/* Disable internal scroll on the dashboard mockup so it doesn't fight
-   the snap deck */
-.dashmock,
-.dashmock__body,
-.dashmock__list ul,
-.dashmock__reader { overflow: hidden !important; }
-
-/* Equal-height cards — every snap-slide is exactly one viewport tall,
-   every inner section fills 100% of it, content centred. No card is
-   visibly taller or shorter than another. */
-.snap-slide {
-  height: 100dvh !important;
-  min-height: 100dvh !important;
-  max-height: 100dvh !important;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.snap-slide > .hero,
-.snap-slide > .section,
-.snap-slide > .cta {
-  width: 100%;
-  height: 100% !important;
-  min-height: 100% !important;
-  max-height: 100% !important;
-  padding-top: 72px !important;
-  padding-bottom: 24px !important;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Dashmock fits the card without internal scroll — height capped */
-.dashmock { max-height: 70dvh; }
-.dashmock__body { height: 56dvh !important; max-height: 56dvh; }
-@media (max-width: 900px) {
-  .dashmock__body { height: 48dvh !important; }
-}
-
-/* Desktop free-scroll still wins */
+/* ---- Desktop (>= 1024px) — natural scrolling, larger type ---- */
 @media (min-width: 1024px) {
-  .snap-slide {
-    height: auto !important;
-    min-height: 100dvh !important;
-    max-height: none !important;
+  html, body { overflow-y: auto; overflow-x: hidden; height: auto; }
+  body { min-height: 100dvh; height: auto; }
+
+  #deck {
+    position: static;
+    height: auto;
     overflow: visible;
+    scroll-snap-type: none;
   }
-  .snap-slide > .hero,
-  .snap-slide > .section,
-  .snap-slide > .cta {
-    height: auto !important;
-    max-height: none !important;
-    padding-top: 96px !important;
-    padding-bottom: 64px !important;
+  .snap-slide {
+    height: auto;
+    min-height: 100dvh;
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+    padding: 80px 0;
   }
-  .dashmock { max-height: none; }
-  .dashmock__body { height: clamp(440px, 64dvh, 600px) !important; max-height: none; }
+
+  .hero { max-width: 64rem; padding: 120px 24px 96px; }
+  .hero__inner { max-width: 44rem; }
+  .hero__h1 { font-size: clamp(3.5rem, 7vw, 5.5rem); line-height: 0.95; }
+  .hero__sub { max-width: 32rem; font-size: 17px; margin-top: 32px; }
+
+  .section--mockup { padding: 80px 24px 96px; }
+  .dashmock { border-radius: 22px; max-width: 78rem; height: auto; max-height: none; }
+  .dashmock__body { height: clamp(440px, 64vh, 600px); }
+
+  .section--triage { padding: 96px 24px; }
+  .triage {
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    max-width: 78rem;
+    text-align: left;
+  }
+  .triage__copy { align-items: flex-start; }
+  .triage__copy h2 { font-size: clamp(2.2rem, 4vw, 3.2rem); }
+  .triage__copy .lead { max-width: 30rem; margin-left: 0; margin-right: 0; }
+  .chips { justify-content: flex-start; }
+  .triage__card { max-width: 100%; }
+
+  .section--cloud { padding: 80px 24px; }
+  .cloud { max-width: 78rem; gap: 24px 40px; }
+  .cloud li { font-size: 15px; }
+
+  .section--testimonials { padding: 96px 24px; }
+  .quotes { max-width: 78rem; gap: 20px; }
+  .quotes figure { padding: 26px; }
+
+  .c3-pricing-section { padding: 96px 24px 96px; }
+  .c3-grid { gap: 24px; grid-template-columns: repeat(3, 1fr); }
+
+  .section--final { padding: 96px 24px; }
+  .final { padding: 72px 48px; border-radius: 32px; }
+  .final h2 { font-size: clamp(2.8rem, 5vw, 4.2rem); }
+  .final p { font-size: 16px; max-width: 36rem; }
 }
+
 
 /* =========================================================================
-   Dashmock fills its card on every viewport, with the text sized up to
-   actually occupy the space rather than sit tiny inside it.
+   8. REDUCED MOTION
    ========================================================================= */
-.dashmock {
-  width: 100%;
-  height: 100%;
-  max-height: 100%;
-  max-width: var(--max);
-  display: flex;
-  flex-direction: column;
-  border-radius: 16px;
+@media (prefers-reduced-motion: reduce) {
+  .hero__h1 .shiny { animation: none !important; }
+  .begin-pill__dot { animation: none !important; }
+  #deck { scroll-behavior: auto; scroll-snap-type: none; }
 }
-.dashmock__body {
-  flex: 1 1 auto;
-  height: auto !important;
-  max-height: none !important;
-  min-height: 0;
-}
-
-/* Bigger, denser content so the dashmock reads as filled-in */
-.dashmock__compose { font-size: 13px; padding: 10px 14px; }
-.dashmock__nav li { font-size: 13px; padding: 8px 10px; gap: 10px; }
-.dashmock__nav em { font-size: 11px; }
-.dashmock__labels p { font-size: 10px; margin-top: 16px; }
-.dashmock__labels li { font-size: 13px; padding: 5px 10px; gap: 10px; }
-.dashmock__search { font-size: 13px; padding: 16px 18px; }
-.msg { padding: 14px 18px; }
-.msg__name { font-size: 14px; }
-.msg__time { font-size: 12px; }
-.msg__sub { font-size: 13px; }
-.msg__pre { font-size: 12px; }
-.dashmock__reader { padding: 22px 26px; font-size: 14px; }
-.dashmock__reader h3 { font-size: 1.05rem; margin-bottom: 14px; }
-.dashmock__from { margin-bottom: 18px; }
-.avatar { width: 32px; height: 32px; font-size: 13px; }
-.dashmock__sum p { font-size: 14px; }
-.dashmock__reader p { font-size: 13.5px; line-height: 1.6; margin: 0 0 14px; }
-.attach { padding: 7px 14px; font-size: 13px; }
-
-/* Section that hosts the dashmock — fill, centre, no padding leftover */
-.section--mockup {
-  padding: 76px 16px 16px !important;
-  max-width: none !important;
-  width: 100%;
-  height: 100% !important;
-  display: flex !important;
-  align-items: stretch !important;
-  justify-content: center !important;
-}
-
-/* On mobile keep three-pane visible by shrinking type a touch but
-   still filling */
-@media (max-width: 900px) {
-  .dashmock { border-radius: 12px; }
-  .dashmock__side, .dashmock__list { display: none !important; }
-  .dashmock__body { grid-template-columns: 1fr !important; }
-}
-
-/* Dual-video crossfade loop — both videos sit absolute, the "is-on"
-   one fades in over 600ms, the other fades out. No single video ever
-   hits its own loop seam. */
-.bg-video { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-.bg-video video {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 600ms linear;
-  pointer-events: none;
-}
-.bg-video video.is-on { opacity: 1; }
-.bg-video__veil { position: absolute; inset: 0; z-index: 1; }
