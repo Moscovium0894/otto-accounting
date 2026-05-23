@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>For accountants — Otto</title>
+<meta name="description" content="Accountants: stop chasing receipts. Otto hands you clean, signed-off books every month for your restaurant clients." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('page-mode')</script>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="particles" id="particles" aria-hidden="true"></div>
+
+<button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+<div class="navsheet" id="navsheet" aria-hidden="true">
+  <a href="index.html#how">How it works</a>
+  <a href="index.html#numbers">Your numbers</a>
+  <a href="bookkeepers.html">Bookkeepers</a>
+  <a href="for-accountants.html">For accountants</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="index.html#book" class="btn btn--primary">Book a Call</a>
+</div>
+
+<header class="nav is-scrolled" id="topnav">
+  <a href="index.html" class="nav__brand" aria-label="Otto — Home">
+    <svg class="nav__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <rect x="0.5" y="0.5" width="63" height="63" rx="6" fill="hsl(0 0% 12%)" stroke="hsl(0 0% 22%)"/>
+      <g stroke="hsl(var(--primary))" stroke-width="3" fill="none" stroke-linecap="round">
+        <circle cx="22" cy="32" r="10"/>
+        <circle cx="42" cy="32" r="10"/>
+      </g>
+    </svg>
+    <span class="nav__wordmark">Otto</span>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#numbers">Your numbers</a>
+    <a href="bookkeepers.html">Bookkeepers</a>
+    <a href="for-accountants.html">For accountants</a>
+    <a href="pricing.html">Pricing</a>
+  </nav>
+  <div class="nav__cta">
+    <a href="index.html#book" class="btn btn--nav">Get a Quote</a>
+  </div>
+</header>
+
+<main class="page">
+  <section class="page__hero">
+    <div class="page__hero-inner">
+      <span class="page__eyebrow">For accountants</span>
+      <h1 class="page__h1">Clean books. <span class="accent">No shoebox.</span></h1>
+      <p class="page__lead">
+        Your restaurant clients should not be the worst part of your March.
+        Otto runs their monthly bookkeeping to a standard you'd sign off on —
+        which is the point — and hands you a tidy year-end pack instead of a
+        carrier bag of receipts.
+      </p>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2>What you get <span class="accent">in the year-end pack.</span></h2>
+    <div class="acc-grid">
+      <div class="acc-card">
+        <span class="glyph">01</span>
+        <h3>Reconciled to the penny.</h3>
+        <p>Every bank line matched. Every till variance investigated. Every
+        supplier statement reconciled at the end of the period. No surprises
+        in the trial balance.</p>
+      </div>
+      <div class="acc-card">
+        <span class="glyph">02</span>
+        <h3>Coded the way you'd code it.</h3>
+        <p>COGS split into food, wet, packaging. Wages split into BOH/FOH.
+        Capex separated from R&amp;M. The chart of accounts is yours — tell us
+        once, we'll keep it that way.</p>
+      </div>
+      <div class="acc-card">
+        <span class="glyph">03</span>
+        <h3>Audit trail you can defend.</h3>
+        <p>Each posted entry links to its source: the till's Z-read, the
+        supplier PDF, the bank line. A junior can answer any HMRC query
+        without you re-doing the year.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2>How we hand it over.</h2>
+    <div class="acc-grid">
+      <div class="acc-card">
+        <span class="glyph">→</span>
+        <h3>Your software, not ours.</h3>
+        <p>We keep the books in Xero or QuickBooks — whichever your firm uses
+        — so the year-end pack arrives in the tool you're already in. No
+        export, no re-import.</p>
+      </div>
+      <div class="acc-card">
+        <span class="glyph">⌖</span>
+        <h3>One point of contact.</h3>
+        <p>You speak to the bookkeeper who signs the file each month — by
+        name, not a ticket queue. They know the year by the time you ask.</p>
+      </div>
+      <div class="acc-card">
+        <span class="glyph">£</span>
+        <h3>Referral fee.</h3>
+        <p>Recommend Otto to a restaurant client and we pay a flat £600 per
+        site once they're onboarded and through their first signed-off month.
+        No clawback. No drip.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page__section" style="text-align:center; padding-bottom:120px;">
+    <h2>Refer a client. <span class="accent">Get them off your desk.</span></h2>
+    <p style="color: hsl(var(--muted-foreground)); font-size: 1.05rem; font-weight:300; max-width: 56ch; margin: 0 auto 28px; line-height: 1.65;">
+      30 minutes on a call with the owner. Connected the same week. The next
+      time the file lands with you, it's tidy.
+    </p>
+    <a href="mailto:partners@otto.bk?subject=Partner%20referral" class="btn btn--primary">Refer a client</a>
+    <a href="index.html#book" class="btn btn--outline" style="margin-left:8px;">Book a partner call</a>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <a href="index.html" class="nav__brand">
+        <svg class="nav__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <rect x="0.5" y="0.5" width="63" height="63" rx="6" fill="hsl(0 0% 12%)" stroke="hsl(0 0% 22%)"/>
+          <g stroke="hsl(var(--primary))" stroke-width="3" fill="none" stroke-linecap="round">
+            <circle cx="22" cy="32" r="10"/><circle cx="42" cy="32" r="10"/>
+          </g>
+        </svg>
+        <span class="nav__wordmark">Otto</span>
+      </a>
+      <p class="footer__tag">Live, human-checked bookkeeping for independent restaurants and pubs.</p>
+    </div>
+    <div>
+      <div class="footer__h">Product</div>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#numbers">Your numbers</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <div>
+      <div class="footer__h">Company</div>
+      <a href="bookkeepers.html">Bookkeepers</a>
+      <a href="for-accountants.html">For accountants</a>
+      <a href="#">Press</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>
+      <div class="footer__h">Office</div>
+      <p>14 Phipp Street</p>
+      <p>London EC2A 4PN</p>
+      <p>hello@otto.bk</p>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2026 Otto Bookkeeping Ltd · Registered in England &amp; Wales</span>
+    <span>Bookkeeping services · not a substitute for a qualified accountant</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const host = document.getElementById('particles');
+  if (!host) return;
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('span');
+    s.style.left = (Math.random() * 100) + 'vw';
+    const dur = 14 + Math.random() * 22;
+    s.style.width = s.style.height = (2 + Math.random() * 3) + 'px';
+    s.style.setProperty('--dur', dur + 's');
+    s.style.setProperty('--delay', (-Math.random() * dur) + 's');
+    s.style.setProperty('--drift', ((Math.random() * 160 - 80)) + 'px');
+    s.style.opacity = (0.3 + Math.random() * 0.5).toString();
+    host.appendChild(s);
+  }
+})();
+(function(){
+  const burger = document.getElementById('navburger');
+  const sheet = document.getElementById('navsheet');
+  if (!burger || !sheet) return;
+  [...sheet.children].forEach((c, i) => c.style.setProperty('--ni', i));
+  const close = () => { sheet.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); };
+  const open  = () => { sheet.classList.add('is-open');    burger.setAttribute('aria-expanded', 'true'); };
+  burger.addEventListener('click', () => sheet.classList.contains('is-open') ? close() : open());
+  sheet.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>

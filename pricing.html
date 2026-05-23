@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pricing — Otto</title>
+<meta name="description" content="Flat per-site monthly pricing. £480 single site, £380 for groups of three or more. No setup fee, cancel any month." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('page-mode')</script>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="particles" id="particles" aria-hidden="true"></div>
+
+<button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+<div class="navsheet" id="navsheet" aria-hidden="true">
+  <a href="index.html#how">How it works</a>
+  <a href="index.html#numbers">Your numbers</a>
+  <a href="bookkeepers.html">Bookkeepers</a>
+  <a href="for-accountants.html">For accountants</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="index.html#book" class="btn btn--primary">Book a Call</a>
+</div>
+
+<header class="nav is-scrolled" id="topnav">
+  <a href="index.html" class="nav__brand" aria-label="Otto — Home">
+    <svg class="nav__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <rect x="0.5" y="0.5" width="63" height="63" rx="6" fill="hsl(0 0% 12%)" stroke="hsl(0 0% 22%)"/>
+      <g stroke="hsl(var(--primary))" stroke-width="3" fill="none" stroke-linecap="round">
+        <circle cx="22" cy="32" r="10"/>
+        <circle cx="42" cy="32" r="10"/>
+      </g>
+    </svg>
+    <span class="nav__wordmark">Otto</span>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="index.html#how">How it works</a>
+    <a href="index.html#numbers">Your numbers</a>
+    <a href="bookkeepers.html">Bookkeepers</a>
+    <a href="for-accountants.html">For accountants</a>
+    <a href="pricing.html">Pricing</a>
+  </nav>
+  <div class="nav__cta">
+    <a href="index.html#book" class="btn btn--nav">Get a Quote</a>
+  </div>
+</header>
+
+<main class="page">
+  <section class="page__hero">
+    <div class="page__hero-inner">
+      <span class="page__eyebrow">Pricing</span>
+      <h1 class="page__h1">One flat fee. <span class="accent">Per site, per month.</span></h1>
+      <p class="page__lead">
+        No setup cost. No exit fee. No surprise add-ons. The price you see is
+        what you pay every month, signed by a real bookkeeper.
+      </p>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2>Single site.</h2>
+    <div class="price">
+      <div class="price__head">
+        <div>
+          <div class="price__lbl">Restaurant or pub · one site</div>
+          <div class="price__amt">
+            <span class="price__num">£480</span>
+            <span class="price__per">/ month</span>
+          </div>
+          <div class="price__note">Plus VAT · billed monthly · cancel any time</div>
+        </div>
+        <a href="index.html#book" class="btn btn--primary">Book a Call</a>
+      </div>
+      <ul class="price__list">
+        <li><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Daily sales posted from your EPOS by 9am</span></li>
+        <li><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Supplier invoices auto-coded &amp; reviewed</span></li>
+        <li><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Bank reconciled, every transaction</span></li>
+        <li><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Monthly P&amp;L signed by a real bookkeeper</span></li>
+        <li><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Live dashboard on phone &amp; laptop</span></li>
+        <li><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Quarterly VAT return prepared</span></li>
+        <li><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Direct WhatsApp line to your bookkeeper</span></li>
+        <li><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Year-end pack handed to your accountant</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2>Multi-site? <span class="accent">Slide to estimate.</span></h2>
+    <div class="calc">
+      <div>
+        <div class="calc__lbl">Number of sites</div>
+        <div class="calc__sites">
+          <input id="calcRange" type="range" min="1" max="20" value="1" aria-label="Number of sites">
+          <span id="calcCount" class="calc__count">1</span>
+        </div>
+        <p style="font-size: 13px; color: hsl(var(--muted-foreground)); font-weight: 300; line-height: 1.6; margin: 0;">
+          Per-site rate drops to £440 from three sites and £380 from five.
+          Custom rates for groups above ten — just ask.
+        </p>
+      </div>
+      <div>
+        <div class="calc__lbl">Estimated monthly fee</div>
+        <div class="calc__total">
+          <span class="big">£<span id="calcTotal">480</span></span>
+          <span class="per">/ month + VAT</span>
+        </div>
+        <div class="calc__per-site">
+          <span id="calcPerSite">£480</span> per site &middot; <span id="calcSaving">£0</span> saved vs single-site rate
+        </div>
+        <a href="mailto:hello@otto.bk?subject=Multi-site%20quote" class="btn btn--primary" style="margin-top:24px;">Get a multi-site quote</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2>What's <span class="accent">not</span> included.</h2>
+    <div class="acc-grid">
+      <div class="acc-card">
+        <span class="glyph">×</span>
+        <h3>Year-end accounts &amp; CT return.</h3>
+        <p>Your accountant files these. We hand them clean books so it costs
+        you less. Don't have one? We'll introduce you to two firms we like.</p>
+      </div>
+      <div class="acc-card">
+        <span class="glyph">×</span>
+        <h3>Payroll.</h3>
+        <p>We post the wage cost from your payroll provider's report but we
+        don't run payroll itself. We'll integrate with whichever you use —
+        FreeAgent, Sage, Xero Payroll, Employment Hero.</p>
+      </div>
+      <div class="acc-card">
+        <span class="glyph">×</span>
+        <h3>Stocktakes.</h3>
+        <p>If you don't run stocktakes today, we'll set up a monthly cadence
+        with one of our stocktaker partners. We post the numbers to your
+        books once you have them.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page__section" style="text-align:center; padding-bottom:120px;">
+    <h2>Start <span class="accent">this week.</span></h2>
+    <p style="color: hsl(var(--muted-foreground)); font-size: 1.05rem; font-weight:300; max-width: 56ch; margin: 0 auto 28px; line-height: 1.65;">
+      30-minute setup call. First signed-off P&amp;L within the month.
+      Cancel any month.
+    </p>
+    <a href="index.html#book" class="btn btn--primary">Book a Call</a>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <a href="index.html" class="nav__brand">
+        <svg class="nav__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <rect x="0.5" y="0.5" width="63" height="63" rx="6" fill="hsl(0 0% 12%)" stroke="hsl(0 0% 22%)"/>
+          <g stroke="hsl(var(--primary))" stroke-width="3" fill="none" stroke-linecap="round">
+            <circle cx="22" cy="32" r="10"/><circle cx="42" cy="32" r="10"/>
+          </g>
+        </svg>
+        <span class="nav__wordmark">Otto</span>
+      </a>
+      <p class="footer__tag">Live, human-checked bookkeeping for independent restaurants and pubs.</p>
+    </div>
+    <div>
+      <div class="footer__h">Product</div>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#numbers">Your numbers</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <div>
+      <div class="footer__h">Company</div>
+      <a href="bookkeepers.html">Bookkeepers</a>
+      <a href="for-accountants.html">For accountants</a>
+      <a href="#">Press</a>
+      <a href="#">Contact</a>
+    </div>
+    <div>
+      <div class="footer__h">Office</div>
+      <p>14 Phipp Street</p>
+      <p>London EC2A 4PN</p>
+      <p>hello@otto.bk</p>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2026 Otto Bookkeeping Ltd · Registered in England &amp; Wales</span>
+    <span>Bookkeeping services · not a substitute for a qualified accountant</span>
+  </div>
+</footer>
+
+<script>
+// Particles
+(function(){
+  const host = document.getElementById('particles');
+  if (!host) return;
+  for (let i = 0; i < 18; i++) {
+    const s = document.createElement('span');
+    s.style.left = (Math.random() * 100) + 'vw';
+    const dur = 14 + Math.random() * 22;
+    s.style.width = s.style.height = (2 + Math.random() * 3) + 'px';
+    s.style.setProperty('--dur', dur + 's');
+    s.style.setProperty('--delay', (-Math.random() * dur) + 's');
+    s.style.setProperty('--drift', ((Math.random() * 160 - 80)) + 'px');
+    s.style.opacity = (0.3 + Math.random() * 0.5).toString();
+    host.appendChild(s);
+  }
+})();
+// Mobile nav
+(function(){
+  const burger = document.getElementById('navburger');
+  const sheet = document.getElementById('navsheet');
+  if (!burger || !sheet) return;
+  [...sheet.children].forEach((c, i) => c.style.setProperty('--ni', i));
+  const close = () => { sheet.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); };
+  const open  = () => { sheet.classList.add('is-open');    burger.setAttribute('aria-expanded', 'true'); };
+  burger.addEventListener('click', () => sheet.classList.contains('is-open') ? close() : open());
+  sheet.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+// Pricing calculator — per-site tiered pricing
+(function(){
+  const range = document.getElementById('calcRange');
+  const count = document.getElementById('calcCount');
+  const total = document.getElementById('calcTotal');
+  const perSite = document.getElementById('calcPerSite');
+  const saving = document.getElementById('calcSaving');
+  if (!range) return;
+  function rateFor(n) {
+    if (n >= 10) return 350;
+    if (n >= 5)  return 380;
+    if (n >= 3)  return 440;
+    return 480;
+  }
+  function fmt(n) { return n.toLocaleString(); }
+  function update() {
+    const n = parseInt(range.value, 10);
+    const r = rateFor(n);
+    const t = r * n;
+    const naive = 480 * n;
+    count.textContent = n;
+    total.textContent = fmt(t);
+    perSite.textContent = '£' + fmt(r);
+    saving.textContent = '£' + fmt(naive - t);
+  }
+  range.addEventListener('input', update);
+  update();
+})();
+</script>
+</body>
+</html>
