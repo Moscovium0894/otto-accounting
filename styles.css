@@ -994,3 +994,106 @@ html.page-mode .btn--outline {
   .hero__h1 .shiny { animation: none !important; }
   #deck { scroll-behavior: auto; scroll-snap-type: none; }
 }
+
+/* =========================================================================
+   POLISH PASS — remove the grey block around the dashboard mockup's
+   search bar, keep cards centered, and unlock natural scrolling on
+   desktop (snap is mobile-only now).
+   ========================================================================= */
+
+/* Dashmock — drop the heavy grey side panel + border around the search.
+   The mockup now reads as a single dark card, not a 3-column app shell. */
+.dashmock__side { background: transparent !important; }
+.dashmock__list { border-right: 0 !important; }
+.dashmock__search {
+  border-bottom: 0 !important;
+  background: transparent !important;
+  padding: 12px 16px !important;
+}
+.dashmock__bar { background: transparent; }
+
+/* Keep card contents centered in their snap-slide (defensive — confirms
+   no inherited left-alignment is winning) */
+.snap-slide {
+  align-items: center !important;
+  justify-content: center !important;
+}
+.section, .hero, .c3-pricing-section, .section--final {
+  margin-left: auto; margin-right: auto;
+}
+
+/* =========================================================================
+   DESKTOP (>= 1024px) — natural scrolling, bigger type, more breathing
+   room. Snap is disabled; the deck becomes a regular document.
+   ========================================================================= */
+@media (min-width: 1024px) {
+  html, body { overflow-y: auto !important; overflow-x: hidden; height: auto !important; }
+  body { min-height: 100vh; }
+  #deck {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+  .snap-slide {
+    height: auto !important;
+    min-height: 100vh;
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
+    padding: 80px 0;
+  }
+
+  /* Stretchier hero */
+  .hero { padding: 120px 24px 96px; max-width: 64rem; }
+  .hero__inner { max-width: 44rem; }
+  .hero__h1 { font-size: clamp(3.5rem, 7vw, 5.5rem); line-height: 0.95; }
+  .hero__sub { max-width: 32rem; font-size: 17px; margin-top: 32px; }
+  .hero__cta { margin-top: 40px; }
+
+  /* Dashmock — wider, taller, more impressive */
+  .section--mockup { padding: 80px 24px 96px; }
+  .dashmock { border-radius: 22px; max-width: 78rem; }
+  .dashmock__body { height: clamp(440px, 64vh, 600px); }
+
+  /* Triage — more breathing room */
+  .section--triage { padding: 96px 24px 96px; }
+  .triage { gap: 88px; max-width: 78rem; }
+  .triage__copy h2 { font-size: clamp(2.4rem, 4vw, 3.4rem); }
+  .triage__copy .lead { max-width: 32rem; }
+
+  /* Logo cloud — spread out and a hair larger */
+  .section--cloud { padding: 80px 24px; }
+  .cloud { max-width: 78rem; gap: 24px 40px; }
+  .cloud li { font-size: 15px; }
+
+  /* Testimonials — wider quotes */
+  .section--testimonials { padding: 96px 24px; }
+  .quotes { max-width: 78rem; gap: 20px; }
+  .quotes figure { padding: 28px; }
+  .quotes blockquote { font-size: 15px; }
+
+  /* Pricing — bigger watermark headline at full effect */
+  .c3-pricing-section { padding: 96px 24px 120px; }
+  .c3-watermark-main { font-size: 10rem; }
+  .c3-grid { gap: 28px; }
+
+  /* Final CTA — bigger */
+  .section--final { padding: 96px 24px 120px; }
+  .final { padding: 80px 48px; border-radius: 32px; }
+  .final h2 { font-size: clamp(2.8rem, 5vw, 4.2rem); }
+  .final p { font-size: 16px; max-width: 36rem; }
+}
+
+/* Tablet sweet-spot — keep snap on phones, disable on tablets too */
+@media (min-width: 900px) and (max-width: 1023px) {
+  html, body { overflow-y: auto !important; overflow-x: hidden; height: auto !important; }
+  #deck {
+    height: auto !important; overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+  .snap-slide {
+    height: auto !important; min-height: 100vh;
+    scroll-snap-align: none !important; scroll-snap-stop: normal !important;
+    padding: 64px 0;
+  }
+}
