@@ -3,1258 +3,424 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Otto — Live bookkeeping for restaurants</title>
-<!-- Set is-mobile before anything renders so the right layout is used from frame 1. -->
+<title>Otto — AI-native bookkeeping for restaurants</title>
+<meta name="description" content="Otto is a live, AI-assisted bookkeeping platform for independent restaurants and pubs. Real numbers, every morning, signed by a real bookkeeper." />
+
 <script>(function(){try{if(matchMedia('(max-width:740px)').matches||(matchMedia('(hover:none)').matches&&matchMedia('(pointer:coarse)').matches)){document.documentElement.classList.add('is-mobile');}}catch(e){}})();</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<!-- Spline 3D viewer (loads on every device) -->
-<script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.48/build/spline-viewer.js"></script>
-
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- Ambient layers -->
-<div class="grain" aria-hidden="true"></div>
-<!-- (sticky bottom Book-a-Call removed per request) -->
-<div class="particles" id="particles" aria-hidden="true"></div>
-
-<!-- Top progress bar -->
-<div class="progress" aria-hidden="true"><div class="progress__fill" id="progressFill"></div></div>
-
-<!-- Side dot navigation (right) + mirror column on the left used as the
-     second emitter for the fast-scroll warp lines. -->
-<nav class="dots dots--right" id="dots" aria-label="Section navigation"></nav>
-<nav class="dots dots--left" id="dotsLeft" aria-hidden="true"></nav>
-
-<!-- Mobile nav (hamburger + sheet) -->
-<button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
-  <span></span><span></span><span></span>
-</button>
-<div class="navsheet" id="navsheet" aria-hidden="true">
-  <a href="#how">How it works</a>
-  <a href="#numbers">Your numbers</a>
-  <a href="bookkeepers.html">Bookkeepers</a>
-  <a href="for-accountants.html">For accountants</a>
-  <a href="pricing.html">Pricing</a>
-  <a href="#faq">FAQ</a>
-  <a href="#book" class="btn btn--primary">Book a Call</a>
+<!-- Global background video -->
+<div class="bg-video">
+  <video autoplay loop muted playsinline preload="auto"
+    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
+  <div class="bg-video__veil"></div>
 </div>
 
-<!-- ============================================================ NAV -->
-<header class="nav" id="topnav" data-screen-label="Nav">
-  <a href="#hero" class="nav__brand" aria-label="Otto — Home">
-    <svg class="nav__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <rect x="0.5" y="0.5" width="63" height="63" rx="6" fill="hsl(0 0% 12%)" stroke="hsl(0 0% 22%)"/>
-      <g stroke="hsl(var(--primary))" stroke-width="3" fill="none" stroke-linecap="round">
-        <circle cx="22" cy="32" r="10"/>
-        <circle cx="42" cy="32" r="10"/>
-      </g>
+<!-- Vertical guide lines (desktop only) -->
+<div class="guide guide--left" aria-hidden="true"></div>
+<div class="guide guide--right" aria-hidden="true"></div>
+
+<!-- Global SVG noise filter for the shiny headline -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="c3-noise">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
+    <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.35 0" />
+    <feComposite in2="SourceGraphic" operator="in" result="noise" />
+    <feBlend in="SourceGraphic" in2="noise" mode="multiply" />
+  </filter>
+</svg>
+
+<!-- =========================================================
+     NAV
+     ========================================================= -->
+<header class="nav" id="topnav">
+  <a class="nav__brand" href="#hero" aria-label="Otto — Home">
+    <svg class="logo-mark" viewBox="0 0 256 256" aria-hidden="true">
+      <path fill="currentColor" d="M 0 128 C 70.692 128 128 185.308 128 256 L 64 256 C 64 220.654 35.346 192 0 192 Z M 256 192 C 220.654 192 192 220.654 192 256 L 128 256 C 128 185.308 185.308 128 256 128 Z M 128 0 C 128 70.692 70.692 128 0 128 L 0 64 C 35.346 64 64 35.346 64 0 Z M 192 0 C 192 35.346 220.654 64 256 64 L 256 128 C 185.308 128 128 70.692 128 0 Z"/>
     </svg>
-    <span class="nav__wordmark">Otto</span>
   </a>
   <nav class="nav__links" aria-label="Primary">
     <a href="#how">How it works</a>
-    <a href="#numbers">Your numbers</a>
-    <a href="bookkeepers.html">Bookkeepers</a>
-    <a href="for-accountants.html">For accountants</a>
-    <a href="pricing.html">Pricing</a>
+    <a href="#triage">Reconcile</a>
+    <a href="#cloud">Customers</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#pricing">Pricing</a>
   </nav>
-  <div class="nav__cta">
-    <a href="#book" class="btn btn--nav">Get a Quote</a>
-  </div>
+  <a href="#book" class="apple-btn nav__cta">
+    <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+    <span>Book a call</span>
+    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+  </a>
+  <button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
-<!-- ============================================================ DECK -->
+<div class="navsheet" id="navsheet" aria-hidden="true">
+  <a href="#how">How it works</a>
+  <a href="#triage">Reconcile</a>
+  <a href="#cloud">Customers</a>
+  <a href="#testimonials">Reviews</a>
+  <a href="#pricing">Pricing</a>
+  <a href="bookkeepers.html">Bookkeepers</a>
+  <a href="for-accountants.html">For accountants</a>
+  <a href="#book" class="apple-btn navsheet__cta">
+    <span>Book a call</span>
+  </a>
+</div>
+
+<!-- =========================================================
+     DECK — scroll-snap container with centered cards
+     ========================================================= -->
 <main id="deck">
 
-<!-- ============================================================ HERO -->
+<!-- 1. HERO -->
 <section class="snap-slide" data-snap data-name="Hero">
-<section class="hero" id="hero" data-bg="spline" data-screen-label="01 Hero">
-  <div class="hero__bg"></div>
-  <div class="hero__spline" aria-hidden="true">
-    <spline-viewer url="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode" loading-anim-type="none"></spline-viewer>
-  </div>
-  <div class="pool-a"></div>
-  <div class="pool-b"></div>
-  <div class="hero__grid"></div>
-
-  <!-- Floating orbs -->
-  <div class="orb orb--a" aria-hidden="true"></div>
-  <div class="orb orb--b" aria-hidden="true"></div>
-  <div class="orb orb--c" aria-hidden="true"></div>
-
-  <div class="hero__overlay"></div>
-
-  <div class="hero__content">
-    <div class="hero__eyebrow fade-up" style="animation-delay:0.15s">
-      <span class="pulse"></span>Live restaurant bookkeeping
-    </div>
-    <h1 class="hero__h1 fade-up" style="animation-delay:0.25s">
-      <span data-chars>Bookkeeping,</span><br><span class="accent">Accelerated.</span>
-    </h1>
-    <p class="hero__sub fade-up" style="animation-delay:0.45s">
-      We do bookkeeping correctly.
-    </p>
-    <p class="hero__desc fade-up" style="animation-delay:0.6s">
-      Live bookkeeping for independent restaurants and pubs. Sales posted from your
-      till overnight. Supplier invoices coded. Bank reconciled, every line. A qualified
-      bookkeeper reviews every figure and signs the month. Faster and cheaper than the
-      monthly bookkeeper you're using today — and a week, not a month, behind.
-    </p>
-    <div class="hero__ctas fade-up" style="animation-delay:0.75s">
-      <a href="#book" class="btn btn--primary">Book a Call</a>
-      <a href="#how" class="btn btn--white">How It Works</a>
-    </div>
-    <p class="hero__trust fade-up" style="animation-delay:0.9s">
-      <span>86 kitchens onboarded</span>
-      <span class="dot"></span>
-      <span>4.9 ★ from owners</span>
-      <span class="dot"></span>
-      <span>London · UK</span>
-    </p>
-  </div>
-
-  <div class="scroll-hint" aria-hidden="true">
-    <span>Scroll</span>
-    <span class="line"></span>
-  </div>
-</section>
-</section>
-
-<!-- ============================================================ HOW -->
-<section class="snap-slide" data-snap data-name="How it works">
-<section class="section section--darker" id="how" data-screen-label="02 How it works" style="--bgx:80%;--bgy:30%">
-  <div class="section__inner">
-    <div class="section__head">
-      <span class="section__eyebrow reveal">How it works</span>
-      <h2 class="section__h2 reveal" style="--i:1">
-        <span class="words" data-words>Three steps. </span><span class="accent words" data-words>Then it runs.</span>
-      </h2>
-      <p class="section__lead reveal" style="--i:2">
-        We connect to the systems you already use. Software does the heavy data work
-        overnight. A real bookkeeper reviews it the next morning. You see the result
-        before service.
+  <section class="hero" id="hero">
+    <div class="hero__inner">
+      <h1 class="hero__h1">
+        <span class="hero__line">Your books.</span>
+        <span class="hero__line shiny">Revitalised.</span>
+      </h1>
+      <p class="hero__sub">
+        Otto is a live, AI-assisted bookkeeping platform for independent
+        restaurants and pubs. It pulls in sales, codes invoices, and
+        reconciles the bank — then a qualified bookkeeper signs off the
+        month, by name, by hand.
       </p>
+      <div class="hero__cta">
+        <a href="#book" class="apple-btn">
+          <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+          <span>Book a call</span>
+          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <p class="hero__note">30-minute setup · cancel any month</p>
+      </div>
     </div>
-    <ol class="steps">
-      <li class="step reveal" style="--i:0">
-        <div class="step__n"><span class="glyph">01</span> Connect</div>
-        <h3 class="step__title">We plug into your till, bank and suppliers.</h3>
-        <p class="step__body">
-          One 30-minute setup call. We link your EPOS, your bank, and give your
-          suppliers a forwarding email for invoices. Nothing changes about how you
-          run service.
-        </p>
-      </li>
-      <li class="step reveal" style="--i:1">
-        <div class="step__n"><span class="glyph">02</span> Run</div>
-        <h3 class="step__title">Overnight, every night, we do the books.</h3>
-        <p class="step__body">
-          Sales posted by 9am. Invoices coded. Bank reconciled to the penny. AI does
-          the data work in minutes instead of days. If anything looks off, we hold
-          the line and ask you one short question by message.
-        </p>
-      </li>
-      <li class="step reveal" style="--i:2">
-        <div class="step__n"><span class="glyph">03</span> Review</div>
-        <h3 class="step__title">A bookkeeper reviews and signs off.</h3>
-        <p class="step__body">
-          Your assigned bookkeeper checks the work, signs the month, and is your direct
-          contact. Same person, every month. Your year-end accountant still files the
-          tax return — we just hand them clean books.
-        </p>
-      </li>
-    </ol>
-  </div>
-</section>
+  </section>
 </section>
 
-<!-- ============================================================ NUMBERS -->
-<section class="snap-slide" data-snap data-name="Your numbers">
-<section class="section" id="numbers" data-screen-label="03 Your numbers" style="--bgx:20%;--bgy:60%">
-  <div class="section__inner">
-    <div class="section__head">
-      <span class="section__eyebrow reveal">Your numbers, current</span>
-      <h2 class="section__h2 reveal" style="--i:1">
-        <span class="words" data-words>Today's figures. </span><span class="accent words" data-words>Not last quarter's.</span>
-      </h2>
-
-      <div class="marquee reveal" style="--i:3" aria-hidden="true">
-        <div class="marquee__track">
-          <span class="marquee__item"><span class="dot"></span>EPOS posted 09:00</span>
-          <span class="marquee__item"><span class="dot"></span>Invoices auto-coded</span>
-          <span class="marquee__item"><span class="dot"></span>Bank reconciled to the penny</span>
-          <span class="marquee__item"><span class="dot"></span>VAT prepared quarterly</span>
-          <span class="marquee__item"><span class="dot"></span>Signed by a real bookkeeper</span>
-          <span class="marquee__item"><span class="dot"></span>Live dashboard on your phone</span>
-          <span class="marquee__item"><span class="dot"></span>EPOS posted 09:00</span>
-          <span class="marquee__item"><span class="dot"></span>Invoices auto-coded</span>
-          <span class="marquee__item"><span class="dot"></span>Bank reconciled to the penny</span>
-          <span class="marquee__item"><span class="dot"></span>VAT prepared quarterly</span>
-          <span class="marquee__item"><span class="dot"></span>Signed by a real bookkeeper</span>
-          <span class="marquee__item"><span class="dot"></span>Live dashboard on your phone</span>
+<!-- 2. DASHBOARD MOCKUP -->
+<section class="snap-slide" data-snap data-name="Dashboard">
+  <section class="section section--mockup" id="how">
+    <div class="dashmock liquid-glass">
+      <div class="dashmock__bar">
+        <span class="tl tl--red"></span><span class="tl tl--amber"></span><span class="tl tl--green"></span>
+        <span class="dashmock__title">Otto — Brown Cow · Week to date</span>
+      </div>
+      <div class="dashmock__body">
+        <aside class="dashmock__side">
+          <button class="dashmock__compose"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="currentColor" d="M9.94 14.34l-2.49-2.49.7-.7 1.79 1.79 4.85-4.85.7.71-5.55 5.54zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Reconcile with Otto</button>
+          <ul class="dashmock__nav">
+            <li class="active"><span class="dot"></span>Today<em>09:14</em></li>
+            <li>Signed-off<em>3</em></li>
+            <li>Holds<em>2</em></li>
+            <li>Sales feed</li>
+            <li>Suppliers</li>
+            <li>Archive</li>
+          </ul>
+          <div class="dashmock__labels">
+            <p>Categories</p>
+            <ul>
+              <li><span class="ld" style="background:#A4F4FD"></span>COGS</li>
+              <li><span class="ld" style="background:#00d2ff"></span>Wages</li>
+              <li><span class="ld" style="background:#f59e0b"></span>Rent &amp; utilities</li>
+              <li><span class="ld" style="background:#10b981"></span>Margin</li>
+            </ul>
+          </div>
+        </aside>
+        <div class="dashmock__list">
+          <div class="dashmock__search">
+            <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm10 2-4.35-4.35"/></svg>
+            <span>Search the books</span>
+          </div>
+          <ul>
+            <li class="msg active unread">
+              <div class="msg__name">Toast EPOS</div>
+              <div class="msg__time">09:00</div>
+              <div class="msg__sub">Yesterday's takings posted</div>
+              <div class="msg__pre">£2,148.00 across 184 covers · 31.4% food cost</div>
+            </li>
+            <li class="msg unread">
+              <div class="msg__name">Bidfood</div>
+              <div class="msg__time">08:22</div>
+              <div class="msg__sub">Invoice coded — COGS / produce</div>
+              <div class="msg__pre">£612.40 · matched to last week's order</div>
+            </li>
+            <li class="msg">
+              <div class="msg__name">Barclays</div>
+              <div class="msg__time">Yesterday</div>
+              <div class="msg__sub">14 lines reconciled to the penny</div>
+              <div class="msg__pre">Bank feed cleared at 04:12</div>
+            </li>
+            <li class="msg">
+              <div class="msg__name">Sarah W.</div>
+              <div class="msg__time">Yesterday</div>
+              <div class="msg__sub">Hold released — wine supplier</div>
+              <div class="msg__pre">Coded to COGS / drinks after owner reply</div>
+            </li>
+            <li class="msg">
+              <div class="msg__name">HMRC</div>
+              <div class="msg__time">Mon</div>
+              <div class="msg__sub">VAT reminder — Q1 due 7 May</div>
+              <div class="msg__pre">Return prepared, awaiting your signoff</div>
+            </li>
+            <li class="msg">
+              <div class="msg__name">Stripe</div>
+              <div class="msg__time">Mon</div>
+              <div class="msg__sub">Card payout £4,210.00 sent</div>
+              <div class="msg__pre">Posted to bank, matched to Z-read 4–6 May</div>
+            </li>
+          </ul>
+        </div>
+        <div class="dashmock__reader">
+          <div class="dashmock__toolbar">
+            <button aria-label="Reply"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 17 4 12l5-5M20 18v-2a4 4 0 0 0-4-4H4"/></svg></button>
+            <button aria-label="Forward"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m15 17 5-5-5-5M4 18v-2a4 4 0 0 1 4-4h12"/></svg></button>
+            <button aria-label="Archive"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg></button>
+            <button aria-label="Trash"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+            <button class="more" aria-label="More"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg></button>
+          </div>
+          <h3>Yesterday's takings posted</h3>
+          <div class="dashmock__from">
+            <span class="avatar">T</span>
+            <div>
+              <strong>Toast EPOS</strong>
+              <span> · to you · 09:00</span>
+            </div>
+            <span class="pill">Sales feed</span>
+          </div>
+          <div class="dashmock__sum">
+            <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="#A4F4FD" d="M9.94 14.34l-2.49-2.49.7-.7 1.79 1.79 4.85-4.85.7.71-5.55 5.54zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <div>
+              <p class="dashmock__sum-h">Summary by Otto</p>
+              <p>£2,148 across 184 covers. Food cost 31.4%, half a point under target. Wage cost on plan. No outliers — Sarah has signed off.</p>
+            </div>
+          </div>
+          <p>Yesterday was a strong Tuesday — wet sales up 9% on last week, food sales flat. Two large covers in the back room moved the average ticket up.</p>
+          <p>Eight supplier invoices have already been coded against the day. Bank reconciliation finished at 04:12. Z-read variance of £2.40 was matched to a void.</p>
+          <p>The £20 cash short on Thursday is the only open question for the week — Marcus thinks it was the tip-out, we will know by tonight.</p>
+          <p class="muted">— Otto, on behalf of Sarah Whitlow (bookkeeper)</p>
+          <a class="attach"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m21 11-9.5 9.5a5.5 5.5 0 0 1-7.78-7.78L13.34 3.6a3.67 3.67 0 0 1 5.19 5.19l-9.62 9.62a1.83 1.83 0 0 1-2.6-2.6L15.4 7.7"/></svg> week-to-date.pdf</a>
         </div>
       </div>
     </div>
+  </section>
+</section>
 
-    <div class="dash-wrap">
-      <div class="dash-side reveal reveal--left">
-        <h3>Open your phone before service. See where you actually are.</h3>
-        <p>
-          Owners we talk to find out their food cost was off two weeks too late.
-          That doesn't happen here. The dashboard updates as bookkeeping happens —
-          you can act on what's in front of you while there's still a week left to
-          act on it.
+<!-- 3. RECONCILE / TRIAGE -->
+<section class="snap-slide" data-snap data-name="Reconcile">
+  <section class="section section--triage" id="triage">
+    <div class="triage">
+      <div class="triage__copy">
+        <p class="eyebrow"><span class="dot"></span>Reconcile<em>AI-native</em></p>
+        <h2>Close the books<br/>without closing the venue.</h2>
+        <p class="lead">
+          Otto reads every till receipt, supplier invoice, and bank line.
+          It codes the routine work the same way every time, holds the
+          weird ones for your bookkeeper, and hands you a signed-off
+          P&amp;L within three working days of month-end.
         </p>
-        <ul>
-          <li style="--li:0"><span class="tick">✓</span><span>Sales posted by 9am, every morning</span></li>
-          <li style="--li:1"><span class="tick">✓</span><span>Food &amp; labour cost vs target, live</span></li>
-          <li style="--li:2"><span class="tick">✓</span><span>Bank reconciled, every transaction</span></li>
-          <li style="--li:3"><span class="tick">✓</span><span>Monthly P&amp;L signed off within 3 working days of month-end</span></li>
-        </ul>
+        <div class="chips">
+          <span>Auto-code COGS</span>
+          <span>Z-read variance flags</span>
+          <span>Supplier statement match</span>
+          <span>VAT prepared</span>
+        </div>
       </div>
-
-      <div class="dash reveal reveal--right" role="img" aria-label="Live bookkeeping dashboard preview for Brown Cow Pub, week 9–15 March 2026">
-        <div class="dash__head">
-          <div>
-            <h3 class="dash__title">Week to date</h3>
-            <div class="dash__sub">Mon 9 – Tue 10 Mar · Brown Cow</div>
-          </div>
-          <span class="badge"><span class="pulse"></span>Signed off</span>
+      <div class="triage__card liquid-glass">
+        <p class="triage__head">Today · 67 transactions reconciled</p>
+        <div class="triage__row liquid-glass">
+          <div><strong>Signed off</strong><span class="ct" style="color:#fff">42</span></div>
+          <p>Bidfood · Brakes · Toast Z-read · Stripe payout</p>
         </div>
-        <table class="dash__table">
-          <tbody>
-            <tr><td>Net sales</td><td>£<span class="counter" data-to="12480.00" data-dec="2">12,480.00</span></td></tr>
-            <tr><td>Cost of goods</td><td class="neg">(£<span class="counter" data-to="3892.16" data-dec="2">3,892.16</span>)</td></tr>
-            <tr><td>Wages</td><td class="neg">(£<span class="counter" data-to="3494.40" data-dec="2">3,494.40</span>)</td></tr>
-            <tr class="dash__total"><td>Gross profit</td><td>£<span class="counter" data-to="5093.44" data-dec="2">5,093.44</span></td></tr>
-          </tbody>
-        </table>
-        <div class="dash__kpis">
-          <div class="dash__kpi">
-            <div class="dash__kpi-lbl">Food cost</div>
-            <div class="dash__kpi-val">31.2%</div>
-            <div class="kpi-bar" style="--p:31.2%"><div class="kpi-bar__fill"></div><div class="kpi-bar__target" style="left:32%"></div></div>
-            <div class="dash__kpi-delta"><span class="pos">↓ 0.8%</span> · target 32%</div>
-          </div>
-          <div class="dash__kpi">
-            <div class="dash__kpi-lbl">Labour</div>
-            <div class="dash__kpi-val">28.0%</div>
-            <div class="kpi-bar" style="--p:28%"><div class="kpi-bar__fill"></div><div class="kpi-bar__target" style="left:28%"></div></div>
-            <div class="dash__kpi-delta">— flat · target 28%</div>
-          </div>
-          <div class="dash__kpi">
-            <div class="dash__kpi-lbl">Net margin</div>
-            <div class="dash__kpi-val">11.4%</div>
-            <div class="kpi-bar" style="--p:38%"><div class="kpi-bar__fill"></div></div>
-            <div class="dash__kpi-delta"><span class="neg">↓ 0.4%</span> vs last week</div>
-          </div>
+        <div class="triage__row liquid-glass">
+          <div><strong>For review</strong><span class="ct" style="color:#e5e5e5">7</span></div>
+          <p>Cash short Thu · Wine credit note · Marcus expense</p>
         </div>
-
-        <svg class="sparkline" viewBox="0 0 220 28" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="sparkGrad" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stop-color="hsl(var(--primary))" stop-opacity="0.35"/>
-              <stop offset="100%" stop-color="hsl(var(--primary))" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <path class="area" d="M0,24 L0,18 L20,16 L40,20 L60,12 L80,14 L100,8 L120,11 L140,6 L160,9 L180,4 L200,7 L220,3 L220,28 L0,28 Z"/>
-          <path d="M0,18 L20,16 L40,20 L60,12 L80,14 L100,8 L120,11 L140,6 L160,9 L180,4 L200,7 L220,3"/>
-        </svg>
-
-        <div class="dash__live">
-          <div class="dash__live-h">
-            <span>Activity</span>
-            <span class="live-dot">Live</span>
-          </div>
-          <div id="ticker">
-            <div class="tick-row"><span class="time">08:14</span><span class="desc">Yesterday's takings posted from Toast</span><span class="amt">£2,148.00</span></div>
-            <div class="tick-row"><span class="time">08:22</span><span class="desc">Bidfood invoice coded · COGS</span><span class="amt">£612.40</span></div>
-            <div class="tick-row"><span class="time">08:31</span><span class="desc">Bank reconciled · 14 lines matched</span><span class="amt">✓</span></div>
-            <div class="tick-row"><span class="time">08:46</span><span class="desc">Reviewed by Sarah</span><span class="amt">✓</span></div>
-          </div>
+        <div class="triage__row liquid-glass">
+          <div><strong>On hold</strong><span class="ct" style="color:#a3a3a3">2</span></div>
+          <p>Awaiting owner — corkage on private hire</p>
+        </div>
+        <div class="triage__row liquid-glass">
+          <div><strong>Auto-archived</strong><span class="ct" style="color:#525252">16</span></div>
+          <p>Statement noise · Marketing emails · Receipts</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
-</section>
-
-<!-- ============================================================ COMPARE -->
-<section class="snap-slide" data-snap data-name="Why switch">
-<section class="section section--darker" id="compare" data-screen-label="04 Why switch" style="--bgx:60%;--bgy:40%">
-  <div class="section__inner">
-    <div class="section__head">
-      <span class="section__eyebrow reveal">Why switch</span>
-      <h2 class="section__h2 reveal" style="--i:1">
-        <span class="words" data-words>Your current bookkeeper, </span><span class="accent words" data-words>but better.</span>
-      </h2>
-    </div>
-
-    <div class="compare">
-      <div class="compare__col reveal reveal--left">
-        <div class="compare__lbl">A typical local bookkeeper</div>
-        <div class="compare__name">Monthly bookkeeping</div>
-        <div class="compare__row" style="--r:0"><div class="k">Cost</div><div class="v">£900 – £1,500 / month</div></div>
-        <div class="compare__row" style="--r:1"><div class="k">Cadence</div><div class="v">Monthly — figures land 3 weeks after month-end</div></div>
-        <div class="compare__row" style="--r:2"><div class="k">Sales entry</div><div class="v">Manually keyed from till reports</div></div>
-        <div class="compare__row" style="--r:3"><div class="k">Invoices</div><div class="v">Emailed in, queued, processed weekly</div></div>
-        <div class="compare__row" style="--r:4"><div class="k">Contact</div><div class="v">A generic inbox at a firm</div></div>
-        <div class="compare__row" style="--r:5"><div class="k">What you see</div><div class="v">A PDF P&amp;L the following month</div></div>
-      </div>
-      <div class="compare__col compare--ours reveal reveal--right">
-        <div class="compare__lbl" style="color: hsl(var(--primary));">Otto</div>
-        <div class="compare__name">Live, AI-assisted bookkeeping</div>
-        <div class="compare__row" style="--r:0"><div class="k">Cost</div><div class="v"><strong>£480 / month</strong> — flat, per site</div></div>
-        <div class="compare__row" style="--r:1"><div class="k">Cadence</div><div class="v"><strong>Every morning by 9am</strong>, monthly P&amp;L signed within 3 working days</div></div>
-        <div class="compare__row" style="--r:2"><div class="k">Sales entry</div><div class="v">Posted from your till <strong>overnight</strong>, no keying</div></div>
-        <div class="compare__row" style="--r:3"><div class="k">Invoices</div><div class="v">Auto-coded on arrival, reviewed same-day</div></div>
-        <div class="compare__row" style="--r:4"><div class="k">Contact</div><div class="v">Your bookkeeper, by name. Same person every month</div></div>
-        <div class="compare__row" style="--r:5"><div class="k">What you see</div><div class="v">A live dashboard. Today's numbers, on your phone</div></div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 </section>
 
-<!-- ============================================================ HUMAN -->
-<section class="snap-slide" data-snap data-name="Bookkeepers">
-<section class="section" id="human" data-screen-label="05 Human in the loop" style="--bgx:90%;--bgy:80%">
-  <div class="section__inner">
-    <div class="section__head">
-      <span class="section__eyebrow reveal">Human in the loop</span>
-      <h2 class="section__h2 reveal" style="--i:1">
-        <span class="words" data-words>A real bookkeeper </span><span class="accent words" data-words>signs every month.</span>
-      </h2>
-      <p class="section__lead reveal" style="--i:2">
-        The software does the data work. A qualified bookkeeper reviews the result and
-        puts their name on it. You write to them. They reply.
-      </p>
-    </div>
-    <ul class="people">
-      <li class="person reveal" style="--i:0">
-        <div class="person__top">
-          <div class="avatar">SW</div>
-          <div>
-            <div class="person__name">Sarah Whitlow</div>
-            <div class="person__role"><span class="yrs counter" data-to="14" data-dec="0">14</span> yrs · Restaurants</div>
-          </div>
-        </div>
-        <p class="person__quote">
-          "I worked in a chef's office for nine years. I know what an owner
-          actually needs to see on a Tuesday morning."
-        </p>
-      </li>
-      <li class="person reveal" style="--i:1">
-        <div class="person__top">
-          <div class="avatar">JO</div>
-          <div>
-            <div class="person__name">James Okoye</div>
-            <div class="person__role">Ex-Pret · <span class="yrs counter" data-to="9" data-dec="0">9</span> yrs</div>
-          </div>
-        </div>
-        <p class="person__quote">
-          "The software gets us 95% of the way. The 5% that matters — the
-          weird invoice, the cash short — is what I do."
-        </p>
-      </li>
-      <li class="person reveal" style="--i:2">
-        <div class="person__top">
-          <div class="avatar">PS</div>
-          <div>
-            <div class="person__name">Priya Shah</div>
-            <div class="person__role">Kingston Smith · <span class="yrs counter" data-to="11" data-dec="0">11</span> yrs</div>
-          </div>
-        </div>
-        <p class="person__quote">
-          "Same client, every month. I know which week your VAT lands and
-          when your big supplier ships."
-        </p>
-      </li>
+<!-- 4. LOGO CLOUD -->
+<section class="snap-slide" data-snap data-name="Customers">
+  <section class="section section--cloud" id="cloud">
+    <p class="kicker">Trusted by independent kitchens across the UK</p>
+    <ul class="cloud">
+      <li>Brown Cow</li>
+      <li>Apothecary</li>
+      <li>Hawthorn</li>
+      <li>Smith &amp; Sons</li>
+      <li>Larder</li>
+      <li>Quay</li>
+      <li>The Plough</li>
+      <li>Marrow</li>
     </ul>
-  </div>
-</section>
+  </section>
 </section>
 
-<!-- ============================================================ PRICING -->
+<!-- 5. TESTIMONIALS -->
+<section class="snap-slide" data-snap data-name="Reviews">
+  <section class="section section--testimonials" id="testimonials">
+    <div class="quotes">
+      <figure class="liquid-glass">
+        <blockquote>"Otto gave us our Tuesdays back. The numbers land before service and we actually act on them in the same week, not three weeks later."</blockquote>
+        <figcaption><strong>Emma Roberts</strong><span>Owner</span><span class="org">BROWN COW</span></figcaption>
+      </figure>
+      <figure class="liquid-glass">
+        <blockquote>"It catches the things a human would miss at 11pm — the tiny variance on a Z-read, the duplicated supplier invoice. And Sarah is on the other end when it doesn't."</blockquote>
+        <figcaption><strong>Daniel Mehta</strong><span>Head chef &amp; partner</span><span class="org">APOTHECARY</span></figcaption>
+      </figure>
+      <figure class="liquid-glass">
+        <blockquote>"Cleanest year-end my accountant has seen. He thanked us. That hasn't happened before."</blockquote>
+        <figcaption><strong>Aoife Byrne</strong><span>Director</span><span class="org">THE PLOUGH</span></figcaption>
+      </figure>
+    </div>
+  </section>
+</section>
+
+<!-- 6. PRICING -->
 <section class="snap-slide" data-snap data-name="Pricing">
-<section class="section section--darker" id="pricing" data-screen-label="06 Pricing" style="--bgx:50%;--bgy:50%">
-  <div class="section__inner">
-    <div class="section__head" style="text-align:center; margin-left:auto; margin-right:auto;">
-      <span class="section__eyebrow reveal">Pricing</span>
-      <h2 class="section__h2 reveal" style="--i:1">
-        <span class="words" data-words>One plan. </span><span class="accent words" data-words>Restaurant priced.</span>
-      </h2>
-    </div>
-    <div class="price reveal reveal--scale">
-      <div class="price__head">
-        <div>
-          <div class="price__lbl">Single-site restaurant or pub</div>
-          <div class="price__amt">
-            <span class="price__num">£480</span>
-            <span class="price__per">/ month</span>
-          </div>
-          <div class="price__note">Plus VAT · billed monthly · cancel any time</div>
-        </div>
-        <a href="#book" class="btn btn--primary">Book a Call</a>
-      </div>
-      <ul class="price__list">
-        <li style="--p:0"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Daily sales posted from your EPOS by 9am</span></li>
-        <li style="--p:1"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Supplier invoices auto-coded &amp; reviewed</span></li>
-        <li style="--p:2"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Bank reconciled, every transaction</span></li>
-        <li style="--p:3"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Monthly P&amp;L, signed off by a real bookkeeper</span></li>
-        <li style="--p:4"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Live dashboard on phone &amp; laptop</span></li>
-        <li style="--p:5"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Quarterly VAT return prepared</span></li>
-        <li style="--p:6"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Direct WhatsApp line to your bookkeeper</span></li>
-        <li style="--p:7"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Year-end pack handed to your accountant</span></li>
-      </ul>
-      <div class="price__foot">
-        Multi-site? Group of three or more? We do per-site rates from £380. <a href="#book" style="color: hsl(var(--primary));">Tell us a bit about the group →</a>
+  <section class="c3-pricing-section" id="pricing">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <filter id="c3-noise-px">
+        <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" stitchTiles="stitch" />
+        <feComponentTransfer><feFuncA type="linear" slope="0.075" /></feComponentTransfer>
+        <feComposite in2="SourceGraphic" operator="in" result="noise" />
+        <feBlend in="SourceGraphic" in2="noise" mode="overlay" />
+      </filter>
+    </svg>
+    <div class="c3-watermark-container" aria-hidden="true">
+      <div class="c3-watermark-main">
+        <span class="c3-watermark-line-1">Your books.</span>
+        <span class="c3-watermark-line-2">Revitalised</span>
       </div>
     </div>
-  </div>
-</section>
-</section>
-
-<!-- ============================================================ FAQ -->
-<section class="snap-slide" data-snap data-name="FAQ">
-<section class="section" id="faq" data-screen-label="07 FAQ" style="--bgx:20%;--bgy:30%">
-  <div class="section__inner">
-    <div class="section__head">
-      <span class="section__eyebrow reveal">FAQ</span>
-      <h2 class="section__h2 reveal" style="--i:1">
-        <span class="words" data-words>Things owners </span><span class="accent words" data-words>ask first.</span>
-      </h2>
+    <div class="c3-grid">
+      <article class="c3-card">
+        <p class="c3-tier-small">Single site</p>
+        <p class="c3-tier-large"><span data-price-m>£480/m</span><span data-price-y hidden>£4,800/y</span></p>
+        <p class="c3-desc">For one independent restaurant or pub. Everything you need to close a month inside three working days.</p>
+        <ul class="c3-list">
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Daily sales posted from your EPOS</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Supplier invoices auto-coded</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Bank reconciled every transaction</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Monthly P&amp;L signed by a real bookkeeper</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Quarterly VAT return prepared</li>
+        </ul>
+        <a href="#book" class="c3-btn">Book a call</a>
+      </article>
+      <article class="c3-card c3-card-pro">
+        <p class="c3-tier-small">Multi-site</p>
+        <p class="c3-tier-large"><span data-price-m>£440/m</span><span data-price-y hidden>£4,400/y</span><span class="per">per site · from 3</span></p>
+        <p class="c3-desc">For groups of three or more. Consolidated reporting, group VAT, inter-site allocations included.</p>
+        <ul class="c3-list">
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Everything in Single site</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Consolidated group P&amp;L</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Inter-site cost allocations</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Group VAT prepared as one return</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Dedicated bookkeeper</li>
+        </ul>
+        <a href="#book" class="c3-btn">Book a call</a>
+      </article>
+      <article class="c3-card">
+        <p class="c3-tier-small">Group</p>
+        <p class="c3-tier-large"><span data-price-m>£380/m</span><span data-price-y hidden>£3,800/y</span><span class="per">per site · from 5</span></p>
+        <p class="c3-desc">For groups of five or more sites. Custom integrations, board pack reporting, and SLAs on signoff timing.</p>
+        <ul class="c3-list">
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Everything in Multi-site</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Custom EPOS / banking integrations</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Monthly board pack</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Signoff SLA — 48 hours of month-end</li>
+          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Named CFO support</li>
+        </ul>
+        <a href="#book" class="c3-btn">Book a call</a>
+      </article>
     </div>
-    <ul class="faq" id="faq-list">
-      <li class="faq__item open reveal" style="--i:0">
-        <button class="faq__q">Do you replace my accountant?</button>
-        <div class="faq__a">
-          No. Your accountant files your year-end return — we don't, and we wouldn't
-          try. What we replace is the slow, expensive monthly bookkeeping.
-        </div>
-      </li>
-      <li class="faq__item reveal" style="--i:1">
-        <button class="faq__q">Is the AI doing the bookkeeping?</button>
-        <div class="faq__a">
-          Software does the data work — pulling sales from your till, coding invoices,
-          matching bank lines. A qualified bookkeeper reviews the result every month
-          and signs it off. Their name is on the report.
-        </div>
-      </li>
-      <li class="faq__item reveal" style="--i:2">
-        <button class="faq__q">How current is "live"?</button>
-        <div class="faq__a">
-          Yesterday's takings are posted by 9am. Supplier invoices coded within one
-          working day. Your P&amp;L is never more than a day old.
-        </div>
-      </li>
-      <li class="faq__item reveal" style="--i:3">
-        <button class="faq__q">How is this cheaper than my local bookkeeper?</button>
-        <div class="faq__a">
-          Because the data entry — five hours a week for a human — is done by software
-          in minutes. Your bookkeeper spends their hour on the judgement work.
-        </div>
-      </li>
-      <li class="faq__item reveal" style="--i:4">
-        <button class="faq__q">What if I don't use a fancy EPOS?</button>
-        <div class="faq__a">
-          We support Toast, Lightspeed, Square, Tevalis, Zonal, Epos Now. On an older
-          till? We'll talk it through on the setup call.
-        </div>
-      </li>
-      <li class="faq__item reveal" style="--i:5">
-        <button class="faq__q">What about VAT?</button>
-        <div class="faq__a">
-          We prepare your VAT return each quarter and your accountant files it (or we
-          can file it for you — included in the monthly fee).
-        </div>
-      </li>
-      <li class="faq__item reveal" style="--i:6">
-        <button class="faq__q">How do I leave?</button>
-        <div class="faq__a">
-          Email us. We export everything to your new bookkeeper in whatever format
-          they ask for. No exit fee. No phone tree.
-        </div>
-      </li>
-      <li class="faq__item reveal" style="--i:7">
-        <button class="faq__q">Multi-site or group?</button>
-        <div class="faq__a">
-          Per-site rates from £380 for groups of three or more. We handle inter-site
-          allocations and consolidated reporting at no extra cost.
-        </div>
-      </li>
-    </ul>
-  </div>
-</section>
-</section>
-
-<!-- ============================================================ CTA -->
-<section class="snap-slide slide--last" data-snap data-name="Book a call">
-<section class="cta" id="book" data-screen-label="08 Book a call" style="--bgx:50%;--bgy:30%">
-  <div class="cta__inner reveal reveal--scale">
-    <h2>
-      <span class="words" data-words>See your kitchen's numbers,</span><br><span class="accent words" data-words>by Friday.</span>
-    </h2>
-    <p>30-minute setup call. Connected the same week. First signed-off P&amp;L within the month. No setup fee. Cancel any month.</p>
-    <div class="cta__ctas">
-      <a href="mailto:hello@otto.bk" class="btn btn--primary">Book a Call</a>
-      <a href="#how" class="btn btn--outline">See how it works</a>
+    <div class="c3-toggle-wrap">
+      <span class="c3-toggle-lbl">Annual billing</span>
+      <button class="c3-toggle" id="priceToggle" aria-pressed="false" aria-label="Toggle annual billing">
+        <span class="c3-toggle-knob"></span>
+      </button>
     </div>
-    <div class="cta__more" aria-hidden="true"><span>Scroll for site map</span><span class="arrow"></span></div>
-  </div>
-</section>
+  </section>
 </section>
 
-</main><!-- /deck -->
-
-<!-- ============================================================ FOOTER (outside the deck) -->
-<footer class="footer" data-screen-label="Footer">
-  <div class="footer__grid">
-    <div class="footer__brand">
-      <div class="nav__brand">
-        <svg class="nav__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-          <rect x="0.5" y="0.5" width="63" height="63" rx="6" fill="hsl(0 0% 12%)" stroke="hsl(0 0% 22%)"/>
-          <g stroke="hsl(var(--primary))" stroke-width="3" fill="none" stroke-linecap="round">
-            <circle cx="22" cy="32" r="10"/>
-            <circle cx="42" cy="32" r="10"/>
-          </g>
-        </svg>
-        <span class="nav__wordmark">Otto</span>
+<!-- 7. FINAL CTA -->
+<section class="snap-slide" data-snap data-name="Book a call">
+  <section class="section section--final" id="book">
+    <div class="final liquid-glass">
+      <div class="final__glow" aria-hidden="true"></div>
+      <h2>Shut the laptop.<br/>Open service.</h2>
+      <p>Join the independents who treat the books like a tool — not a Sunday-night chore.</p>
+      <div class="final__cta">
+        <a href="mailto:hello@otto.bk?subject=Book%20a%20call" class="apple-btn">
+          <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+          <span>Book a call</span>
+          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a href="bookkeepers.html" class="ghost-btn">Meet your bookkeeper <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg></a>
       </div>
-      <p class="footer__tag">Live, human-checked bookkeeping for independent restaurants and pubs.</p>
     </div>
-    <div>
-      <div class="footer__h">Product</div>
-      <a href="#how">How it works</a>
-      <a href="#numbers">Your numbers</a>
-      <a href="#compare">Why switch</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
-    </div>
-    <div>
-      <div class="footer__h">Company</div>
-      <a href="#">About</a>
-      <a href="#">Bookkeepers</a>
-      <a href="#">Press</a>
-      <a href="#">Contact</a>
-    </div>
-    <div>
-      <div class="footer__h">Office</div>
-      <p>14 Phipp Street</p>
-      <p>London EC2A 4PN</p>
-      <p>hello@otto.bk</p>
-    </div>
-  </div>
-  <div class="footer__bottom">
-    <span>© 2026 Otto Bookkeeping Ltd · Registered in England &amp; Wales</span>
-    <span>Bookkeeping services · not a substitute for a qualified accountant</span>
-  </div>
-</footer>
+  </section>
+</section>
 
-<!-- Tweaks mount -->
-<div id="tweaks-root"></div>
+</main>
 
 <script>
-/* =========================================================================
-   Word-splitter — wrap each word in <span class="word"> for staggered reveal
-   ========================================================================= */
-(function splitWords() {
-  if (document.documentElement.classList.contains('is-mobile')) return;
-  document.querySelectorAll('[data-words]').forEach((el) => {
-    const text = el.textContent;
-    el.innerHTML = '';
-    let wi = 0;
-    text.split(/(\s+)/).forEach((chunk) => {
-      if (/^\s+$/.test(chunk)) { el.appendChild(document.createTextNode(chunk)); return; }
-      const span = document.createElement('span');
-      span.className = 'word';
-      span.style.setProperty('--w', wi++);
-      span.textContent = chunk;
-      el.appendChild(span);
+  // Mobile hamburger
+  (function(){
+    const burger = document.getElementById('navburger');
+    const sheet = document.getElementById('navsheet');
+    if (!burger || !sheet) return;
+    const close = () => { sheet.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); };
+    const open  = () => { sheet.classList.add('is-open');    burger.setAttribute('aria-expanded', 'true'); };
+    burger.addEventListener('click', () => sheet.classList.contains('is-open') ? close() : open());
+    sheet.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  })();
+
+  // Pricing yearly toggle
+  (function(){
+    const btn = document.getElementById('priceToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const active = btn.classList.toggle('active');
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      document.querySelectorAll('[data-price-m]').forEach(el => { el.hidden = active; });
+      document.querySelectorAll('[data-price-y]').forEach(el => { el.hidden = !active; });
     });
-  });
-})();
+  })();
 
-/* =========================================================================
-   FAQ accordion
-   ========================================================================= */
-document.getElementById('faq-list').addEventListener('click', (e) => {
-  const q = e.target.closest('.faq__q');
-  if (!q) return;
-  const item = q.closest('.faq__item');
-  const wasOpen = item.classList.contains('open');
-  item.parentElement.querySelectorAll('.faq__item.open').forEach(el => el.classList.remove('open'));
-  if (!wasOpen) item.classList.add('open');
-});
-
-/* =========================================================================
-   Slide tracking — keeps is-active on the right slide for reveals,
-   progress bar, dots, and nav blur.
-   ========================================================================= */
-(function trackSlides() {
-  const slides = [...document.querySelectorAll('[data-snap]')];
-  if (!slides.length) return;
-  const mobile = document.documentElement.classList.contains('is-mobile');
-  // On mobile we skip all JS slide-tracking entirely. Reveal animations
-  // are disabled, dots are hidden, the nav stays in its default state.
-  // The page is left to native CSS scroll-snap so iOS can run it on the
-  // compositor without any JS in the scroll path.
-  if (mobile) {
-    window.__ottoSlides = slides;
-    return;
-  }
-
-  if (!mobile) {
-    const dotsEl = document.getElementById('dots');
-    const dotsLeftEl = document.getElementById('dotsLeft');
-    slides.forEach((s, i) => {
-      const make = (clickable) => {
-        const b = document.createElement('button');
-        b.className = 'dots__btn';
-        b.style.setProperty('--i', i);
-        b.setAttribute('aria-label', `Go to ${s.getAttribute('data-name')}`);
-        b.innerHTML = `<span class="dots__lbl">${s.getAttribute('data-name')}</span>`;
-        if (clickable) b.addEventListener('click', () => window.__ottoScrollTo && window.__ottoScrollTo(s));
-        else { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
-        return b;
-      };
-      dotsEl.appendChild(make(true));
-      if (dotsLeftEl) dotsLeftEl.appendChild(make(false));
-    });
-  }
-
-  function setActive(idx) {
-    slides.forEach((s, i) => {
-      const isAct = i === idx;
-      s.classList.toggle('is-active', isAct);
-      const inner = s.firstElementChild;
-      if (inner) inner.classList.toggle('is-active', isAct);
-    });
-    document.getElementById('progressFill').style.width = ((idx + 1) / slides.length * 100) + '%';
-    document.querySelectorAll('.dots__btn').forEach((b) => {
-      const dotIdx = parseInt(b.style.getPropertyValue('--i'), 10);
-      b.classList.toggle('is-active', dotIdx === idx);
-    });
-    document.getElementById('topnav').classList.toggle('is-scrolled', idx > 0);
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    let best = null, bestRatio = 0;
-    entries.forEach((e) => {
-      if (e.intersectionRatio > bestRatio) { best = e.target; bestRatio = e.intersectionRatio; }
-    });
-    if (best) {
-      const idx = slides.indexOf(best);
-      if (idx >= 0) setActive(idx);
+  // Nav style on scroll (deck or document)
+  (function(){
+    const nav = document.getElementById('topnav');
+    const deck = document.getElementById('deck');
+    const scroller = (deck && getComputedStyle(deck).overflowY === 'scroll') ? deck : window;
+    const target = scroller === window ? document.documentElement : deck;
+    function onScroll(){
+      const y = scroller === window ? window.scrollY : deck.scrollTop;
+      nav.classList.toggle('is-scrolled', y > 60);
     }
-  }, { threshold: [0.3, 0.5, 0.7] });
-  slides.forEach((s) => io.observe(s));
-
-  setActive(0);
-  window.__ottoSlides = slides;
-})();
-
-/* =========================================================================
-   Card-step scroller — wheel / swipe / key input nudges a small buffer;
-   once over a threshold, the page smoothly animates to the next/prev
-   slide. Feels less like raw scrolling and more like an animated step
-   between cards. Past the last card, scrolling reveals the footer.
-   Fast-flick fires the warp (speed lines from the side dots).
-   ========================================================================= */
-(function cardStepScroller() {
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const mobile = document.documentElement.classList.contains('is-mobile');
-  if (mobile) {
-    // Mobile uses a totally different layout (natural document flow with
-    // native scrolling) — no custom deck logic at all.
-    window.__ottoScrollTo = (el) => el && el.scrollIntoView({ behavior: 'smooth' });
-    return;
-  }
-  const slides = window.__ottoSlides || [...document.querySelectorAll('[data-snap]')];
-  if (!slides.length) return;
-
-  if (reduced) {
-    window.__ottoScrollTo = (el) => el.scrollIntoView({ behavior: 'auto' });
-    return;
-  }
-
-  // ---- state ----
-  let animating = false;
-  let currentIdx = 0;
-  let pastDeck = false; // true once user has scrolled past the last card into the footer
-  let bufDown = 0;
-  let bufUp = 0;
-  let bufTimer = null;
-  const BUF_THRESH = 50;
-  const BUF_RESET_MS = 240;
-
-  // Velocity ring for warp
-  const recent = []; // {t, dy}
-  const RECENT_MS = 240;
-
-  function maxScroll() {
-    return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-  }
-  function deckBottom() {
-    const last = slides[slides.length - 1];
-    return last.offsetTop + last.offsetHeight;
-  }
-
-  function resetBuf() { bufDown = 0; bufUp = 0; clearTimeout(bufTimer); bufTimer = null; }
-  function pingBufTimer() {
-    clearTimeout(bufTimer);
-    bufTimer = setTimeout(resetBuf, BUF_RESET_MS);
-  }
-
-  // Map current scroll position to nearest slide index
-  function indexAt(y) {
-    let best = 0, bestD = Infinity;
-    for (let i = 0; i < slides.length; i++) {
-      const sy = slides[i].offsetTop;
-      const d = Math.abs(sy - y);
-      if (d < bestD) { bestD = d; best = i; }
-    }
-    return best;
-  }
-
-  // Smoothly animate window.scrollY from current to `endY` over `dur` ms.
-  // Uses an in-out cubic so the page eases out of one card and into the next.
-  function animateScroll(endY, dur) {
-    animating = true;
-    const startY = window.scrollY;
-    const t0 = performance.now();
-    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-    function step(now) {
-      const t = Math.min(1, (now - t0) / dur);
-      const v = startY + (endY - startY) * ease(t);
-      window.scrollTo(0, v);
-      if (t < 1) requestAnimationFrame(step);
-      else { animating = false; resetBuf(); }
-    }
-    requestAnimationFrame(step);
-  }
-
-  function goToSlide(idx, dur) {
-    idx = Math.max(0, Math.min(slides.length - 1, idx));
-    if (animating) return;
-    currentIdx = idx;
-    pastDeck = false;
-    animateScroll(slides[idx].offsetTop, dur || 650);
-  }
-
-  function tryAdvance(dir) {
-    if (animating) return;
-    if (dir > 0) {
-      if (currentIdx < slides.length - 1) {
-        goToSlide(currentIdx + 1);
-      } else if (!pastDeck) {
-        // Reveal footer / page bottom
-        pastDeck = true;
-        animateScroll(maxScroll(), 700);
-      }
-    } else {
-      if (pastDeck) {
-        pastDeck = false;
-        animateScroll(slides[slides.length - 1].offsetTop, 700);
-      } else if (currentIdx > 0) {
-        goToSlide(currentIdx - 1);
-      }
-    }
-  }
-
-  function noteVelocity(dy) {
-    const now = performance.now();
-    recent.push({ t: now, dy: Math.abs(dy) });
-    while (recent.length && now - recent[0].t > RECENT_MS) recent.shift();
-  }
-  function velocitySum() {
-    return recent.reduce((a, r) => a + r.dy, 0);
-  }
-
-  function feed(dy) {
-    if (animating) return;
-    noteVelocity(dy);
-    if (dy > 0) { bufDown += dy; bufUp = 0; }
-    else        { bufUp += -dy; bufDown = 0; }
-    pingBufTimer();
-    if (bufDown > BUF_THRESH) {
-      resetBuf();
-      // Hard flick downward past slide 2 → warp instead of single step
-      if (velocitySum() > 2200 && currentIdx >= 2) triggerWarp();
-      else tryAdvance(1);
-    } else if (bufUp > BUF_THRESH) {
-      resetBuf();
-      tryAdvance(-1);
-    }
-  }
-
-  // ---- wheel ----
-  function handleWheel(e) {
-    e.preventDefault();
-    feed(e.deltaY);
-  }
-  window.addEventListener('wheel', handleWheel, { passive: false });
-  // Spline canvas can swallow wheel events; capture and forward.
-  const spline = document.querySelector('.hero__spline');
-  if (spline) {
-    spline.addEventListener('wheel', handleWheel, { passive: false, capture: true });
-  }
-
-  // ---- touch — one swipe = one slide. No real-time scrubbing
-  //              (the previous scrub model felt glitchy on iPhone because
-  //              it fought the browser's compositor). We just track the
-  //              swipe distance and on release fire the smooth animator.
-  // Listeners on window with capture:true so child elements (Spline,
-  // buttons) can't swallow the gesture.
-  let tStartY = null, tStartT = 0;
-  window.addEventListener('touchstart', (e) => {
-    if (animating) return;
-    tStartY = e.touches[0].clientY;
-    tStartT = performance.now();
-  }, { passive: true, capture: true });
-  // touchmove is non-passive so we can preventDefault the browser's
-  // native scroll without it competing with our animation. We never
-  // call scrollTo during the swipe — the page is still until release.
-  window.addEventListener('touchmove', (e) => {
-    if (tStartY == null) return;
-    e.preventDefault();
-  }, { passive: false, capture: true });
-  window.addEventListener('touchend', (e) => {
-    if (tStartY == null) return;
-    const endY = e.changedTouches[0].clientY;
-    const dy = tStartY - endY;
-    const dt = performance.now() - tStartT;
-    const vel = Math.abs(dy) / Math.max(1, dt); // px/ms
-    tStartY = null;
-    // ignore taps
-    if (Math.abs(dy) < 12 && vel < 0.05) return;
-    // Hard fling downward past slide 2 → warp
-    if (dy > 0 && vel > 1.6 && currentIdx >= 2) { triggerWarp(); return; }
-    // Otherwise: any swipe with reasonable distance OR velocity advances one card.
-    if (Math.abs(dy) > 40 || vel > 0.35) {
-      tryAdvance(dy > 0 ? 1 : -1);
-    }
-  }, { passive: true, capture: true });
-  window.addEventListener('touchcancel', () => { tStartY = null; }, { passive: true, capture: true });
-
-  // ---- keyboard ----
-  window.addEventListener('keydown', (e) => {
-    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
-    if (animating) return;
-    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); tryAdvance(1); }
-    else if (['ArrowUp', 'PageUp'].includes(e.key))     { e.preventDefault(); tryAdvance(-1); }
-    else if (e.key === 'Home')                          { e.preventDefault(); goToSlide(0); }
-    else if (e.key === 'End')                           { e.preventDefault(); goToSlide(slides.length - 1); }
-  });
-
-  // ---- programmatic ----
-  window.__ottoScrollTo = (el) => {
-    if (!el) return;
-    const idx = slides.indexOf(el.closest ? el.closest('[data-snap]') || el : el);
-    if (idx >= 0) goToSlide(idx);
-    else animateScroll(el.offsetTop || 0, 800);
-  };
-
-  // ---- anchor link interception ----
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const href = a.getAttribute('href');
-    if (!href || href === '#') return;
-    const target = document.querySelector(href);
-    if (!target) return;
-    e.preventDefault();
-    window.__ottoScrollTo(target);
-  });
-
-  // ---- track currentIdx if user lands here via deep-link or refresh ----
-  window.addEventListener('load', () => {
-    currentIdx = indexAt(window.scrollY);
-  });
-  currentIdx = indexAt(window.scrollY);
-
-  // ---- warp sequence ----
-  function triggerWarp() {
-    if (animating) return;
-    // Restart the dot-ray animation by toggling the class on a fresh frame
-    document.body.classList.remove('is-warp');
-    void document.body.offsetWidth;
-    document.body.classList.add('is-warp');
-    currentIdx = slides.length - 1;
-    pastDeck = false;
-    const end = slides[slides.length - 1].offsetTop;
-    animateScroll(Math.max(0, end), 820);
-    setTimeout(() => { document.body.classList.remove('is-warp'); }, 1300);
-  }
-})();
-
-/* =========================================================================
-   Ambient particles — spawn N drifting dots positioned across the viewport
-   ========================================================================= */
-(function spawnParticles() {
-  const host = document.getElementById('particles');
-  if (!host) return;
-  // Mobile: skip particles entirely — they were eating frames.
-  if (document.documentElement.classList.contains('is-mobile')) return;
-  const N = 22;
-  for (let i = 0; i < N; i++) {
-    const s = document.createElement('span');
-    const left = Math.random() * 100;
-    const dur = 14 + Math.random() * 22;
-    const delay = -Math.random() * dur;
-    const drift = (Math.random() * 160 - 80) + 'px';
-    const size = 2 + Math.random() * 3;
-    s.style.left = left + 'vw';
-    s.style.width = s.style.height = size + 'px';
-    s.style.setProperty('--dur', dur + 's');
-    s.style.setProperty('--delay', delay + 's');
-    s.style.setProperty('--drift', drift);
-    s.style.opacity = (0.3 + Math.random() * 0.5).toString();
-    host.appendChild(s);
-  }
-})();
-
-/* =========================================================================
-   KPI count-up — fires when 'Your numbers' slide goes active
-   ========================================================================= */
-(function countUpKpis() {
-  if (document.documentElement.classList.contains('is-mobile')) return;
-  const slide = document.querySelector('[data-name="Your numbers"]');
-  const vals = document.querySelectorAll('.dash__kpi-val');
-  if (!slide || !vals.length) return;
-  let played = false;
-  const obs = new MutationObserver(() => {
-    if (slide.classList.contains('is-active') && !played) {
-      played = true;
-      vals.forEach((el) => animateOne(el));
-    } else if (!slide.classList.contains('is-active')) {
-      played = false; // replay each time it becomes active
-    }
-  });
-  obs.observe(slide, { attributes: true, attributeFilter: ['class'] });
-
-  function animateOne(el) {
-    const target = el.dataset.original || el.textContent.trim();
-    el.dataset.original = target;
-    const match = target.match(/^(-?[\d.]+)(\D*)$/);
-    if (!match) return;
-    const end = parseFloat(match[1]);
-    const suffix = match[2];
-    const decimals = (match[1].split('.')[1] || '').length;
-    const duration = 1200;
-    const start = performance.now();
-    const ease = (t) => 1 - Math.pow(1 - t, 3);
-    el.classList.add('counted');
-    function tick(now) {
-      const t = Math.min(1, (now - start) / duration);
-      const v = end * ease(t);
-      el.textContent = v.toFixed(decimals) + suffix;
-      if (t < 1) requestAnimationFrame(tick);
-      else {
-        el.textContent = target;
-        setTimeout(() => { el.classList.remove('counted'); el.classList.add('counted-done'); setTimeout(() => el.classList.remove('counted-done'), 600); }, 200);
-      }
-    }
-    el.textContent = '0' + (decimals ? '.' + '0'.repeat(decimals) : '') + suffix;
-    requestAnimationFrame(tick);
-  }
-})();
-
-/* =========================================================================
-   Live ticker — appends rows when the dashboard slide is active
-   ========================================================================= */
-(function liveTicker() {
-  if (document.documentElement.classList.contains('is-mobile')) return;
-  const ticker = document.getElementById('ticker');
-  if (!ticker) return;
-  const pool = [
-    ['Square charge reconciled', '£284.20'],
-    ['Brakes invoice coded · COGS', '£418.92'],
-    ['Tip payout posted · Wages', '£162.40'],
-    ['Bank fee matched · Overheads', '£12.00'],
-    ['Wine supplier invoice coded · COGS', '£196.60'],
-    ['Daily Z-read posted from till', '£1,924.10'],
-    ['Reviewed by Sarah', '✓'],
-    ['Question sent to owner re: cash short', '£20.00'],
-  ];
-  let i = 0;
-  setInterval(() => {
-    const [desc, amt] = pool[i % pool.length]; i++;
-    const now = new Date();
-    const hh = String(now.getHours()).padStart(2, '0');
-    const mm = String(now.getMinutes()).padStart(2, '0');
-    const row = document.createElement('div');
-    row.className = 'tick-row';
-    row.innerHTML = `<span class="time">${hh}:${mm}</span><span class="desc">${desc}</span><span class="amt">${amt}</span>`;
-    ticker.insertBefore(row, ticker.firstChild);
-    while (ticker.children.length > 5) ticker.removeChild(ticker.lastChild);
-  }, 5000);
-})();
-
-/* =========================================================================
-   Mobile-only — sticky Book-a-Call appears after scrolling past the hero.
-   ========================================================================= */
-/* Mobile: pause Spline rendering when the hero is off-screen so the
-   WebGL canvas isn't burning frames while the user is on other cards.
-   `display:none` removes it from the layout/compositor entirely. */
-(function pauseSplineOffScreen() {
-  if (!document.documentElement.classList.contains('is-mobile')) return;
-  const sv = document.querySelector('.hero__spline');
-  const hero = document.getElementById('hero');
-  const deck = document.getElementById('deck');
-  if (!sv || !hero) return;
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      sv.style.display = e.isIntersecting ? '' : 'none';
-    });
-  }, { root: deck || null, threshold: 0 });
-  io.observe(hero);
-})();
-
-(function stickyCta() {
-  // sticky bottom CTA removed; this IIFE is a no-op now.
-  return;
-})();
-
-/* =========================================================================
-   Mobile nav — hamburger toggles a full-screen sheet. Sheet closes on
-   link click. The sheet links each get a per-item delay via --ni.
-   ========================================================================= */
-(function mobileNav() {
-  const burger = document.getElementById('navburger');
-  const sheet = document.getElementById('navsheet');
-  if (!burger || !sheet) return;
-  [...sheet.children].forEach((c, i) => c.style.setProperty('--ni', i));
-  function close() { sheet.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); sheet.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
-  function open()  { sheet.classList.add('is-open');    burger.setAttribute('aria-expanded', 'true');  sheet.setAttribute('aria-hidden', 'false'); }
-  burger.addEventListener('click', () => {
-    if (sheet.classList.contains('is-open')) close(); else open();
-  });
-  sheet.addEventListener('click', (e) => {
-    if (e.target.closest('a')) close();
-  });
-  // ESC closes
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && sheet.classList.contains('is-open')) close();
-  });
-})();
-
-/* =========================================================================
-   On small viewports, skip the Spline scene — it's a ~1MB asset that
-   tanks first paint on phones. Fall back to the CSS "pools" backdrop.
-   ========================================================================= */
-// (mobile Spline removal removed — Spline now loads on every device.
-//  Touch absorption is handled at the CSS layer with pointer-events:none
-//  on coarse-pointer devices, see styles.css.)
-
-/* =========================================================================
-   Magnet effect — only on hero buttons. On other slides the magnet-pull
-   on a green primary CTA can read as "a green blob following the cursor",
-   which we want to avoid off the hero.
-   ========================================================================= */
-(function magnetButtons() {
-  if (document.documentElement.classList.contains('is-mobile')) return;
-  document.querySelectorAll('.hero .btn').forEach((btn) => {
-    const strength = 0.22;
-    btn.addEventListener('pointermove', (e) => {
-      const r = btn.getBoundingClientRect();
-      const dx = (e.clientX - (r.left + r.width / 2)) * strength;
-      const dy = (e.clientY - (r.top + r.height / 2)) * strength;
-      btn.style.transform = `translate(${dx}px, ${dy}px)`;
-    });
-    btn.addEventListener('pointerleave', () => { btn.style.transform = ''; });
-  });
-})();
-
-/* =========================================================================
-   Generic counter — animates any .counter span with data-to / data-dec
-   when its enclosing slide becomes active. Re-plays each time it activates.
-   ========================================================================= */
-(function counters() {
-  if (document.documentElement.classList.contains('is-mobile')) return;
-  const items = [...document.querySelectorAll('.counter')];
-  if (!items.length) return;
-
-  function format(n, dec) {
-    return n.toLocaleString(undefined, { minimumFractionDigits: dec, maximumFractionDigits: dec });
-  }
-
-  function animate(el) {
-    const to = parseFloat(el.dataset.to);
-    const dec = parseInt(el.dataset.dec || '0', 10);
-    if (isNaN(to)) return;
-    const start = performance.now();
-    const dur = 1100;
-    const ease = (t) => 1 - Math.pow(1 - t, 3);
-    el.classList.add('counting');
-    function tick(now) {
-      const t = Math.min(1, (now - start) / dur);
-      const v = to * ease(t);
-      el.textContent = format(v, dec);
-      if (t < 1) requestAnimationFrame(tick);
-      else { el.textContent = format(to, dec); setTimeout(() => el.classList.remove('counting'), 350); }
-    }
-    el.textContent = format(0, dec);
-    requestAnimationFrame(tick);
-  }
-
-  items.forEach((el) => {
-    const slide = el.closest('[data-snap]');
-    if (!slide) return;
-    let played = false;
-    const obs = new MutationObserver(() => {
-      if (slide.classList.contains('is-active') && !played) { played = true; animate(el); }
-      else if (!slide.classList.contains('is-active')) { played = false; }
-    });
-    obs.observe(slide, { attributes: true, attributeFilter: ['class'] });
-  });
-})();
-
-/* =========================================================================
-   Character splitter for hero h1 — fires once on load
-   ========================================================================= */
-(function splitChars() {
-  if (document.documentElement.classList.contains('is-mobile')) return;
-  document.querySelectorAll('[data-chars]').forEach((el) => {
-    const text = el.textContent;
-    el.innerHTML = '';
-    el.classList.add('chars');
-    let ci = 0;
-    for (const ch of text) {
-      if (ch === ' ') { el.appendChild(document.createTextNode(' ')); continue; }
-      const span = document.createElement('span');
-      span.className = 'char';
-      span.style.setProperty('--c', ci++);
-      span.textContent = ch;
-      el.appendChild(span);
-    }
-    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
-  });
-})();
-
-/* =========================================================================
-   Tilt effect on cards (.dash, .person, .price)
-   ========================================================================= */
-(function tiltCards() {
-  if (document.documentElement.classList.contains('is-mobile')) return;
-  document.querySelectorAll('.person, .dash, .price').forEach((card) => {
-    const max = 6;
-    card.addEventListener('pointermove', (e) => {
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5;
-      const py = (e.clientY - r.top) / r.height - 0.5;
-      card.style.transform = `perspective(1000px) rotateY(${px * max}deg) rotateX(${-py * max}deg) translateY(-2px)`;
-    });
-    card.addEventListener('pointerleave', () => { card.style.transform = ''; });
-  });
-})();
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
 </script>
-
-<script type="text/babel" data-presets="env,react" src="tweaks-panel.jsx"></script>
-<script type="text/babel" data-presets="env,react">
-const { useState, useEffect } = React;
-
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "accent": "#02e80b",
-  "heroBg": "spline",
-  "showLiveDash": true,
-  "ctaLabel": "Book a Call"
-}/*EDITMODE-END*/;
-
-function hexToHsl(hex) {
-  const m = hex.replace('#','');
-  const r = parseInt(m.substring(0,2), 16) / 255;
-  const g = parseInt(m.substring(2,4), 16) / 255;
-  const b = parseInt(m.substring(4,6), 16) / 255;
-  const max = Math.max(r,g,b), min = Math.min(r,g,b);
-  let h, s, l = (max + min) / 2;
-  if (max === min) { h = s = 0; }
-  else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-      case g: h = (b - r) / d + 2; break;
-      case b: h = (r - g) / d + 4; break;
-    }
-    h /= 6;
-  }
-  return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
-}
-
-function applyTweaks(t) {
-  const root = document.documentElement;
-  const { h, s, l } = hexToHsl(t.accent);
-  root.style.setProperty('--accent-h', h);
-  root.style.setProperty('--accent-s', s + '%');
-  root.style.setProperty('--accent-l', l + '%');
-  const hero = document.getElementById('hero');
-  if (hero) hero.setAttribute('data-bg', t.heroBg);
-  document.querySelectorAll('.dash__live').forEach(el => {
-    el.style.display = t.showLiveDash ? '' : 'none';
-  });
-  document.querySelectorAll('.btn--primary').forEach(el => {
-    if (el.getAttribute('href') === '#book' || el.getAttribute('href') === 'mailto:hello@otto.bk') {
-      el.textContent = t.ctaLabel;
-    }
-  });
-}
-
-function App() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
-  useEffect(() => { applyTweaks(t); }, [t]);
-  return (
-    <TweaksPanel title="Tweaks">
-      <TweakSection label="Theme" />
-      <TweakColor
-        label="Accent"
-        value={t.accent}
-        options={['#02e80b', '#ffb800', '#ff6a3d', '#6aa6ff']}
-        onChange={(v) => setTweak('accent', v)}
-      />
-      <TweakSelect
-        label="Hero backdrop"
-        value={t.heroBg}
-        options={[
-          { value: 'spline', label: '3D scene (Spline)' },
-          { value: 'pools', label: 'Green pools' },
-          { value: 'mesh', label: 'Mesh grid' },
-          { value: 'minimal', label: 'Minimal' },
-        ]}
-        onChange={(v) => setTweak('heroBg', v)}
-      />
-      <TweakSection label="Dashboard" />
-      <TweakToggle
-        label="Show live activity feed"
-        value={t.showLiveDash}
-        onChange={(v) => setTweak('showLiveDash', v)}
-      />
-      <TweakSection label="Copy" />
-      <TweakRadio
-        label="Primary CTA"
-        value={t.ctaLabel}
-        options={[
-          { value: 'Book a Call', label: 'Book a Call' },
-          { value: 'Get a Quote', label: 'Get a Quote' },
-        ]}
-        onChange={(v) => setTweak('ctaLabel', v)}
-      />
-    </TweaksPanel>
-  );
-}
-
-const mount = document.getElementById('tweaks-root');
-ReactDOM.createRoot(mount).render(<App />);
-</script>
-
 </body>
 </html>
