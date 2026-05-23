@@ -2192,3 +2192,67 @@ html.is-mobile #book .cta__inner p { font-size: 0.85rem; max-width: 30ch; line-h
 html.is-mobile #book .cta__ctas { max-width: 280px; gap: 8px; }
 html.is-mobile #book .cta__ctas .btn--outline { display: none; }
 html.is-mobile #book .cta__ctas .btn { padding: 13px 22px; font-size: 13px; }
+
+/* =========================================================================
+   MOBILE — balanced restore. The last pass was too aggressive (cards
+   felt empty). Add back the cut content but keep things tight enough
+   to fit 100svh.
+   ========================================================================= */
+
+/* HERO — restore sub paragraph + trust line + secondary button */
+html.is-mobile .hero__sub { display: block !important; font-size: 1rem; margin-bottom: 12px; font-weight: 300; }
+html.is-mobile .hero__trust { display: flex !important; font-size: 9.5px; gap: 8px; margin-top: 14px; }
+html.is-mobile .hero__h1 { font-size: clamp(2.2rem, 10vw, 2.9rem); margin-bottom: 12px; }
+html.is-mobile .hero__ctas .btn--white { display: inline-flex !important; }
+html.is-mobile .hero__ctas { gap: 8px; }
+html.is-mobile .hero__ctas .btn { width: 100%; padding: 14px; font-size: 13px; }
+
+/* HOW — restore one-line step bodies under each title */
+html.is-mobile #how .step__body {
+  display: block !important;
+  font-size: 11.5px;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+html.is-mobile #how .step__title { font-size: 0.94rem; margin-bottom: 2px; }
+html.is-mobile #how .steps { gap: 16px; }
+
+/* YOUR NUMBERS — restore the dash chrome (title bar + KPI tiles) +
+   short activity feed (1 row) so the card actually looks like a
+   dashboard, not three loose tiles */
+html.is-mobile #numbers .dash {
+  background: hsl(var(--background)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  box-shadow: 0 12px 30px -12px rgba(0,0,0,0.5) !important;
+  padding: 14px !important;
+  border-radius: 12px !important;
+}
+html.is-mobile #numbers .dash__head { display: flex !important; padding-bottom: 10px; margin-bottom: 12px; }
+html.is-mobile #numbers .dash__title { font-size: 0.92rem; }
+html.is-mobile #numbers .dash__sub { font-size: 9px; }
+html.is-mobile #numbers .dash__live { display: block !important; margin-top: 12px; padding-top: 10px; }
+html.is-mobile #numbers .dash__live-h { font-size: 8.5px; margin-bottom: 6px; }
+html.is-mobile #numbers .tick-row:nth-child(n+2) { display: none; }   /* keep just 1 row */
+html.is-mobile #numbers .tick-row { font-size: 11px; padding: 4px 0; grid-template-columns: 40px 1fr auto; gap: 6px; }
+
+/* WHY SWITCH — go back to 4 rows per card (Cost, Cadence, Sales, Contact) */
+html.is-mobile #compare .compare__col > .compare__row:nth-child(n+5) { display: revert; }
+html.is-mobile #compare .compare__col > .compare__row:nth-child(7),
+html.is-mobile #compare .compare__col > .compare__row:nth-child(8) { display: none; }
+html.is-mobile #compare .compare__row { padding: 6px 0; font-size: 11.5px; }
+
+/* PRICING — restore to 5 features */
+html.is-mobile #pricing .price__list li:nth-child(n+4) { display: revert; }
+html.is-mobile #pricing .price__list li:nth-child(n+6) { display: none; }
+
+/* FAQ — restore to 5 items */
+html.is-mobile #faq .faq__item:nth-child(n+4) { display: revert; }
+html.is-mobile #faq .faq__item:nth-child(n+6) { display: none; }
+html.is-mobile #faq .faq__q { font-size: 0.88rem; padding: 10px 0; }
+html.is-mobile #faq .faq__a { font-size: 11.5px; padding-bottom: 10px; }
+
+/* CTA — restore the secondary button (outline) */
+html.is-mobile #book .cta__ctas .btn--outline { display: inline-flex !important; }
+
+/* Slightly bigger global mobile h2 so titles feel substantial */
+html.is-mobile .section__h2 { font-size: clamp(1.5rem, 6.5vw, 2.05rem); }
