@@ -793,7 +793,7 @@ html.page-mode #deck,
 html.page-mode .snap-slide,
 html.page-mode .bg-video,
 html.page-mode .guide { display: none; }
-html.page-mode .nav { position: fixed; background: rgba(12,12,12,0.85); border-bottom: 1px solid var(--line); }
+html.page-mode .nav { position: fixed; background: transparent; border: 0 !important; }
 
 .page { background: var(--bg); min-height: 100vh; padding-top: 96px; }
 .page__hero { padding: 96px 24px 64px; border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
@@ -1524,3 +1524,119 @@ html.page-mode .page { padding-bottom: env(safe-area-inset-bottom); }
   z-index: 0;
 }
 .hero__inner { position: relative; z-index: 1; }
+
+/* =========================================================================
+   FINAL FIXES — black line nuked, seamless URL bar, equal heights,
+   dashmock internal scroll disabled.
+   ========================================================================= */
+
+/* Aggressively nuke every possible border/shadow line on every nav
+   surface on every page. */
+.nav,
+.nav.is-scrolled,
+html.page-mode .nav,
+html.page-mode .nav.is-scrolled,
+.nav__brand,
+.brand-pill,
+.navburger {
+  border: 0 !important;
+  border-bottom: 0 !important;
+  outline: 0 !important;
+}
+.nav__brand,
+.brand-pill,
+.navburger {
+  /* Soft outer glow only — no inner bottom line of any kind */
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 6px 18px -6px rgba(0,0,0,0.4) !important;
+}
+.brand-pill {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    0 8px 20px -8px rgba(61,129,227,0.50) !important;
+}
+/* Slim hairline border using inset shadow instead of border so it can't
+   render as a darker bottom line. */
+.nav__brand,
+.brand-pill,
+.navburger {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 6px 18px -6px rgba(0,0,0,0.4) !important;
+}
+.brand-pill {
+  box-shadow:
+    inset 0 0 0 1px rgba(61,129,227,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.35),
+    0 8px 20px -8px rgba(61,129,227,0.50) !important;
+}
+
+/* Seamless behind the iOS URL bar — the body bg used to obscure the
+   fixed video when scrolled past 100dvh. Let the video be the
+   bottom-most paint everywhere; the dark veil over it handles
+   readability. */
+html, body { background: transparent !important; }
+html { background: var(--bg) !important; }   /* keep dark fallback only on html (behind video) */
+
+/* Disable internal scroll on the dashboard mockup so it doesn't fight
+   the snap deck */
+.dashmock,
+.dashmock__body,
+.dashmock__list ul,
+.dashmock__reader { overflow: hidden !important; }
+
+/* Equal-height cards — every snap-slide is exactly one viewport tall,
+   every inner section fills 100% of it, content centred. No card is
+   visibly taller or shorter than another. */
+.snap-slide {
+  height: 100dvh !important;
+  min-height: 100dvh !important;
+  max-height: 100dvh !important;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.snap-slide > .hero,
+.snap-slide > .section,
+.snap-slide > .cta {
+  width: 100%;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
+  padding-top: 72px !important;
+  padding-bottom: 24px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dashmock fits the card without internal scroll — height capped */
+.dashmock { max-height: 70dvh; }
+.dashmock__body { height: 56dvh !important; max-height: 56dvh; }
+@media (max-width: 900px) {
+  .dashmock__body { height: 48dvh !important; }
+}
+
+/* Desktop free-scroll still wins */
+@media (min-width: 1024px) {
+  .snap-slide {
+    height: auto !important;
+    min-height: 100dvh !important;
+    max-height: none !important;
+    overflow: visible;
+  }
+  .snap-slide > .hero,
+  .snap-slide > .section,
+  .snap-slide > .cta {
+    height: auto !important;
+    max-height: none !important;
+    padding-top: 96px !important;
+    padding-bottom: 64px !important;
+  }
+  .dashmock { max-height: none; }
+  .dashmock__body { height: clamp(440px, 64dvh, 600px) !important; max-height: none; }
+}
