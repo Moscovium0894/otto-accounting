@@ -2381,3 +2381,34 @@ html.is-mobile .snap-slide.slide--last .cta__inner {
   text-align: center;
   justify-content: center;
 }
+
+/* =========================================================================
+   MOBILE — center the content of each card in the scroll view.
+   The snap-slide already fills the viewport; the inner content frame is
+   the same fixed size on every card. Switch its inner alignment to
+   center so the title + body sit in the visual middle of the scroll
+   view rather than anchored to the top.
+   ========================================================================= */
+html.is-mobile .hero__content,
+html.is-mobile .section__inner,
+html.is-mobile .cta__inner {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Right-align fixes for content that doesn't want to be centered */
+html.is-mobile .section__head { width: 100%; text-align: center; }
+html.is-mobile .section__head .section__eyebrow { padding-left: 0; }
+html.is-mobile .section__eyebrow::before { display: none; }
+
+/* Stack/center the various card bodies so they look intentional in the
+   centered frame, not left-aligned blocks inside a centered container */
+html.is-mobile .steps,
+html.is-mobile .dash__kpis,
+html.is-mobile .price__list,
+html.is-mobile .faq,
+html.is-mobile .compare {
+  width: 100%;
+}
+html.is-mobile .people { justify-content: flex-start; }
