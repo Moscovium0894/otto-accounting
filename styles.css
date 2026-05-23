@@ -1779,3 +1779,124 @@ html.is-mobile .faq__a { padding-bottom: 12px; font-size: 12px; line-height: 1.6
 /* CTA slide: when it's the last snap-slide, give it full 100svh and center
    the inner card vertically. */
 html.is-mobile .snap-slide.slide--last .cta { display: flex; align-items: center; justify-content: center; padding: 80px 22px; }
+
+/* =========================================================================
+   MOBILE PERFORMANCE PASS — strip everything that causes jank on iPhone.
+   The shudder during scroll-snap was caused by:
+     • backdrop-filter on the nav (very expensive on iOS during scroll)
+     • mix-blend-mode on the grain (full-viewport composite per frame)
+     • reveal animations + IntersectionObserver firing during the snap
+     • transitions on every card child
+   On mobile we now render a flat, static layout. iOS handles the snap
+   purely on the compositor.
+   ========================================================================= */
+
+/* Use html as the scroll container with explicit settings */
+html.is-mobile {
+  height: 100%;
+  height: 100svh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  touch-action: pan-y;
+  overscroll-behavior-y: none;
+}
+html.is-mobile body {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+html.is-mobile .snap-slide {
+  height: 100svh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Kill expensive composites */
+html.is-mobile .grain { display: none !important; }
+html.is-mobile .nav,
+html.is-mobile .nav.is-scrolled {
+  background: hsl(var(--hero-bg) / 0.92);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 1px solid hsl(var(--border));
+}
+html.is-mobile .navsheet {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: hsl(var(--hero-bg) / 0.98);
+}
+html.is-mobile .badge,
+html.is-mobile .hero__eyebrow {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Kill ALL reveal / entrance animations and transitions on mobile.
+   Content is static — no IntersectionObserver toggling classes during
+   scroll, no transitions firing on swipe. */
+html.is-mobile .reveal,
+html.is-mobile .reveal--left,
+html.is-mobile .reveal--right,
+html.is-mobile .reveal--scale,
+html.is-mobile .reveal--rotate,
+html.is-mobile .chars .char,
+html.is-mobile .words .word,
+html.is-mobile .fade-up,
+html.is-mobile .step,
+html.is-mobile .dash-side li,
+html.is-mobile .compare__row,
+html.is-mobile .price__list li {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Kill the per-card decorative animations (rotating conic borders, draws) */
+html.is-mobile .dash,
+html.is-mobile .price,
+html.is-mobile .compare,
+html.is-mobile .step {
+  transform: none !important;
+}
+html.is-mobile .dash::before,
+html.is-mobile .price::before,
+html.is-mobile .compare::before,
+html.is-mobile .step::before,
+html.is-mobile .section::before,
+html.is-mobile .section::after {
+  display: none !important;
+}
+
+/* Hero accent gets the static green colour, no animated sheen */
+html.is-mobile .hero__h1 .accent {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary)) !important;
+  animation: none !important;
+}
+html.is-mobile .hero__h1 .accent::after { display: none !important; }
+
+/* Hover/tilt effects on cards do nothing on touch but the transition
+   declarations are still costly to compute. Wipe them. */
+html.is-mobile .person,
+html.is-mobile .dash,
+html.is-mobile .price,
+html.is-mobile .dash__kpi,
+html.is-mobile .btn {
+  transition: none !important;
+}
+
+/* Make sure the sparkline + marquee aren't computing anything */
+html.is-mobile .sparkline,
+html.is-mobile .marquee,
+html.is-mobile .marquee__track { animation: none !important; }

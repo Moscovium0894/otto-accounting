@@ -569,6 +569,7 @@
    Word-splitter — wrap each word in <span class="word"> for staggered reveal
    ========================================================================= */
 (function splitWords() {
+  if (document.documentElement.classList.contains('is-mobile')) return;
   document.querySelectorAll('[data-words]').forEach((el) => {
     const text = el.textContent;
     el.innerHTML = '';
@@ -604,6 +605,14 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
   const slides = [...document.querySelectorAll('[data-snap]')];
   if (!slides.length) return;
   const mobile = document.documentElement.classList.contains('is-mobile');
+  // On mobile we skip all JS slide-tracking entirely. Reveal animations
+  // are disabled, dots are hidden, the nav stays in its default state.
+  // The page is left to native CSS scroll-snap so iOS can run it on the
+  // compositor without any JS in the scroll path.
+  if (mobile) {
+    window.__ottoSlides = slides;
+    return;
+  }
 
   if (!mobile) {
     const dotsEl = document.getElementById('dots');
@@ -919,6 +928,7 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
    KPI count-up — fires when 'Your numbers' slide goes active
    ========================================================================= */
 (function countUpKpis() {
+  if (document.documentElement.classList.contains('is-mobile')) return;
   const slide = document.querySelector('[data-name="Your numbers"]');
   const vals = document.querySelectorAll('.dash__kpi-val');
   if (!slide || !vals.length) return;
@@ -964,6 +974,7 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
    Live ticker — appends rows when the dashboard slide is active
    ========================================================================= */
 (function liveTicker() {
+  if (document.documentElement.classList.contains('is-mobile')) return;
   const ticker = document.getElementById('ticker');
   if (!ticker) return;
   const pool = [
@@ -1062,6 +1073,7 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
    when its enclosing slide becomes active. Re-plays each time it activates.
    ========================================================================= */
 (function counters() {
+  if (document.documentElement.classList.contains('is-mobile')) return;
   const items = [...document.querySelectorAll('.counter')];
   if (!items.length) return;
 
@@ -1104,6 +1116,7 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
    Character splitter for hero h1 — fires once on load
    ========================================================================= */
 (function splitChars() {
+  if (document.documentElement.classList.contains('is-mobile')) return;
   document.querySelectorAll('[data-chars]').forEach((el) => {
     const text = el.textContent;
     el.innerHTML = '';
