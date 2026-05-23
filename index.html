@@ -20,7 +20,7 @@
 
 <!-- Global background video -->
 <div class="bg-video">
-  <video autoplay loop muted playsinline preload="auto" crossorigin="anonymous"
+  <video autoplay loop muted playsinline preload="auto"
     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
   <div class="bg-video__veil"></div>
 </div>
@@ -440,67 +440,7 @@
     bgV.addEventListener('timeupdate', dim);
   })();
 
-  // Sample the bg-video pixel under the "Revitalised" headline and
-  // interpolate the text colour between brand blue (when the area is
-  // dark) and pure white (when a bright cyan/blue ribbon is behind).
-  (function sampleBehindHeadline(){
-    const video = document.querySelector('.bg-video video');
-    const text  = document.querySelector('.hero__h1 .shiny');
-    if (!video || !text) return;
-
-    const canvas = document.createElement('canvas');
-    canvas.width = 8; canvas.height = 4;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-    const BLUE  = [61, 129, 227];   // brand blue
-    const WHITE = [255, 255, 255];
-    let supported = true;           // turns off if CORS blocks getImageData
-
-    function tick(){
-      if (!supported) return;
-      if (video.readyState < 2) { requestAnimationFrame(tick); return; }
-      const tRect = text.getBoundingClientRect();
-      const vRect = video.getBoundingClientRect();
-      // Find what video coords sit under the headline's centre band.
-      const vw = video.videoWidth, vh = video.videoHeight;
-      if (!vw || !vh) { requestAnimationFrame(tick); return; }
-      // object-fit: cover scaling
-      const scale = Math.max(vRect.width / vw, vRect.height / vh);
-      const dispW = vw * scale, dispH = vh * scale;
-      const offX = (vRect.width  - dispW) / 2 + vRect.left;
-      const offY = (vRect.height - dispH) / 2 + vRect.top;
-      const sx = Math.max(0, Math.min(vw - 1, (tRect.left  - offX) / scale));
-      const sy = Math.max(0, Math.min(vh - 1, (tRect.top   - offY) / scale));
-      const sw = Math.max(1, Math.min(vw - sx, tRect.width  / scale));
-      const sh = Math.max(1, Math.min(vh - sy, tRect.height / scale));
-      try {
-        ctx.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
-        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-        let r = 0, g = 0, b = 0, n = 0;
-        for (let i = 0; i < data.length; i += 4) {
-          r += data[i]; g += data[i+1]; b += data[i+2]; n++;
-        }
-        r /= n; g /= n; b /= n;
-        // Brightness 0-255. Map [40, 180] → [0, 1] linear, clamp.
-        const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
-        const t = Math.max(0, Math.min(1, (brightness - 40) / 140));
-        // Smoothstep for a nicer transition
-        const e = t * t * (3 - 2 * t);
-        const cr = Math.round(BLUE[0] + (WHITE[0] - BLUE[0]) * e);
-        const cg = Math.round(BLUE[1] + (WHITE[1] - BLUE[1]) * e);
-        const cb = Math.round(BLUE[2] + (WHITE[2] - BLUE[2]) * e);
-        text.style.color = 'rgb(' + cr + ',' + cg + ',' + cb + ')';
-        text.style.webkitTextFillColor = 'rgb(' + cr + ',' + cg + ',' + cb + ')';
-      } catch (err) {
-        // CORS on the video: getImageData throws SecurityError.
-        // Fall back to the CSS mix-blend-mode that's already in styles.
-        supported = false;
-        return;
-      }
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  })();
+  // (Headline colour effect handled in CSS — gradient + shimmer.)
 </script>
 </body>
 </html>
