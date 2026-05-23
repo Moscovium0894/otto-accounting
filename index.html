@@ -56,55 +56,50 @@ html, body {
   font-variant-numeric: tabular-nums;
 }
 body { overflow-x: hidden; }
-html.snap-mode, html.snap-mode body { overflow: hidden; height: 100vh; }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; }
 
 /* =========================================================================
-   Snap container — each [data-snap] section becomes a single "slide".
-   On wheel/touch/key, JS animates between them. CSS handles the visuals.
+   Native scroll-snap deck — same idea, less locked-down. Browser snaps
+   to the nearest slide as the user scrolls. scroll-snap-stop: always
+   prevents skipping past a slide.
    ========================================================================= */
-.snap-deck {
-  position: fixed; inset: 0;
-  overflow: hidden;
-  perspective: 1400px;
-}
-.snap-track {
-  position: relative;
-  width: 100%; height: 100%;
-  will-change: transform;
-  transition: transform 950ms var(--ease-out-expo);
-}
+html { scroll-snap-type: y mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
 .snap-slide {
-  position: absolute;
-  left: 0; right: 0;
-  width: 100%; height: 100vh;
-  overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-.snap-slide.is-active { z-index: 2; }
-
-/* Fallback when JS disabled or before init */
-html:not(.snap-mode) .snap-slide { position: relative; height: auto; min-height: 100vh; }
-html:not(.snap-mode) .snap-track { transition: none; }
-html:not(.snap-mode) .snap-deck { position: static; }
 
 /* =========================================================================
-   Global ambient layers — grain + cursor follow glow
+   Global ambient layer — grain + floating particles
    ========================================================================= */
 .grain {
-  pointer-events: none; position: fixed; inset: 0; z-index: 60; mix-blend-mode: overlay; opacity: 0.18;
+  pointer-events: none; position: fixed; inset: 0; z-index: 60; mix-blend-mode: overlay; opacity: 0.16;
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
-.cursor-glow {
-  pointer-events: none; position: fixed; left: 0; top: 0; z-index: 1;
-  width: 520px; height: 520px; border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(closest-side, hsl(var(--primary) / 0.18), transparent 70%);
-  filter: blur(40px);
-  transition: opacity 400ms ease;
+
+.particles { pointer-events: none; position: fixed; inset: 0; z-index: 2; overflow: hidden; }
+.particles span {
+  position: absolute; display: block;
+  width: 3px; height: 3px; border-radius: 50%;
+  background: hsl(var(--primary) / 0.55);
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
   opacity: 0;
+  animation: particle-drift var(--dur, 22s) linear infinite;
+  animation-delay: var(--delay, 0s);
 }
-.snap-mode .cursor-glow { opacity: 1; }
+@keyframes particle-drift {
+  0%   { transform: translate3d(0, 110vh, 0) scale(0.5); opacity: 0; }
+  10%  { opacity: 0.9; }
+  85%  { opacity: 0.9; }
+  100% { transform: translate3d(var(--drift, 60px), -10vh, 0) scale(1); opacity: 0; }
+}
 
 /* =========================================================================
    Progress bar (top) + slide dots (right) + side label
@@ -254,9 +249,9 @@ html:not(.snap-mode) .snap-deck { position: static; }
 .float-y { animation: float-y 5s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .fade-up, .float-y, .pool-a, .pool-b, .pulse, .tick-row { animation: none !important; }
-  .snap-track { transition: none !important; }
-  .reveal { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .fade-up, .float-y, .pool-a, .pool-b, .pulse, .tick-row, .particles span, .marquee__track, .orb { animation: none !important; }
+  .reveal, .chars .char { opacity: 1 !important; transform: none !important; filter: none !important; }
+  html { scroll-snap-type: none; scroll-behavior: auto; }
 }
 
 /* =========================================================================
@@ -1024,15 +1019,149 @@ html:not(.snap-mode) .snap-deck { position: static; }
 /* Final slide is taller — let CTA + footer stack inside its 100vh */
 .snap-slide.slide--last { height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
 
-/* Tweaks panel host position (the JSX renders its own UI; just give it z-index) */
+/* =========================================================================
+   Marquee strip
+   ========================================================================= */
+.marquee {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center;
+  height: 56px;
+  margin-top: 32px;
+  border-top: 1px solid hsl(var(--border));
+  border-bottom: 1px solid hsl(var(--border));
+  background: linear-gradient(180deg, transparent, hsl(var(--primary) / 0.04), transparent);
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+.marquee__track {
+  display: flex; gap: 56px;
+  white-space: nowrap; flex-shrink: 0;
+  animation: marquee-slide 32s linear infinite;
+  padding-right: 56px;
+}
+.marquee__item {
+  font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.22em;
+  color: hsl(var(--muted-foreground));
+  display: inline-flex; align-items: center; gap: 14px;
+}
+.marquee__item .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: hsl(var(--primary));
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.7);
+}
+.marquee__item:hover { color: hsl(var(--primary)); }
+@keyframes marquee-slide {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+/* =========================================================================
+   KPI bar chart
+   ========================================================================= */
+.kpi-bar {
+  margin-top: 8px;
+  height: 4px; border-radius: 2px;
+  background: hsl(var(--border) / 0.6);
+  position: relative; overflow: hidden;
+}
+.kpi-bar__fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: linear-gradient(90deg, hsl(var(--primary) / 0.6), hsl(var(--primary)));
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  transition: width 1.4s var(--ease-out-expo) 0.4s;
+  border-radius: 2px;
+}
+.kpi-bar__target {
+  position: absolute; top: -2px; bottom: -2px;
+  width: 1px;
+  background: hsl(var(--foreground) / 0.4);
+  transition: left 1s ease 0.3s;
+}
+.is-active .kpi-bar__fill { width: var(--p, 0%); }
+
+/* =========================================================================
+   Sparkline (mini chart in dashboard)
+   ========================================================================= */
+.sparkline { display: block; margin-top: 10px; width: 100%; height: 28px; }
+.sparkline path {
+  fill: none;
+  stroke: hsl(var(--primary));
+  stroke-width: 1.5;
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  transition: stroke-dashoffset 1.6s var(--ease-out-expo) 0.5s;
+  filter: drop-shadow(0 0 4px hsl(var(--primary) / 0.5));
+}
+.sparkline .area {
+  fill: url(#sparkGrad);
+  stroke: none;
+  opacity: 0;
+  transition: opacity 1s ease 1s;
+}
+.is-active .sparkline path { stroke-dashoffset: 0; }
+.is-active .sparkline .area { opacity: 1; }
+
+/* =========================================================================
+   Character reveal (used on hero h1)
+   ========================================================================= */
+.chars { display: inline-block; }
+.chars .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(80%) rotate(6deg);
+  filter: blur(4px);
+  transition:
+    opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo),
+    filter 0.6s var(--ease-out-expo);
+  transition-delay: calc(var(--c, 0) * 28ms + 100ms);
+}
+.chars.in .char { opacity: 1; transform: none; filter: blur(0); }
+
+/* =========================================================================
+   SVG tick draw (used on pricing list)
+   ========================================================================= */
+.price__list .svg-tick {
+  width: 18px; height: 18px; flex-shrink: 0;
+  background: hsl(var(--primary) / 0.18);
+  border-radius: 50%;
+  border: 1px solid hsl(var(--primary) / 0.3);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.price__list .svg-tick svg { width: 10px; height: 10px; display: block; }
+.price__list .svg-tick path {
+  fill: none;
+  stroke: hsl(var(--primary));
+  stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  transition: stroke-dashoffset 0.55s var(--ease-out-expo);
+  transition-delay: calc(var(--p, 0) * 80ms + 700ms);
+}
+.is-active .price__list .svg-tick path { stroke-dashoffset: 0; }
+
+/* =========================================================================
+   Counter spans for dashboard table (£12,480 etc) — animated via JS
+   ========================================================================= */
+.counter { font-variant-numeric: tabular-nums; }
+.counter.counting { color: hsl(var(--primary)); }
+
+/* =========================================================================
+   Bookkeeper experience badge counter
+   ========================================================================= */
+.person__role .yrs { color: hsl(var(--primary)); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* Tweaks panel host position */
 #tweaks-root { z-index: 95; position: relative; }
 </style>
 </head>
 <body>
 
 <!-- Ambient layers -->
-<div class="cursor-glow" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
+<div class="particles" id="particles" aria-hidden="true"></div>
 
 <!-- Top progress bar -->
 <div class="progress" aria-hidden="true"><div class="progress__fill" id="progressFill"></div></div>
@@ -1072,8 +1201,7 @@ html:not(.snap-mode) .snap-deck { position: static; }
 </header>
 
 <!-- ============================================================ DECK -->
-<div class="snap-deck" id="deck">
-<div class="snap-track" id="track">
+<main id="deck">
 
 <!-- ============================================================ HERO -->
 <section class="snap-slide" data-snap data-name="Hero">
@@ -1098,7 +1226,7 @@ html:not(.snap-mode) .snap-deck { position: static; }
       <span class="pulse"></span>Live restaurant bookkeeping
     </div>
     <h1 class="hero__h1 fade-up" style="animation-delay:0.25s">
-      Real numbers.<br><span class="accent" data-text="Checked.">Checked.</span>
+      <span data-chars>Real numbers.</span><br><span class="accent" data-text="Checked.">Checked.</span>
     </h1>
     <p class="hero__sub fade-up" style="animation-delay:0.45s">
       We do bookkeeping correctly.
@@ -1186,6 +1314,23 @@ html:not(.snap-mode) .snap-deck { position: static; }
       <h2 class="section__h2 reveal" style="--i:1">
         <span class="words" data-words>Today's figures. </span><span class="accent words" data-words>Not last quarter's.</span>
       </h2>
+
+      <div class="marquee reveal" style="--i:3" aria-hidden="true">
+        <div class="marquee__track">
+          <span class="marquee__item"><span class="dot"></span>EPOS posted 09:00</span>
+          <span class="marquee__item"><span class="dot"></span>Invoices auto-coded</span>
+          <span class="marquee__item"><span class="dot"></span>Bank reconciled to the penny</span>
+          <span class="marquee__item"><span class="dot"></span>VAT prepared quarterly</span>
+          <span class="marquee__item"><span class="dot"></span>Signed by a real bookkeeper</span>
+          <span class="marquee__item"><span class="dot"></span>Live dashboard on your phone</span>
+          <span class="marquee__item"><span class="dot"></span>EPOS posted 09:00</span>
+          <span class="marquee__item"><span class="dot"></span>Invoices auto-coded</span>
+          <span class="marquee__item"><span class="dot"></span>Bank reconciled to the penny</span>
+          <span class="marquee__item"><span class="dot"></span>VAT prepared quarterly</span>
+          <span class="marquee__item"><span class="dot"></span>Signed by a real bookkeeper</span>
+          <span class="marquee__item"><span class="dot"></span>Live dashboard on your phone</span>
+        </div>
+      </div>
     </div>
 
     <div class="dash-wrap">
@@ -1215,29 +1360,43 @@ html:not(.snap-mode) .snap-deck { position: static; }
         </div>
         <table class="dash__table">
           <tbody>
-            <tr><td>Net sales</td><td>£12,480.00</td></tr>
-            <tr><td>Cost of goods</td><td class="neg">(£3,892.16)</td></tr>
-            <tr><td>Wages</td><td class="neg">(£3,494.40)</td></tr>
-            <tr class="dash__total"><td>Gross profit</td><td>£5,093.44</td></tr>
+            <tr><td>Net sales</td><td>£<span class="counter" data-to="12480.00" data-dec="2">12,480.00</span></td></tr>
+            <tr><td>Cost of goods</td><td class="neg">(£<span class="counter" data-to="3892.16" data-dec="2">3,892.16</span>)</td></tr>
+            <tr><td>Wages</td><td class="neg">(£<span class="counter" data-to="3494.40" data-dec="2">3,494.40</span>)</td></tr>
+            <tr class="dash__total"><td>Gross profit</td><td>£<span class="counter" data-to="5093.44" data-dec="2">5,093.44</span></td></tr>
           </tbody>
         </table>
         <div class="dash__kpis">
           <div class="dash__kpi">
             <div class="dash__kpi-lbl">Food cost</div>
             <div class="dash__kpi-val">31.2%</div>
+            <div class="kpi-bar" style="--p:31.2%"><div class="kpi-bar__fill"></div><div class="kpi-bar__target" style="left:32%"></div></div>
             <div class="dash__kpi-delta"><span class="pos">↓ 0.8%</span> · target 32%</div>
           </div>
           <div class="dash__kpi">
             <div class="dash__kpi-lbl">Labour</div>
             <div class="dash__kpi-val">28.0%</div>
+            <div class="kpi-bar" style="--p:28%"><div class="kpi-bar__fill"></div><div class="kpi-bar__target" style="left:28%"></div></div>
             <div class="dash__kpi-delta">— flat · target 28%</div>
           </div>
           <div class="dash__kpi">
             <div class="dash__kpi-lbl">Net margin</div>
             <div class="dash__kpi-val">11.4%</div>
+            <div class="kpi-bar" style="--p:38%"><div class="kpi-bar__fill"></div></div>
             <div class="dash__kpi-delta"><span class="neg">↓ 0.4%</span> vs last week</div>
           </div>
         </div>
+
+        <svg class="sparkline" viewBox="0 0 220 28" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="sparkGrad" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="hsl(var(--primary))" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="hsl(var(--primary))" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path class="area" d="M0,24 L0,18 L20,16 L40,20 L60,12 L80,14 L100,8 L120,11 L140,6 L160,9 L180,4 L200,7 L220,3 L220,28 L0,28 Z"/>
+          <path d="M0,18 L20,16 L40,20 L60,12 L80,14 L100,8 L120,11 L140,6 L160,9 L180,4 L200,7 L220,3"/>
+        </svg>
 
         <div class="dash__live">
           <div class="dash__live-h">
@@ -1314,7 +1473,7 @@ html:not(.snap-mode) .snap-deck { position: static; }
           <div class="avatar">SW</div>
           <div>
             <div class="person__name">Sarah Whitlow</div>
-            <div class="person__role">14 yrs · Restaurants</div>
+            <div class="person__role"><span class="yrs counter" data-to="14" data-dec="0">14</span> yrs · Restaurants</div>
           </div>
         </div>
         <p class="person__quote">
@@ -1327,7 +1486,7 @@ html:not(.snap-mode) .snap-deck { position: static; }
           <div class="avatar">JO</div>
           <div>
             <div class="person__name">James Okoye</div>
-            <div class="person__role">Ex-Pret Finance</div>
+            <div class="person__role">Ex-Pret · <span class="yrs counter" data-to="9" data-dec="0">9</span> yrs</div>
           </div>
         </div>
         <p class="person__quote">
@@ -1340,7 +1499,7 @@ html:not(.snap-mode) .snap-deck { position: static; }
           <div class="avatar">PS</div>
           <div>
             <div class="person__name">Priya Shah</div>
-            <div class="person__role">Kingston Smith trained</div>
+            <div class="person__role">Kingston Smith · <span class="yrs counter" data-to="11" data-dec="0">11</span> yrs</div>
           </div>
         </div>
         <p class="person__quote">
@@ -1376,14 +1535,14 @@ html:not(.snap-mode) .snap-deck { position: static; }
         <a href="#book" class="btn btn--primary">Book a Call</a>
       </div>
       <ul class="price__list">
-        <li style="--p:0"><span class="tick">✓</span><span>Daily sales posted from your EPOS by 9am</span></li>
-        <li style="--p:1"><span class="tick">✓</span><span>Supplier invoices auto-coded &amp; reviewed</span></li>
-        <li style="--p:2"><span class="tick">✓</span><span>Bank reconciled, every transaction</span></li>
-        <li style="--p:3"><span class="tick">✓</span><span>Monthly P&amp;L, signed off by a real bookkeeper</span></li>
-        <li style="--p:4"><span class="tick">✓</span><span>Live dashboard on phone &amp; laptop</span></li>
-        <li style="--p:5"><span class="tick">✓</span><span>Quarterly VAT return prepared</span></li>
-        <li style="--p:6"><span class="tick">✓</span><span>Direct WhatsApp line to your bookkeeper</span></li>
-        <li style="--p:7"><span class="tick">✓</span><span>Year-end pack handed to your accountant</span></li>
+        <li style="--p:0"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Daily sales posted from your EPOS by 9am</span></li>
+        <li style="--p:1"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Supplier invoices auto-coded &amp; reviewed</span></li>
+        <li style="--p:2"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Bank reconciled, every transaction</span></li>
+        <li style="--p:3"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Monthly P&amp;L, signed off by a real bookkeeper</span></li>
+        <li style="--p:4"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Live dashboard on phone &amp; laptop</span></li>
+        <li style="--p:5"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Quarterly VAT return prepared</span></li>
+        <li style="--p:6"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Direct WhatsApp line to your bookkeeper</span></li>
+        <li style="--p:7"><span class="svg-tick"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.5 L6 10.5 L11 4.5"/></svg></span><span>Year-end pack handed to your accountant</span></li>
       </ul>
       <div class="price__foot">
         Multi-site? Group of three or more? We do per-site rates from £380. <a href="#book" style="color: hsl(var(--primary));">Tell us a bit about the group →</a>
@@ -1525,8 +1684,7 @@ html:not(.snap-mode) .snap-deck { position: static; }
 </footer>
 </section>
 
-</div><!-- /track -->
-</div><!-- /deck -->
+</main><!-- /deck -->
 
 <!-- Tweaks mount -->
 <div id="tweaks-root"></div>
@@ -1564,31 +1722,23 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 });
 
 /* =========================================================================
-   Section snap navigation
-   - One wheel tick / one swipe / one keypress = jump to next slide
-   - Cooldown while animating
-   - Falls back to native scroll if reduced motion or small screens
+   Slide tracking via IntersectionObserver — native scroll-snap handles
+   the snapping itself; this just maintains is-active for animations,
+   progress bar, dots, and slide tag.
    ========================================================================= */
-(function sectionSnap() {
+(function trackSlides() {
   const slides = [...document.querySelectorAll('[data-snap]')];
   if (!slides.length) return;
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const track = document.getElementById('track');
-  const html = document.documentElement;
-
-  let current = 0;
-  let locked = false;
-  let lastInput = 0;
-
-  function viewportH() { return window.innerHeight; }
-
-  function enable() {
-    if (reduced) return false;
-    html.classList.add('snap-mode');
-    return true;
-  }
-  enable();
+  const dotsEl = document.getElementById('dots');
+  slides.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'dots__btn';
+    b.setAttribute('aria-label', `Go to ${s.getAttribute('data-name')}`);
+    b.innerHTML = `<span class="dots__lbl">${s.getAttribute('data-name')}</span>`;
+    b.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth' }));
+    dotsEl.appendChild(b);
+  });
 
   function setActive(idx) {
     slides.forEach((s, i) => {
@@ -1597,128 +1747,68 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
       const inner = s.firstElementChild;
       if (inner) inner.classList.toggle('is-active', isAct);
     });
-    const tag = slides[idx].getAttribute('data-name') || '';
-    document.getElementById('slideName').textContent = tag;
+    document.getElementById('slideName').textContent = slides[idx].getAttribute('data-name') || '';
     document.getElementById('slideNum').textContent = String(idx + 1).padStart(2, '0');
     document.getElementById('progressFill').style.width = ((idx + 1) / slides.length * 100) + '%';
     document.querySelectorAll('.dots__btn').forEach((b, i) => b.classList.toggle('is-active', i === idx));
     document.getElementById('topnav').classList.toggle('is-scrolled', idx > 0);
   }
 
-  function positionTrack() {
-    slides.forEach((s, i) => { s.style.top = (i * 100) + 'vh'; });
-    track.style.height = (slides.length * 100) + 'vh';
-  }
-  positionTrack();
-  window.addEventListener('resize', positionTrack);
-
-  function go(idx) {
-    idx = Math.max(0, Math.min(slides.length - 1, idx));
-    if (idx === current) return;
-    locked = true;
-    current = idx;
-    track.style.transform = `translate3d(0, ${-idx * viewportH()}px, 0)`;
-    setActive(idx);
-    setTimeout(() => { locked = false; }, 980);
-  }
-
-  // Wheel
-  window.addEventListener('wheel', (e) => {
-    if (!html.classList.contains('snap-mode')) return;
-    e.preventDefault();
-    if (locked) return;
-    const now = Date.now();
-    if (now - lastInput < 120) return;
-    lastInput = now;
-    if (Math.abs(e.deltaY) < 1) return;
-    go(current + (e.deltaY > 0 ? 1 : -1));
-  }, { passive: false });
-
-  // Touch
-  let touchStart = null;
-  window.addEventListener('touchstart', (e) => {
-    if (!html.classList.contains('snap-mode')) return;
-    touchStart = e.touches[0].clientY;
-  }, { passive: true });
-  window.addEventListener('touchmove', (e) => {
-    if (touchStart == null || locked) return;
-    const dy = touchStart - e.touches[0].clientY;
-    if (Math.abs(dy) > 20) {
-      go(current + (dy > 0 ? 1 : -1));
-      touchStart = null;
+  const io = new IntersectionObserver((entries) => {
+    let best = null, bestRatio = 0;
+    entries.forEach((e) => {
+      if (e.intersectionRatio > bestRatio) { best = e.target; bestRatio = e.intersectionRatio; }
+    });
+    if (best) {
+      const idx = slides.indexOf(best);
+      if (idx >= 0) setActive(idx);
     }
-  }, { passive: true });
-  window.addEventListener('touchend', () => { touchStart = null; }, { passive: true });
+  }, { threshold: [0.35, 0.55, 0.75] });
+  slides.forEach((s) => io.observe(s));
 
-  // Keyboard
-  window.addEventListener('keydown', (e) => {
-    if (!html.classList.contains('snap-mode')) return;
-    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
-    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go(current + 1); }
-    if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); go(current - 1); }
-    if (e.key === 'Home') { e.preventDefault(); go(0); }
-    if (e.key === 'End') { e.preventDefault(); go(slides.length - 1); }
-  });
-
-  // Anchor links — intercept and snap
-  function handleAnchor(href) {
-    if (!href || href === '#') return false;
-    const target = document.querySelector(href);
-    if (!target) return false;
-    const idx = slides.findIndex(s => s === target || s.contains(target));
-    if (idx >= 0) { go(idx); return true; }
-    return false;
-  }
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    if (handleAnchor(a.getAttribute('href'))) e.preventDefault();
-  });
-
-  // Build side dots
-  const dotsEl = document.getElementById('dots');
-  slides.forEach((s, i) => {
-    const b = document.createElement('button');
-    b.className = 'dots__btn';
-    b.setAttribute('aria-label', `Go to ${s.getAttribute('data-name')}`);
-    b.innerHTML = `<span class="dots__lbl">${s.getAttribute('data-name')}</span>`;
-    b.addEventListener('click', () => go(i));
-    dotsEl.appendChild(b);
-  });
-
-  // Init
-  setActive(0);
-  // Forward wheel from inside the Spline canvas
+  // Forward wheel from inside the Spline canvas to the page
   const spline = document.querySelector('.hero__spline');
   if (spline) {
     spline.addEventListener('wheel', (e) => {
+      window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
       e.preventDefault();
-      if (locked) return;
-      const now = Date.now();
-      if (now - lastInput < 120) return;
-      lastInput = now;
-      go(current + (e.deltaY > 0 ? 1 : -1));
     }, { passive: false, capture: true });
+    let lastY = null;
+    spline.addEventListener('touchstart', (e) => { lastY = e.touches[0].clientY; }, { passive: true });
+    spline.addEventListener('touchmove', (e) => {
+      if (lastY == null) return;
+      const y = e.touches[0].clientY;
+      window.scrollBy({ top: lastY - y, behavior: 'auto' });
+      lastY = y;
+    }, { passive: true });
+    spline.addEventListener('touchend', () => { lastY = null; }, { passive: true });
   }
+
+  setActive(0);
 })();
 
 /* =========================================================================
-   Cursor follow glow
+   Ambient particles — spawn N drifting dots positioned across the viewport
    ========================================================================= */
-(function cursorGlow() {
-  const el = document.querySelector('.cursor-glow');
-  if (!el) return;
-  let tx = 0, ty = 0, x = 0, y = 0;
-  window.addEventListener('pointermove', (e) => {
-    tx = e.clientX; ty = e.clientY;
-  });
-  function tick() {
-    x += (tx - x) * 0.12;
-    y += (ty - y) * 0.12;
-    el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
-    requestAnimationFrame(tick);
+(function spawnParticles() {
+  const host = document.getElementById('particles');
+  if (!host) return;
+  const N = 22;
+  for (let i = 0; i < N; i++) {
+    const s = document.createElement('span');
+    const left = Math.random() * 100;
+    const dur = 14 + Math.random() * 22;
+    const delay = -Math.random() * dur;
+    const drift = (Math.random() * 160 - 80) + 'px';
+    const size = 2 + Math.random() * 3;
+    s.style.left = left + 'vw';
+    s.style.width = s.style.height = size + 'px';
+    s.style.setProperty('--dur', dur + 's');
+    s.style.setProperty('--delay', delay + 's');
+    s.style.setProperty('--drift', drift);
+    s.style.opacity = (0.3 + Math.random() * 0.5).toString();
+    host.appendChild(s);
   }
-  tick();
 })();
 
 /* =========================================================================
@@ -1809,6 +1899,70 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
       btn.style.transform = `translate(${dx}px, ${dy}px)`;
     });
     btn.addEventListener('pointerleave', () => { btn.style.transform = ''; });
+  });
+})();
+
+/* =========================================================================
+   Generic counter — animates any .counter span with data-to / data-dec
+   when its enclosing slide becomes active. Re-plays each time it activates.
+   ========================================================================= */
+(function counters() {
+  const items = [...document.querySelectorAll('.counter')];
+  if (!items.length) return;
+
+  function format(n, dec) {
+    return n.toLocaleString(undefined, { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  }
+
+  function animate(el) {
+    const to = parseFloat(el.dataset.to);
+    const dec = parseInt(el.dataset.dec || '0', 10);
+    if (isNaN(to)) return;
+    const start = performance.now();
+    const dur = 1100;
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    el.classList.add('counting');
+    function tick(now) {
+      const t = Math.min(1, (now - start) / dur);
+      const v = to * ease(t);
+      el.textContent = format(v, dec);
+      if (t < 1) requestAnimationFrame(tick);
+      else { el.textContent = format(to, dec); setTimeout(() => el.classList.remove('counting'), 350); }
+    }
+    el.textContent = format(0, dec);
+    requestAnimationFrame(tick);
+  }
+
+  items.forEach((el) => {
+    const slide = el.closest('[data-snap]');
+    if (!slide) return;
+    let played = false;
+    const obs = new MutationObserver(() => {
+      if (slide.classList.contains('is-active') && !played) { played = true; animate(el); }
+      else if (!slide.classList.contains('is-active')) { played = false; }
+    });
+    obs.observe(slide, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+
+/* =========================================================================
+   Character splitter for hero h1 — fires once on load
+   ========================================================================= */
+(function splitChars() {
+  document.querySelectorAll('[data-chars]').forEach((el) => {
+    const text = el.textContent;
+    el.innerHTML = '';
+    el.classList.add('chars');
+    let ci = 0;
+    for (const ch of text) {
+      if (ch === ' ') { el.appendChild(document.createTextNode(' ')); continue; }
+      const span = document.createElement('span');
+      span.className = 'char';
+      span.style.setProperty('--c', ci++);
+      span.textContent = ch;
+      el.appendChild(span);
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('in')));
   });
 })();
 
