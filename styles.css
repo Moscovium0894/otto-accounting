@@ -269,15 +269,26 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; flex-direction: column;
 }
 .hero__line { display: block; }
-/* "Revitalised" — text fill is just white at 50% opacity. The page's
-   looping background video shows through the semi-transparent letters,
-   so the video itself provides the flowing motion in the headline. */
+/* "Revitalised" — solid brand blue with `mix-blend-mode: lighten`.
+   How that gives the requested effect:
+   - `lighten` blends each text pixel with whatever sits underneath
+     (the looping background video, plus its veil) and keeps the
+     LIGHTER of the two channels.
+   - Over the dark page, brand blue is lighter than the dark, so the
+     text reads as brand blue (the "normal" state).
+   - When a bright cyan/blue ribbon in the video passes underneath,
+     those video pixels are *lighter* than the brand blue, so they
+     win — the text effectively turns white/near-white over that
+     region, only for as long as the ribbon is there.
+   Result: the text colour reacts live to the video, no JS needed. */
 .hero__h1 .shiny {
-  color: rgba(255, 255, 255, 0.5);
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.5);
+  color: #3D81E3;
+  -webkit-text-fill-color: #3D81E3;
   background: none;
-  filter: drop-shadow(0 0 24px rgba(164, 244, 253, 0.18));
+  filter: none;
   animation: none;
+  mix-blend-mode: lighten;
+  isolation: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {
