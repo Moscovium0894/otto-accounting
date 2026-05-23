@@ -20,7 +20,7 @@
 
 <!-- Global background video -->
 <div class="bg-video">
-  <video autoplay loop muted playsinline preload="auto"
+  <video id="bgvideo" autoplay loop muted playsinline webkit-playsinline disablepictureinpicture preload="auto"
     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
   <div class="bg-video__veil"></div>
 </div>
@@ -410,6 +410,21 @@
     }
     scroller.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+  })();
+
+  // Forever-loop the background video. iOS Safari sometimes drops playback
+  // when the tab backgrounds, on low-power mode, or after a memory blip —
+  // the native `loop` attribute alone doesn't always come back. Re-kick on
+  // pause / ended / visibility change.
+  (function(){
+    const v = document.getElementById('bgvideo');
+    if (!v) return;
+    const kick = () => { const p = v.play(); if (p && p.catch) p.catch(()=>{}); };
+    v.addEventListener('ended', () => { try { v.currentTime = 0; } catch(e){} kick(); });
+    v.addEventListener('pause', () => { if (!v.ended && !document.hidden) kick(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
+    window.addEventListener('pageshow', kick);
+    window.addEventListener('focus', kick);
   })();
 </script>
 </body>

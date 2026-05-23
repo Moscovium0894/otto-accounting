@@ -55,15 +55,17 @@
 
 html, body {
   margin: 0;
-  background: var(--bg);
   color: var(--fg);
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   letter-spacing: -0.005em;
 }
-html { height: 100%; overflow: hidden; }
-body { height: 100dvh; overflow: hidden; }
+/* Dark fallback lives on <html> only — the deepest layer behind the fixed
+   video. Body is transparent so the video paints uninterrupted under any
+   translucent browser chrome (iOS Safari URL bar, notch / status bar). */
+html { height: 100%; overflow: hidden; background: var(--bg); }
+body { height: 100dvh; overflow: hidden; background: transparent; }
 
 ::selection { background: rgba(232,228,216,0.3); }
 a { color: inherit; text-decoration: none; }
@@ -75,14 +77,28 @@ img, svg, video { display: block; max-width: 100%; }
    3. LAYOUT SHELL
    ========================================================================= */
 
-/* ---- Background video ---- */
+/* ---- Background video ----
+   Sized to the LARGE viewport (lvh / lvw) so it always covers the maximum
+   possible screen area — including the strip behind the translucent iOS
+   Safari URL bar. Without this, position:fixed elements size to the SMALL
+   viewport (svh) by default and the body's dark fill shows through where
+   the URL bar overlays the page, reading as a grey rectangle.
+   Top/left also pinned to the unsafe edges and shifted UP by the top
+   safe-area inset so the video reaches the very top of the screen under
+   the status bar / notch. */
 .bg-video {
-  position: fixed; inset: 0; z-index: 0;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100lvh;
+  min-height: 100dvh;     /* fallback for browsers without lvh */
+  z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
 .bg-video video {
-  position: absolute; inset: 0;
+  position: absolute;
+  top: 0; left: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   pointer-events: none;
