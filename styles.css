@@ -1526,6 +1526,17 @@ html.is-mobile, html.is-mobile body {
 }
 html.is-mobile body { overflow-x: hidden; overflow-y: visible; }
 
+/* YouTube-Shorts-style snap on mobile. Uses native CSS scroll-snap so
+   there's no JS in the scroll path — buttery on iOS. Each section is a
+   100svh snap target; scroll-snap-stop:always enforces one swipe = one
+   section. Sections that occasionally overflow get overflow-y:auto so
+   their content can still be reached. */
+html.is-mobile { scroll-snap-type: y mandatory; }
+html.is-mobile .snap-slide {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 /* Kill the desk-only effects that were tanking the framerate */
 html.is-mobile .particles,
 html.is-mobile .orb,
@@ -1543,22 +1554,22 @@ html.is-mobile .grain { opacity: 0.05; }
 /* Spline stays — visible only, not a touch sink */
 html.is-mobile .hero[data-bg="spline"] .hero__spline { pointer-events: none; }
 
-/* The deck is no longer a deck — every slide is a normal vertical block */
+/* Each section fills the viewport on mobile. Internal overflow lets tall
+   content (numbers, compare) be scrolled within the snap point if needed. */
 html.is-mobile .snap-slide,
 html.is-mobile .hero,
 html.is-mobile .section {
   position: relative;
-  height: auto !important;
+  height: 100svh;
   min-height: 0;
-  overflow: visible;
-  scroll-snap-align: none;
-  scroll-snap-stop: normal;
+  overflow: hidden;
 }
+html.is-mobile .snap-slide.slide--last { height: auto; }
+html.is-mobile .snap-slide.slide--last .cta { height: 100svh; }
 
 /* HERO — tall enough to feel like a real intro, content bottom-anchored,
-   big stacked headline, two CTAs full-width, trust line below */
+   smaller stacked headline, two CTAs full-width, trust line below */
 html.is-mobile .hero {
-  min-height: 96svh;
   padding: 0;
   display: flex; align-items: flex-end;
 }
@@ -1569,7 +1580,7 @@ html.is-mobile .hero__content {
 }
 html.is-mobile .hero__eyebrow { font-size: 10px; padding: 5px 10px; margin-bottom: 18px; }
 html.is-mobile .hero__h1 {
-  font-size: clamp(2.6rem, 13vw, 4rem);
+  font-size: clamp(2rem, 10vw, 3.2rem);
   line-height: 0.98; letter-spacing: -0.045em;
   margin-bottom: 14px;
 }
@@ -1748,3 +1759,23 @@ html.is-mobile .sticky-cta {
 }
 html.is-mobile .sticky-cta.is-on { opacity: 1; transform: translateY(0); pointer-events: auto; }
 html:not(.is-mobile) .sticky-cta { display: none; }
+
+/* Mobile content trim — make sure each section actually fits 100svh */
+html.is-mobile .section { padding: 68px 22px 28px; }
+html.is-mobile .section__head { margin-bottom: 26px; }
+
+/* Numbers slide: drop the explainer side, just show the dashboard mockup.
+   The headline + lead already tell the story. */
+html.is-mobile #numbers .dash-side { display: none; }
+html.is-mobile #numbers .dash-wrap { grid-template-columns: 1fr; }
+
+/* Compare slide: hide the bulkier 'What you see' row on phones */
+html.is-mobile .compare__col > .compare__row:last-child { display: none; }
+
+/* FAQ — collapse all but the first item by default so the slide fits */
+html.is-mobile .faq__q { padding: 12px 0; }
+html.is-mobile .faq__a { padding-bottom: 12px; font-size: 12px; line-height: 1.6; }
+
+/* CTA slide: when it's the last snap-slide, give it full 100svh and center
+   the inner card vertically. */
+html.is-mobile .snap-slide.slide--last .cta { display: flex; align-items: center; justify-content: center; padding: 80px 22px; }
