@@ -1900,3 +1900,117 @@ html.is-mobile .btn {
 html.is-mobile .sparkline,
 html.is-mobile .marquee,
 html.is-mobile .marquee__track { animation: none !important; }
+
+/* =========================================================================
+   MOBILE HERO BACKDROP — replaces Spline on iPhone with a CSS-only canvas
+   that's GPU-cheap. Layers:
+     • a giant outlined Otto mark anchored top-right, slowly pulsing
+     • a diagonal sweep that loops across the hero
+     • a rising chart line at the bottom (drawing in once, then idle)
+     • a glowing horizontal rule under the chart
+   ========================================================================= */
+.m-hero { display: none; }
+html.is-mobile .m-hero {
+  display: block;
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* On mobile, remove the desktop hero layers that aren't needed */
+html.is-mobile .hero__spline,
+html.is-mobile .pool-a,
+html.is-mobile .pool-b,
+html.is-mobile .hero__grid { display: none !important; }
+
+/* Hero background — layered radial pools done as a single background
+   image so it composites as one layer, not five separate elements. */
+html.is-mobile .hero {
+  background:
+    radial-gradient(420px 280px at 82% 18%, hsl(var(--primary) / 0.22), transparent 60%),
+    radial-gradient(360px 240px at 12% 72%, hsl(var(--primary) / 0.16), transparent 65%),
+    radial-gradient(560px 320px at 70% 88%, hsl(var(--primary) / 0.12), transparent 65%),
+    linear-gradient(180deg, hsl(var(--hero-bg)) 0%, hsl(0 0% 6%) 100%);
+}
+
+/* Otto mark, oversized, anchored top-right, very subtle */
+.m-hero__mark {
+  position: absolute;
+  top: -18px; right: -54px;
+  width: 320px; height: 320px;
+  color: hsl(var(--primary) / 0.18);
+  opacity: 1;
+  filter: drop-shadow(0 0 24px hsl(var(--primary) / 0.25));
+  animation: m-mark-pulse 6s ease-in-out infinite;
+}
+@keyframes m-mark-pulse {
+  0%, 100% { transform: rotate(-4deg) scale(1);    opacity: 0.85; }
+  50%      { transform: rotate(-4deg) scale(1.04); opacity: 1; }
+}
+
+/* Diagonal sweep — a thin shiny stripe that loops top-right → bottom-left */
+.m-hero__sweep {
+  position: absolute;
+  top: -20%; bottom: -20%;
+  left: -40%;
+  width: 60%;
+  background: linear-gradient(115deg,
+    transparent 0%,
+    transparent 40%,
+    hsl(var(--primary) / 0.10) 50%,
+    transparent 60%,
+    transparent 100%);
+  transform: translate3d(0, 0, 0);
+  animation: m-sweep 7s ease-in-out infinite;
+}
+@keyframes m-sweep {
+  0%   { transform: translate3d(-30%, 0, 0); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translate3d(260%, 0, 0); opacity: 0; }
+}
+
+/* Rising chart line at the bottom — the "accelerated" idea visualised.
+   The line draws on once via stroke-dashoffset, then idles. */
+.m-hero__chart {
+  position: absolute;
+  left: 0; right: 0; bottom: 11%;
+  width: 100%; height: 36%;
+  pointer-events: none;
+}
+.m-hero__chart-line {
+  fill: none;
+  stroke: hsl(var(--primary));
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  filter: drop-shadow(0 0 8px hsl(var(--primary) / 0.55));
+  animation: m-chart-draw 2.2s 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.m-hero__chart-fill {
+  opacity: 0;
+  animation: m-chart-fade 1s 1.6s ease-out forwards;
+}
+@keyframes m-chart-draw { to { stroke-dashoffset: 0; } }
+@keyframes m-chart-fade { to { opacity: 1; } }
+
+/* Glowing horizontal rule at the very bottom of the hero */
+.m-hero__rule {
+  position: absolute;
+  left: 0; right: 0; bottom: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.5), hsl(var(--primary)) 50%, hsl(var(--primary) / 0.5), transparent);
+  box-shadow: 0 0 12px hsl(var(--primary) / 0.5);
+  transform: scaleX(0);
+  transform-origin: center;
+  animation: m-rule-in 1s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes m-rule-in { to { transform: scaleX(1); } }
+
+/* Make sure hero content stays above the m-hero layer */
+html.is-mobile .hero__content { z-index: 10; }
+html.is-mobile .hero__overlay {
+  background: linear-gradient(180deg, transparent 0%, transparent 40%, hsl(var(--hero-bg) / 0.7) 100%);
+}
