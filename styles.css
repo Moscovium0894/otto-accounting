@@ -300,7 +300,7 @@ button { font-family: inherit; cursor: pointer; }
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 26px rgba(0, 210, 255, 0.18));
+  filter: url(#c3-noise);
   animation: shiny 6s linear infinite;
   mix-blend-mode: normal;
 }
