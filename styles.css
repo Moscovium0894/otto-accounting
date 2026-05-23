@@ -104,7 +104,10 @@ img, svg, video { display: block; max-width: 100%; }
   width: auto; height: auto;
   object-fit: cover;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 600ms linear;
 }
+.bg-video video.is-on { opacity: 1; }
 .bg-video__veil {
   position: absolute; inset: 0;
   background:
