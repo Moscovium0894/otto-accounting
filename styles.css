@@ -2652,3 +2652,130 @@ html.is-mobile .navsheet .btn--primary::before {
   border-radius: inherit;
   pointer-events: none;
 }
+
+/* =========================================================================
+   MOBILE — neutral Apple-style Liquid Glass (no green tint).
+   Both buttons share the same glass material; the primary is just
+   slightly brighter and more opaque so it reads as the main action
+   without using a colour fill.
+   ========================================================================= */
+
+/* ---- Hero CTAs: neutral grey Liquid Glass ---- */
+html.is-mobile .hero__ctas .btn--primary {
+  background: linear-gradient(180deg,
+    hsl(0 0% 100% / 0.22) 0%,
+    hsl(0 0% 100% / 0.10) 100%) !important;
+  border: 1px solid hsl(0 0% 100% / 0.28) !important;
+  color: hsl(var(--foreground)) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.42),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.22),
+    0 18px 36px -12px hsl(0 0% 0% / 0.5),
+    0 2px 4px hsl(0 0% 0% / 0.25) !important;
+  text-shadow: none;
+  animation: none !important;
+}
+html.is-mobile .hero__ctas .btn--primary::after { display: none !important; }
+html.is-mobile .hero__ctas .btn--primary::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.22) 0%, transparent 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+html.is-mobile .hero__ctas .btn--white {
+  background: linear-gradient(180deg,
+    hsl(0 0% 100% / 0.12) 0%,
+    hsl(0 0% 100% / 0.04) 100%) !important;
+  border: 1px solid hsl(0 0% 100% / 0.18) !important;
+  color: hsl(var(--foreground)) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.24),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.18),
+    0 18px 36px -12px hsl(0 0% 0% / 0.45) !important;
+}
+html.is-mobile .hero__ctas .btn--white::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.14) 0%, transparent 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* ---- Refined navbar — a floating glass pill at the top of the page,
+        with a hairline border and a top inset highlight. ---- */
+html.is-mobile .nav,
+html.is-mobile .nav.is-scrolled {
+  position: fixed !important;
+  top: 10px !important;
+  left: 14px !important;
+  right: 14px !important;
+  padding: 10px 14px 10px 16px !important;
+  border-radius: 22px !important;
+  background: linear-gradient(180deg,
+    hsl(0 0% 14% / 0.55) 0%,
+    hsl(0 0% 8% / 0.5) 100%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(180%) !important;
+  backdrop-filter: blur(36px) saturate(180%) !important;
+  border: 1px solid hsl(0 0% 100% / 0.10) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.18),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.25),
+    0 12px 28px -10px hsl(0 0% 0% / 0.5) !important;
+}
+html.is-mobile .nav__wordmark { font-size: 15px; letter-spacing: 0.16em; }
+html.is-mobile .nav__mark { width: 26px; height: 26px; }
+html.is-mobile .nav::after {
+  /* very subtle top sheen on the pill */
+  content: '';
+  position: absolute;
+  inset: 0 0 50% 0;
+  border-radius: 22px 22px 0 0;
+  background: linear-gradient(180deg, hsl(0 0% 100% / 0.06) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* The hamburger has to slide up to match the new floating pill */
+html.is-mobile .navburger {
+  top: 14px !important;
+  right: 18px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(180deg,
+    hsl(0 0% 100% / 0.14) 0%,
+    hsl(0 0% 100% / 0.05) 100%) !important;
+  border: 1px solid hsl(0 0% 100% / 0.16) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.30),
+    inset 0 -1px 0 hsl(0 0% 0% / 0.18),
+    0 8px 20px -8px hsl(0 0% 0% / 0.45) !important;
+}
+html.is-mobile .navburger span { width: 16px; }
+
+/* Sheet primary button — neutral glass to match (no green) */
+html.is-mobile .navsheet .btn--primary {
+  background: linear-gradient(180deg,
+    hsl(0 0% 100% / 0.22) 0%,
+    hsl(0 0% 100% / 0.10) 100%) !important;
+  border: 1px solid hsl(0 0% 100% / 0.28) !important;
+  color: hsl(var(--foreground)) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.4),
+    0 14px 30px -10px hsl(0 0% 0% / 0.5);
+}
+
+/* Section padding shifts up slightly because the nav is now a floating
+   pill that's smaller than the old full-width header */
+html.is-mobile .snap-slide > .hero,
+html.is-mobile .snap-slide > .section,
+html.is-mobile .snap-slide > .cta {
+  padding-top: 76px;
+}
