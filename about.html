@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>About — Otto</title>
+<meta name="description" content="Otto was built by a former chef-turned-engineer and a restaurant CFO. We make live bookkeeping the way the back office actually wants to work." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('page-mode')</script>
+</head>
+<body>
+
+<header class="nav" id="topnav">
+  <a class="nav__brand" href="index.html" aria-label="Otto — Home">
+    <svg class="logo-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round">
+        <circle cx="22" cy="32" r="14"/>
+        <circle cx="42" cy="32" r="14"/>
+      </g>
+    </svg>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="how-it-works.html">How it works</a>
+    <a href="bookkeepers.html">Bookkeepers</a>
+    <a href="for-accountants.html">For accountants</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="about.html">About</a>
+  </nav>
+  <a href="book-a-call.html" class="apple-btn nav__cta">
+    <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+    <span>Book a call</span>
+    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+  </a>
+  <button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="navsheet" id="navsheet" aria-hidden="true">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How it works</a>
+  <a href="bookkeepers.html">Bookkeepers</a>
+  <a href="for-accountants.html">For accountants</a>
+  <a href="integrations.html">Integrations</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="book-a-call.html" class="apple-btn navsheet__cta">
+    <span>Book a call</span>
+  </a>
+</div>
+
+<main class="page">
+  <section class="page__hero">
+    <div class="page__hero-inner">
+      <p class="page__eyebrow">About Otto</p>
+      <h1 class="page__h1">A back office<br/>that <span class="accent">runs itself.</span></h1>
+      <p class="page__lead">
+        Otto was built by a former chef-turned-engineer and a restaurant
+        group CFO who were tired of bookkeeping that arrived three weeks
+        after it mattered. We make live bookkeeping the way the back
+        office actually wants to work — fast, accurate, and signed by a
+        real person.
+      </p>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2>The story.</h2>
+    <div class="acc-grid">
+      <div class="acc-card">
+        <span class="glyph">2024</span>
+        <h3>An owner's complaint.</h3>
+        <p>One of our founders was running a 3-site restaurant group and getting
+        monthly P&amp;Ls three weeks late. By the time the numbers landed, the
+        food cost problem had cost him another £8,000.</p>
+      </div>
+      <div class="acc-card">
+        <span class="glyph">2025</span>
+        <h3>The first prototype.</h3>
+        <p>We connected a single Toast EPOS to a Xero ledger and let an AI code
+        the supplier invoices overnight. The next morning, the books matched.
+        We knew it could work.</p>
+      </div>
+      <div class="acc-card">
+        <span class="glyph">2026</span>
+        <h3>Otto today.</h3>
+        <p>86 independent restaurants and pubs onboarded across the UK, six
+        qualified bookkeepers on the team, and a signoff SLA of three working
+        days from month-end.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2>Who's behind it.</h2>
+    <ul class="bk-grid" style="list-style:none;padding:0;margin:0;">
+      <li class="bk-card">
+        <div class="bk-card__top">
+          <div class="avatar">RP</div>
+          <div>
+            <div class="bk-card__name">Roger Perowne</div>
+            <div class="bk-card__role">Co-founder &amp; CEO</div>
+          </div>
+        </div>
+        <p class="bk-card__bio">
+          Roger spent eight years running the back office for an independent
+          restaurant group. He builds the software so it works the way an
+          owner actually thinks.
+        </p>
+      </li>
+      <li class="bk-card">
+        <div class="bk-card__top">
+          <div class="avatar">LJ</div>
+          <div>
+            <div class="bk-card__name">Lena Jakobsen</div>
+            <div class="bk-card__role">Co-founder &amp; CFO</div>
+          </div>
+        </div>
+        <p class="bk-card__bio">
+          Lena was group CFO at a 24-site hospitality business. She runs the
+          bookkeeping standard — every entry in Otto is signed off to the same
+          bar she'd apply herself.
+        </p>
+      </li>
+      <li class="bk-card">
+        <div class="bk-card__top">
+          <div class="avatar">MK</div>
+          <div>
+            <div class="bk-card__name">Marcus Knowles</div>
+            <div class="bk-card__role">Head of bookkeepers</div>
+          </div>
+        </div>
+        <p class="bk-card__bio">
+          Marcus leads the six-person bookkeeping team. Twelve years in
+          hospitality finance and a former kitchen porter — he knows the
+          industry from both ends.
+        </p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="page__section">
+    <h2>Where to find us.</h2>
+    <div class="acc-grid">
+      <div class="acc-card">
+        <h3>London office.</h3>
+        <p>14 Phipp Street<br/>London EC2A 4PN<br/>+44 20 4525 7800</p>
+      </div>
+      <div class="acc-card">
+        <h3>Talk to us.</h3>
+        <p>hello@otto.bk · WhatsApp +44 7700 900 410 · Or just <a href="book-a-call.html" style="color:#fff;text-decoration:underline;">book a 30-minute call</a>.</p>
+      </div>
+      <div class="acc-card">
+        <h3>Working with us.</h3>
+        <p>We're a small team. If you'd like to join as a bookkeeper or an
+        engineer, write to <a href="mailto:careers@otto.bk" style="color:#fff;text-decoration:underline;">careers@otto.bk</a>.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  const burger = document.getElementById('navburger');
+  const sheet = document.getElementById('navsheet');
+  if (!burger || !sheet) return;
+  const close = () => { sheet.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); };
+  const open  = () => { sheet.classList.add('is-open');    burger.setAttribute('aria-expanded', 'true'); };
+  burger.addEventListener('click', () => sheet.classList.contains('is-open') ? close() : open());
+  sheet.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>

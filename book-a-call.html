@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>Book a call — Otto</title>
+<meta name="description" content="30 minutes on a call to connect your systems and start live bookkeeping this week." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('page-mode')</script>
+</head>
+<body>
+
+<header class="nav" id="topnav">
+  <a class="nav__brand" href="index.html" aria-label="Otto — Home">
+    <svg class="logo-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round">
+        <circle cx="22" cy="32" r="14"/>
+        <circle cx="42" cy="32" r="14"/>
+      </g>
+    </svg>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="how-it-works.html">How it works</a>
+    <a href="bookkeepers.html">Bookkeepers</a>
+    <a href="for-accountants.html">For accountants</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="about.html">About</a>
+  </nav>
+  <a href="book-a-call.html" class="apple-btn nav__cta">
+    <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+    <span>Book a call</span>
+    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+  </a>
+  <button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="navsheet" id="navsheet" aria-hidden="true">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How it works</a>
+  <a href="bookkeepers.html">Bookkeepers</a>
+  <a href="for-accountants.html">For accountants</a>
+  <a href="integrations.html">Integrations</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="book-a-call.html" class="apple-btn navsheet__cta"><span>Book a call</span></a>
+</div>
+
+<main class="page">
+  <section class="page__hero">
+    <div class="page__hero-inner">
+      <p class="page__eyebrow">Book a call</p>
+      <h1 class="page__h1">30 minutes.<br/><span class="accent">Live by Friday.</span></h1>
+      <p class="page__lead">
+        Pick a time, tell us a bit about your kitchen, and we'll connect
+        your till, your bank, and your suppliers on the call. Your first
+        signed-off P&amp;L lands inside the month.
+      </p>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <div class="booking">
+      <form class="booking__form" action="mailto:hello@otto.bk" method="post" enctype="text/plain">
+        <h2 style="margin: 0 0 18px;">Tell us about your kitchen.</h2>
+        <p style="color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; margin: 0 0 28px; font-weight: 300;">
+          We'll come back within one working day with a calendar link.
+        </p>
+        <label>
+          <span>Your name</span>
+          <input type="text" name="name" required placeholder="Jane Smith" />
+        </label>
+        <label>
+          <span>Restaurant or pub</span>
+          <input type="text" name="venue" required placeholder="Brown Cow" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" required placeholder="jane@browncow.co.uk" />
+        </label>
+        <label>
+          <span>Number of sites</span>
+          <select name="sites">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5+</option>
+          </select>
+        </label>
+        <label>
+          <span>Which till do you run?</span>
+          <select name="epos">
+            <option>Toast</option>
+            <option>Lightspeed</option>
+            <option>Square</option>
+            <option>Tevalis</option>
+            <option>Zonal</option>
+            <option>Epos Now</option>
+            <option>Other / unsure</option>
+          </select>
+        </label>
+        <label>
+          <span>Anything else worth knowing?</span>
+          <textarea name="notes" rows="3" placeholder="We close on Mondays · Two sites going on three"></textarea>
+        </label>
+        <button type="submit" class="apple-btn" style="border:0; cursor:pointer; margin-top: 12px;">
+          <span>Send</span>
+          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+        </button>
+        <p style="font-size: 11px; color: rgba(255,255,255,0.4); margin: 16px 0 0;">
+          By submitting you agree to be contacted about Otto. We don't share
+          your details with anyone.
+        </p>
+      </form>
+      <aside class="booking__aside">
+        <h3>What happens next.</h3>
+        <ol class="booking__steps">
+          <li><strong>Today.</strong> You hit Send. We get back within one working day with a 30-minute video call slot.</li>
+          <li><strong>On the call.</strong> Co-founder Roger walks you through the setup, answers your questions, and starts the integration with your EPOS / bank / suppliers.</li>
+          <li><strong>This week.</strong> Your first sales feed posts overnight. Your bookkeeper (one of six) is assigned and introduces themselves.</li>
+          <li><strong>This month.</strong> First signed-off P&amp;L lands within three working days of month-end.</li>
+        </ol>
+        <p class="booking__or">
+          Or just email <a href="mailto:hello@otto.bk">hello@otto.bk</a> · WhatsApp <a href="https://wa.me/447700900410">+44 7700 900 410</a>.
+        </p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  const burger = document.getElementById('navburger');
+  const sheet = document.getElementById('navsheet');
+  if (!burger || !sheet) return;
+  const close = () => { sheet.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); };
+  const open  = () => { sheet.classList.add('is-open');    burger.setAttribute('aria-expanded', 'true'); };
+  burger.addEventListener('click', () => sheet.classList.contains('is-open') ? close() : open());
+  sheet.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>

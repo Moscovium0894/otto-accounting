@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<title>Integrations — Otto</title>
+<meta name="description" content="Otto connects to the EPOS, banks, suppliers and accounting platforms your kitchen already uses." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('page-mode')</script>
+</head>
+<body>
+
+<header class="nav" id="topnav">
+  <a class="nav__brand" href="index.html" aria-label="Otto — Home">
+    <svg class="logo-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round">
+        <circle cx="22" cy="32" r="14"/>
+        <circle cx="42" cy="32" r="14"/>
+      </g>
+    </svg>
+  </a>
+  <nav class="nav__links" aria-label="Primary">
+    <a href="how-it-works.html">How it works</a>
+    <a href="bookkeepers.html">Bookkeepers</a>
+    <a href="for-accountants.html">For accountants</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="about.html">About</a>
+  </nav>
+  <a href="book-a-call.html" class="apple-btn nav__cta">
+    <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+    <span>Book a call</span>
+    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+  </a>
+  <button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="navsheet" id="navsheet" aria-hidden="true">
+  <a href="index.html">Home</a>
+  <a href="how-it-works.html">How it works</a>
+  <a href="bookkeepers.html">Bookkeepers</a>
+  <a href="for-accountants.html">For accountants</a>
+  <a href="integrations.html">Integrations</a>
+  <a href="pricing.html">Pricing</a>
+  <a href="about.html">About</a>
+  <a href="book-a-call.html" class="apple-btn navsheet__cta"><span>Book a call</span></a>
+</div>
+
+<main class="page">
+  <section class="page__hero">
+    <div class="page__hero-inner">
+      <p class="page__eyebrow">Integrations</p>
+      <h1 class="page__h1">We connect to<br/>what <span class="accent">you already use.</span></h1>
+      <p class="page__lead">
+        No new tills, no new banking. Otto plugs into the systems
+        independent kitchens already run. If your stack isn't listed,
+        we'll talk about it on the setup call.
+      </p>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2>EPOS &amp; <span class="accent">point-of-sale.</span></h2>
+    <div class="acc-grid">
+      <div class="acc-card"><span class="glyph">T</span><h3>Toast</h3><p>Direct API. Z-reads at midnight; sales, modifiers, voids, tips, and service charge all itemised.</p></div>
+      <div class="acc-card"><span class="glyph">L</span><h3>Lightspeed</h3><p>Direct API. Item-level sales, refunds, deposits, and house-account activity.</p></div>
+      <div class="acc-card"><span class="glyph">S</span><h3>Square</h3><p>Direct API. Card and cash sales, payouts, refunds, with itemised modifiers.</p></div>
+      <div class="acc-card"><span class="glyph">T</span><h3>Tevalis</h3><p>Sales feed via Tevalis Cloud. Multi-area splits for groups running multiple bars in one site.</p></div>
+      <div class="acc-card"><span class="glyph">Z</span><h3>Zonal</h3><p>Aztec data feed. Splits by area, by daypart, by event.</p></div>
+      <div class="acc-card"><span class="glyph">E</span><h3>Epos Now</h3><p>API connection. Sales and deposits posted nightly to your books.</p></div>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2><span class="accent">Banks</span> &amp; payment processors.</h2>
+    <div class="acc-grid">
+      <div class="acc-card"><span class="glyph">£</span><h3>Open Banking</h3><p>Read-only feed for all major UK high-street banks via Plaid &amp; TrueLayer.</p></div>
+      <div class="acc-card"><span class="glyph">£</span><h3>Stripe</h3><p>Payouts matched to till activity. Fees automatically allocated.</p></div>
+      <div class="acc-card"><span class="glyph">£</span><h3>SumUp / Worldpay</h3><p>Card payout statements parsed and reconciled.</p></div>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2><span class="accent">Suppliers</span> &amp; invoicing.</h2>
+    <div class="acc-grid">
+      <div class="acc-card"><span class="glyph">@</span><h3>PDF email invoices</h3><p>Forwarded to your unique Otto address. OCR + line-item coding within 1 hour.</p></div>
+      <div class="acc-card"><span class="glyph">@</span><h3>Bidfood / Brakes</h3><p>Direct supplier feeds. Invoices match to delivery notes automatically.</p></div>
+      <div class="acc-card"><span class="glyph">@</span><h3>Cellar / wine</h3><p>Hallgarten, Liberty, Boutinot — direct feeds for the wet side of the business.</p></div>
+    </div>
+  </section>
+
+  <section class="page__section">
+    <h2><span class="accent">Accounting</span> platforms.</h2>
+    <div class="acc-grid">
+      <div class="acc-card"><span class="glyph">X</span><h3>Xero</h3><p>Native two-way sync. Otto is the bookkeeper; Xero is the ledger your accountant looks at.</p></div>
+      <div class="acc-card"><span class="glyph">Q</span><h3>QuickBooks Online</h3><p>Full integration including custom chart-of-accounts mapping.</p></div>
+      <div class="acc-card"><span class="glyph">F</span><h3>FreeAgent</h3><p>Smaller venues using FreeAgent — sales and invoice feeds, monthly close still done by us.</p></div>
+    </div>
+  </section>
+
+  <section class="page__section" style="text-align:center;">
+    <h2>Don't see your system?</h2>
+    <p style="color: rgba(255,255,255,0.6); font-size: 1rem; max-width: 56ch; margin: 24px auto 32px; line-height: 1.6; font-weight: 300;">
+      We add integrations as our customers need them. If you're running
+      something we don't list, mention it on the setup call — chances are
+      we can wire it up.
+    </p>
+    <a href="book-a-call.html" class="apple-btn" style="display:inline-flex;">
+      <span>Talk to us</span>
+      <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+    </a>
+  </section>
+</main>
+
+<script>
+(function(){
+  const burger = document.getElementById('navburger');
+  const sheet = document.getElementById('navsheet');
+  if (!burger || !sheet) return;
+  const close = () => { sheet.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); };
+  const open  = () => { sheet.classList.add('is-open');    burger.setAttribute('aria-expanded', 'true'); };
+  burger.addEventListener('click', () => sheet.classList.contains('is-open') ? close() : open());
+  sheet.addEventListener('click', e => { if (e.target.closest('a')) close(); });
+  window.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+</script>
+</body>
+</html>
