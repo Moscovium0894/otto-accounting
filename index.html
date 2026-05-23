@@ -23,8 +23,7 @@
 
 <!-- Ambient layers -->
 <div class="grain" aria-hidden="true"></div>
-<!-- Sticky bottom Book-a-Call (mobile only). JS toggles .is-on after hero scrolls past. -->
-<a href="#book" class="sticky-cta" id="stickyCta" aria-hidden="true">Book a Call →</a>
+<!-- (sticky bottom Book-a-Call removed per request) -->
 <div class="particles" id="particles" aria-hidden="true"></div>
 
 <!-- Top progress bar -->
@@ -1022,18 +1021,8 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 })();
 
 (function stickyCta() {
-  if (!document.documentElement.classList.contains('is-mobile')) return;
-  const cta = document.getElementById('stickyCta');
-  const hero = document.getElementById('hero');
-  const deck = document.getElementById('deck');
-  if (!cta || !hero) return;
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      // Hide while hero is in view; show once we've scrolled past it.
-      cta.classList.toggle('is-on', !e.isIntersecting);
-    });
-  }, { root: deck || null, threshold: 0, rootMargin: '-50% 0px 0px 0px' });
-  io.observe(hero);
+  // sticky bottom CTA removed; this IIFE is a no-op now.
+  return;
 })();
 
 /* =========================================================================

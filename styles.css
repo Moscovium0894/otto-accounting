@@ -2099,3 +2099,96 @@ html.is-mobile .cta {
   max-height: 100svh;
   overflow: hidden;
 }
+
+/* =========================================================================
+   MOBILE — much smaller cards. Final pass.
+   Every card was still too tall on iPhone. Everything below shrinks
+   font sizes, drops more content, and centers what's left so the snap
+   target is comfortably half-empty rather than crammed full.
+   ========================================================================= */
+
+/* Defensive: hide the sticky CTA in case any old markup is cached */
+.sticky-cta, html.is-mobile .sticky-cta { display: none !important; }
+
+/* HERO — single button, no sub paragraph, smaller everything */
+html.is-mobile .hero__sub { display: none !important; }
+html.is-mobile .hero__h1 { font-size: clamp(2rem, 9vw, 2.6rem); letter-spacing: -0.03em; }
+html.is-mobile .hero__eyebrow { font-size: 9px; padding: 4px 9px; margin-bottom: 14px; letter-spacing: 0.16em; }
+html.is-mobile .hero__content { padding: 5rem 22px 28px; }
+html.is-mobile .hero__ctas { gap: 8px; }
+html.is-mobile .hero__ctas .btn--white { display: none; }   /* keep only the primary CTA */
+html.is-mobile .hero__ctas .btn--primary { width: auto; align-self: flex-start; padding: 13px 26px; font-size: 13px; }
+
+/* SECTION FRAME — global slimming */
+html.is-mobile .section { padding: 84px 22px 24px; justify-content: center; }
+html.is-mobile .section__head { margin-bottom: 14px; }
+html.is-mobile .section__eyebrow { font-size: 9px; margin-bottom: 8px; padding-left: 22px; letter-spacing: 0.16em; }
+html.is-mobile .section__eyebrow::before { width: 14px; }
+html.is-mobile .section__h2 { font-size: clamp(1.3rem, 6vw, 1.8rem); letter-spacing: -0.02em; line-height: 1.08; }
+html.is-mobile .section__lead { display: none !important; }
+
+/* HOW — three numbered titles in a tight stack. No extras. */
+html.is-mobile #how .steps { gap: 12px; padding-left: 8px; }
+html.is-mobile #how .step { padding: 0 0 0 26px; }
+html.is-mobile #how .step__title { font-size: 0.88rem; margin: 0; line-height: 1.3; }
+html.is-mobile #how .step__n { font-size: 8.5px; margin-bottom: 3px; letter-spacing: 0.16em; }
+html.is-mobile #how .step__n .glyph { width: 24px; height: 24px; font-size: 10px; left: -13px; top: -2px; border-width: 1.5px; }
+html.is-mobile #how .steps::before { left: 12px; top: 12px; bottom: 12px; }
+
+/* YOUR NUMBERS — three KPI tiles, full width, no card chrome */
+html.is-mobile #numbers .dash {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+html.is-mobile #numbers .dash::before { display: none !important; }
+html.is-mobile #numbers .dash__kpis { gap: 8px; }
+html.is-mobile #numbers .dash__kpi {
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  padding: 12px 10px;
+  border-radius: 8px;
+}
+html.is-mobile #numbers .dash__kpi-val { font-size: 1.15rem; }
+html.is-mobile #numbers .dash__kpi-lbl { font-size: 8.5px; }
+html.is-mobile #numbers .dash__kpi-delta { font-size: 8.5px; }
+
+/* WHY SWITCH — only 2 rows per card (Cost + Cadence) */
+html.is-mobile #compare .compare__col > .compare__row:nth-child(n+5) { display: none; }
+html.is-mobile #compare .compare__col { padding: 12px 14px; border-radius: 8px; }
+html.is-mobile #compare .compare__lbl { font-size: 8px; margin-bottom: 4px; }
+html.is-mobile #compare .compare__name { font-size: 0.88rem; margin-bottom: 8px; }
+html.is-mobile #compare .compare__row { grid-template-columns: 72px 1fr; padding: 5px 0; font-size: 11px; gap: 8px; }
+html.is-mobile #compare .compare__row .k { font-size: 8px; }
+html.is-mobile #compare .compare { gap: 8px; }
+
+/* BOOKKEEPERS — very compact carousel cards, only the quote */
+html.is-mobile #human .person { padding: 14px; flex-basis: 76%; }
+html.is-mobile #human .person__top { margin-bottom: 8px; gap: 10px; }
+html.is-mobile #human .avatar { width: 34px; height: 34px; font-size: 11px; border-radius: 4px; }
+html.is-mobile #human .person__name { font-size: 13px; }
+html.is-mobile #human .person__role { font-size: 9px; margin-top: 2px; }
+html.is-mobile #human .person__quote { font-size: 11px; padding-top: 10px; line-height: 1.5; }
+
+/* PRICING — 3 features only, smaller £ */
+html.is-mobile #pricing .price__list li:nth-child(n+4) { display: none; }
+html.is-mobile #pricing .price__num { font-size: 2.1rem; }
+html.is-mobile #pricing .price__lbl { font-size: 9px; }
+html.is-mobile #pricing .price__note { font-size: 9.5px; }
+html.is-mobile #pricing .price__head { padding-bottom: 12px; margin-bottom: 12px; }
+html.is-mobile #pricing .price__list li { font-size: 11.5px; }
+html.is-mobile #pricing .price { padding: 18px; }
+
+/* FAQ — 3 items only on mobile */
+html.is-mobile #faq .faq__item:nth-child(n+4) { display: none; }
+html.is-mobile #faq .faq__q { font-size: 0.82rem; padding: 9px 0; }
+html.is-mobile #faq .faq__a { font-size: 11px; line-height: 1.55; padding-bottom: 9px; }
+
+/* CTA — one button, smaller heading */
+html.is-mobile #book .cta__inner { gap: 12px; }
+html.is-mobile #book .cta__inner h2 { font-size: clamp(1.5rem, 6vw, 1.9rem); }
+html.is-mobile #book .cta__inner p { font-size: 0.85rem; max-width: 30ch; line-height: 1.5; }
+html.is-mobile #book .cta__ctas { max-width: 280px; gap: 8px; }
+html.is-mobile #book .cta__ctas .btn--outline { display: none; }
+html.is-mobile #book .cta__ctas .btn { padding: 13px 22px; font-size: 13px; }
