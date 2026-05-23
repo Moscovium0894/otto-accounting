@@ -76,6 +76,7 @@ html::-webkit-scrollbar { display: none; }
   position: relative;
   width: 100%;
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 }
@@ -120,10 +121,13 @@ html::-webkit-scrollbar { display: none; }
 }
 
 .dots {
-  position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
+  position: fixed; top: 50%; transform: translateY(-50%);
   display: flex; flex-direction: column; gap: 14px;
   z-index: 80;
 }
+.dots--right { right: 28px; }
+.dots--left  { left: 28px; pointer-events: none; opacity: 0; transition: opacity 250ms ease; }
+.is-warp .dots--left { opacity: 1; }
 .dots__btn {
   position: relative; width: 22px; height: 22px; border: 0; background: transparent; cursor: pointer; padding: 0;
   display: flex; align-items: center; justify-content: center;
@@ -148,9 +152,84 @@ html::-webkit-scrollbar { display: none; }
   white-space: nowrap;
 }
 .dots__btn:hover .dots__lbl { opacity: 1; }
+.dots--left .dots__btn { cursor: default; }
+.dots--left .dots__lbl { display: none; }
+
+/* Warp emitter — each dot grows a horizontal speed-line across the page.
+   Right column streaks left, left column streaks right. Per-dot stagger
+   uses the --i index set in JS. */
+.dots__btn::after {
+  content: ''; position: absolute; top: 50%;
+  height: 1px; width: 0;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary)) 30%, hsl(var(--primary)) 70%, transparent);
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.7);
+  opacity: 0;
+  pointer-events: none;
+  will-change: width, opacity;
+}
+.dots--right .dots__btn::after { right: 100%; transform: translateY(-50%); }
+.dots--left  .dots__btn::after { left: 100%;  transform: translateY(-50%); }
+.is-warp .dots__btn::after {
+  animation: dot-ray 720ms cubic-bezier(0.7, 0, 0.2, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+@keyframes dot-ray {
+  0%   { width: 0;     opacity: 1; }
+  25%  { opacity: 1; }
+  100% { width: 110vw; opacity: 0; }
+}
 
 @media (max-width: 700px) {
-  .dots { display: none; }
+  .dots--right, .dots--left { display: none; }
+}
+
+/* =========================================================================
+   Mobile hamburger + slide-in nav sheet (hidden above 900px)
+   ========================================================================= */
+.navburger {
+  display: none;
+  position: fixed; top: 14px; right: 18px; z-index: 95;
+  width: 44px; height: 44px; border-radius: 8px;
+  background: hsl(var(--hero-bg) / 0.7);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid hsl(var(--border));
+  cursor: pointer; padding: 0;
+  align-items: center; justify-content: center; flex-direction: column; gap: 5px;
+}
+.navburger span {
+  display: block; width: 18px; height: 1.5px; background: hsl(var(--foreground));
+  transition: transform 280ms var(--ease-out-quart), opacity 200ms ease;
+}
+.navburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.navburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.navburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.navsheet {
+  position: fixed; inset: 0; z-index: 92;
+  background: hsl(var(--hero-bg) / 0.96);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+  gap: 6px; padding: 80px 40px 40px;
+  transform: translateY(-100%);
+  transition: transform 420ms var(--ease-out-expo);
+  pointer-events: none;
+}
+.navsheet.is-open { transform: translateY(0); pointer-events: auto; }
+.navsheet a {
+  font-size: clamp(1.5rem, 6vw, 2.2rem); font-weight: 600; letter-spacing: -0.02em;
+  text-transform: uppercase; color: hsl(var(--foreground));
+  padding: 12px 0;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .5s var(--ease-out-expo), transform .5s var(--ease-out-expo);
+  transition-delay: calc(var(--ni, 0) * 60ms + 120ms);
+}
+.navsheet.is-open a { opacity: 1; transform: translateY(0); }
+.navsheet .btn--primary {
+  margin-top: 24px;
+  font-size: 14px; letter-spacing: 0.04em;
+  padding: 16px 28px;
+}
+@media (max-width: 900px) {
+  .navburger { display: flex; }
 }
 
 /* Scroll hint on hero */
@@ -214,12 +293,6 @@ html::-webkit-scrollbar { display: none; }
 @keyframes float-y {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-12px); }
-}
-@keyframes glitch-1 {
-  0%, 92%, 100% { transform: none; opacity: 1; }
-  93% { transform: translate(-2px, 1px); }
-  95% { transform: translate(3px, -2px); }
-  97% { transform: translate(-1px, 2px); }
 }
 @keyframes word-in {
   0%   { opacity: 0; transform: translateY(40%) rotateX(-25deg); filter: blur(6px); }
@@ -405,7 +478,7 @@ html::-webkit-scrollbar { display: none; }
    HERO
    ========================================================================= */
 .hero {
-  position: relative; height: 100vh;
+  position: relative; height: 100vh; height: 100svh;
   display: flex; align-items: flex-end;
   background: hsl(var(--hero-bg)); overflow: hidden;
 }
@@ -517,16 +590,39 @@ html::-webkit-scrollbar { display: none; }
   perspective: 800px;
 }
 .hero__h1 .accent {
+  position: relative; display: inline-block;
   color: hsl(var(--primary));
   text-shadow: 0 0 60px hsl(var(--primary) / 0.4);
-  position: relative; display: inline-block;
-  animation: glitch-1 6s infinite;
+  background-image: linear-gradient(
+    100deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--primary)) 38%,
+    hsl(0 0% 100% / 0.95) 50%,
+    hsl(var(--primary)) 62%,
+    hsl(var(--primary)) 100%
+  );
+  background-size: 220% 100%;
+  background-position: 100% 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: accent-sheen 7s 1.4s ease-in-out infinite;
 }
-.hero__h1 .accent::before {
-  content: attr(data-text); position: absolute; left: 0; top: 0; color: hsl(var(--primary));
-  text-shadow: 2px 0 hsl(0 90% 60% / 0.6), -2px 0 hsl(195 100% 60% / 0.6);
-  opacity: 0; mix-blend-mode: screen;
-  animation: glitch-1 6s infinite reverse;
+.hero__h1 .accent::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -0.08em;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary)), transparent);
+  box-shadow: 0 0 12px hsl(var(--primary) / 0.7);
+  transform: scaleX(0); transform-origin: left center;
+  animation: accent-rule 1s 1.4s var(--ease-out-expo) forwards;
+}
+@keyframes accent-sheen {
+  0%, 30%, 100% { background-position: 100% 0; }
+  60%           { background-position: -20% 0; }
+}
+@keyframes accent-rule {
+  0%   { transform: scaleX(0); transform-origin: left center; }
+  100% { transform: scaleX(1); transform-origin: left center; }
 }
 .hero__sub {
   font-size: clamp(1.125rem, 2.5vw, 1.875rem);
@@ -569,7 +665,7 @@ html::-webkit-scrollbar { display: none; }
   display: flex; align-items: center;
   padding: 96px 64px 80px;
   background: hsl(var(--background));
-  height: 100vh;
+  height: 100vh; height: 100svh;
   overflow: hidden;
 }
 .section--darker { background: hsl(var(--hero-bg)); }
@@ -1148,60 +1244,18 @@ html::-webkit-scrollbar { display: none; }
 #tweaks-root { z-index: 95; position: relative; }
 
 /* =========================================================================
-   Warp overlay (fast-scroll easter egg)
+   Warp (fast-scroll easter egg) — emitted by the side dots themselves,
+   so the effect feels rooted in the page chrome instead of a separate
+   overlay. The active dot pulses harder, all dots briefly brighten.
    ========================================================================= */
-.warp {
-  position: fixed; inset: 0; z-index: 200; pointer-events: none;
-  opacity: 0;
-  transition: opacity 220ms ease;
+.warp { display: none; }
+.is-warp .dots__btn::before {
+  background: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.25), 0 0 14px hsl(var(--primary) / 0.8);
 }
-.warp.is-on { opacity: 1; }
-.warp__lines {
-  position: absolute; inset: -10%;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent 0,
-      transparent 6px,
-      hsl(var(--primary) / 0.18) 6px,
-      hsl(var(--primary) / 0.18) 7px
-    );
-  mask-image: radial-gradient(ellipse at center, transparent 12%, black 70%);
-  -webkit-mask-image: radial-gradient(ellipse at center, transparent 12%, black 70%);
-  opacity: 0;
-}
-.warp.is-on .warp__lines { animation: warp-lines 760ms cubic-bezier(0.7, 0, 0.2, 1) forwards; }
-@keyframes warp-lines {
-  0%   { transform: scale(0.5); opacity: 0; filter: blur(8px); }
-  35%  { opacity: 1; }
-  100% { transform: scale(2.2); opacity: 0; filter: blur(0px); }
-}
-.warp__slash {
-  position: absolute; top: 50%; left: -10%; right: -10%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, hsl(var(--primary)) 30%, #fff 50%, hsl(var(--primary)) 70%, transparent);
-  box-shadow: 0 0 28px hsl(var(--primary)), 0 0 60px hsl(var(--primary));
-  transform: translateY(-50%) scaleX(0);
-  transform-origin: left center;
-  opacity: 0;
-}
-.warp.is-on .warp__slash { animation: warp-slash 760ms cubic-bezier(0.85, 0, 0.15, 1) forwards; }
-@keyframes warp-slash {
-  0%   { transform: translateY(-50%) scaleX(0); transform-origin: left center; opacity: 1; }
-  45%  { transform: translateY(-50%) scaleX(1); transform-origin: left center; opacity: 1; }
-  55%  { transform: translateY(-50%) scaleX(1); transform-origin: right center; opacity: 1; }
-  100% { transform: translateY(-50%) scaleX(0); transform-origin: right center; opacity: 0; }
-}
-.warp__flash {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at center, hsl(var(--primary) / 0.35), transparent 60%);
-  opacity: 0;
-}
-.warp.is-on .warp__flash { animation: warp-flash 760ms ease-out forwards; }
-@keyframes warp-flash {
-  0%   { opacity: 0; }
-  40%  { opacity: 1; }
-  100% { opacity: 0; }
+.is-warp .dots__btn.is-active::before {
+  transform: scale(1.7);
+  box-shadow: 0 0 0 6px hsl(var(--primary) / 0.25), 0 0 28px hsl(var(--primary));
 }
 .is-warp .particles span { animation-duration: 1.4s !important; }
 .is-warp .btn--primary { box-shadow: 0 0 40px 4px hsl(var(--primary) / 0.7); }
@@ -1232,14 +1286,23 @@ html::-webkit-scrollbar { display: none; }
 <!-- Top progress bar -->
 <div class="progress" aria-hidden="true"><div class="progress__fill" id="progressFill"></div></div>
 
-<!-- Side dot navigation -->
-<nav class="dots" id="dots" aria-label="Section navigation"></nav>
+<!-- Side dot navigation (right) + mirror column on the left used as the
+     second emitter for the fast-scroll warp lines. -->
+<nav class="dots dots--right" id="dots" aria-label="Section navigation"></nav>
+<nav class="dots dots--left" id="dotsLeft" aria-hidden="true"></nav>
 
-<!-- Fast-scroll warp overlay -->
-<div class="warp" id="warp" aria-hidden="true">
-  <div class="warp__lines"></div>
-  <div class="warp__slash"></div>
-  <div class="warp__flash"></div>
+<!-- Mobile nav (hamburger + sheet) -->
+<button class="navburger" id="navburger" aria-label="Open menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+<div class="navsheet" id="navsheet" aria-hidden="true">
+  <a href="#how">How it works</a>
+  <a href="#numbers">Your numbers</a>
+  <a href="#compare">Why switch</a>
+  <a href="#human">Bookkeepers</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#faq">FAQ</a>
+  <a href="#book" class="btn btn--primary">Book a Call</a>
 </div>
 
 <!-- ============================================================ NAV -->
@@ -1293,7 +1356,7 @@ html::-webkit-scrollbar { display: none; }
       <span class="pulse"></span>Live restaurant bookkeeping
     </div>
     <h1 class="hero__h1 fade-up" style="animation-delay:0.25s">
-      <span data-chars>Real numbers.</span><br><span class="accent" data-text="Checked.">Checked.</span>
+      <span data-chars>Real numbers.</span><br><span class="accent">Checked.</span>
     </h1>
     <p class="hero__sub fade-up" style="animation-delay:0.45s">
       We do bookkeeping correctly.
@@ -1799,13 +1862,20 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
   if (!slides.length) return;
 
   const dotsEl = document.getElementById('dots');
+  const dotsLeftEl = document.getElementById('dotsLeft');
   slides.forEach((s, i) => {
-    const b = document.createElement('button');
-    b.className = 'dots__btn';
-    b.setAttribute('aria-label', `Go to ${s.getAttribute('data-name')}`);
-    b.innerHTML = `<span class="dots__lbl">${s.getAttribute('data-name')}</span>`;
-    b.addEventListener('click', () => window.__ottoScrollTo && window.__ottoScrollTo(s));
-    dotsEl.appendChild(b);
+    const make = (clickable) => {
+      const b = document.createElement('button');
+      b.className = 'dots__btn';
+      b.style.setProperty('--i', i);
+      b.setAttribute('aria-label', `Go to ${s.getAttribute('data-name')}`);
+      b.innerHTML = `<span class="dots__lbl">${s.getAttribute('data-name')}</span>`;
+      if (clickable) b.addEventListener('click', () => window.__ottoScrollTo && window.__ottoScrollTo(s));
+      else { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
+      return b;
+    };
+    dotsEl.appendChild(make(true));
+    if (dotsLeftEl) dotsLeftEl.appendChild(make(false));
   });
 
   function setActive(idx) {
@@ -1816,7 +1886,10 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
       if (inner) inner.classList.toggle('is-active', isAct);
     });
     document.getElementById('progressFill').style.width = ((idx + 1) / slides.length * 100) + '%';
-    document.querySelectorAll('.dots__btn').forEach((b, i) => b.classList.toggle('is-active', i === idx));
+    document.querySelectorAll('.dots__btn').forEach((b) => {
+      const dotIdx = parseInt(b.style.getPropertyValue('--i'), 10);
+      b.classList.toggle('is-active', dotIdx === idx);
+    });
     document.getElementById('topnav').classList.toggle('is-scrolled', idx > 0);
   }
 
@@ -1837,164 +1910,198 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
 })();
 
 /* =========================================================================
-   Inertial scroller — replaces native scroll-snap with a damped lerp.
-   Input always moves `targetY`; each frame `currentY` eases toward it.
-   When input stops, `targetY` snaps to the nearest slide top so the user
-   can never settle off-card. Fast-flick to the bottom triggers the warp.
+   Card-step scroller — wheel / swipe / key input nudges a small buffer;
+   once over a threshold, the page smoothly animates to the next/prev
+   slide. Feels less like raw scrolling and more like an animated step
+   between cards. Past the last card, scrolling reveals the footer.
+   Fast-flick fires the warp (speed lines from the side dots).
    ========================================================================= */
-(function inertialScroll() {
+(function cardStepScroller() {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-  if (reduced || isTouch) {
-    window.__ottoScrollTo = (el) => el.scrollIntoView({ behavior: 'smooth' });
+  const slides = window.__ottoSlides || [...document.querySelectorAll('[data-snap]')];
+  if (!slides.length) return;
+
+  if (reduced) {
+    window.__ottoScrollTo = (el) => el.scrollIntoView({ behavior: 'auto' });
     return;
   }
 
-  const slides = window.__ottoSlides || [...document.querySelectorAll('[data-snap]')];
-  const warpEl = document.getElementById('warp');
+  // ---- state ----
+  let animating = false;
+  let currentIdx = 0;
+  let pastDeck = false; // true once user has scrolled past the last card into the footer
+  let bufDown = 0;
+  let bufUp = 0;
+  let bufTimer = null;
+  const BUF_THRESH = 50;
+  const BUF_RESET_MS = 240;
 
-  let targetY = window.scrollY;
-  let currentY = window.scrollY;
-  const lerp = 0.085;
-  const maxLead = () => window.innerHeight * 0.85;
-  let lastInputAt = 0;
-  let warping = false;
-
-  // Velocity tracking for warp trigger
+  // Velocity ring for warp
   const recent = []; // {t, dy}
   const RECENT_MS = 240;
 
   function maxScroll() {
     return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
   }
-
-  function clampLead() {
-    const lead = targetY - currentY;
-    const cap = maxLead();
-    if (lead > cap) targetY = currentY + cap;
-    else if (lead < -cap) targetY = currentY - cap;
-    targetY = Math.max(0, Math.min(maxScroll(), targetY));
-  }
-
-  function nearestSlideTop(y) {
-    let bestY = 0, bestD = Infinity;
-    for (const s of slides) {
-      const sy = s.offsetTop;
-      const d = Math.abs(sy - y);
-      if (d < bestD) { bestD = d; bestY = sy; }
-    }
-    return bestY;
-  }
-
-  function snapToNearest() {
-    // Only snap to slide tops while within the deck. Allow free scroll
-    // into the footer (below the last slide's bottom).
+  function deckBottom() {
     const last = slides[slides.length - 1];
-    const deckBottom = last.offsetTop + last.offsetHeight;
-    if (currentY >= deckBottom - 8) return;
-    targetY = Math.min(nearestSlideTop(currentY), deckBottom - 8);
+    return last.offsetTop + last.offsetHeight;
   }
 
-  let rafQueued = false;
-  function tick() {
-    rafQueued = true;
-    const dy = targetY - currentY;
-    if (Math.abs(dy) > 0.4) {
-      currentY += dy * lerp;
-      window.scrollTo(0, currentY);
+  function resetBuf() { bufDown = 0; bufUp = 0; clearTimeout(bufTimer); bufTimer = null; }
+  function pingBufTimer() {
+    clearTimeout(bufTimer);
+    bufTimer = setTimeout(resetBuf, BUF_RESET_MS);
+  }
+
+  // Map current scroll position to nearest slide index
+  function indexAt(y) {
+    let best = 0, bestD = Infinity;
+    for (let i = 0; i < slides.length; i++) {
+      const sy = slides[i].offsetTop;
+      const d = Math.abs(sy - y);
+      if (d < bestD) { bestD = d; best = i; }
+    }
+    return best;
+  }
+
+  // Smoothly animate window.scrollY from current to `endY` over `dur` ms.
+  // Uses an in-out cubic so the page eases out of one card and into the next.
+  function animateScroll(endY, dur) {
+    animating = true;
+    const startY = window.scrollY;
+    const t0 = performance.now();
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    function step(now) {
+      const t = Math.min(1, (now - t0) / dur);
+      const v = startY + (endY - startY) * ease(t);
+      window.scrollTo(0, v);
+      if (t < 1) requestAnimationFrame(step);
+      else { animating = false; resetBuf(); }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function goToSlide(idx, dur) {
+    idx = Math.max(0, Math.min(slides.length - 1, idx));
+    if (animating) return;
+    currentIdx = idx;
+    pastDeck = false;
+    animateScroll(slides[idx].offsetTop, dur || 950);
+  }
+
+  function tryAdvance(dir) {
+    if (animating) return;
+    if (dir > 0) {
+      if (currentIdx < slides.length - 1) {
+        goToSlide(currentIdx + 1);
+      } else if (!pastDeck) {
+        // Reveal footer / page bottom
+        pastDeck = true;
+        animateScroll(maxScroll(), 700);
+      }
     } else {
-      currentY = targetY;
-      window.scrollTo(0, currentY);
+      if (pastDeck) {
+        pastDeck = false;
+        animateScroll(slides[slides.length - 1].offsetTop, 700);
+      } else if (currentIdx > 0) {
+        goToSlide(currentIdx - 1);
+      }
     }
-    // After user has stopped feeding input for ~120ms, ease to nearest slide top.
-    if (!warping && performance.now() - lastInputAt > 120 && Math.abs(targetY - currentY) < 2) {
-      snapToNearest();
-    }
-    requestAnimationFrame(tick);
   }
-  requestAnimationFrame(tick);
 
-  function noteInput(dy) {
-    lastInputAt = performance.now();
-    const now = lastInputAt;
+  function noteVelocity(dy) {
+    const now = performance.now();
     recent.push({ t: now, dy: Math.abs(dy) });
     while (recent.length && now - recent[0].t > RECENT_MS) recent.shift();
-    const sum = recent.reduce((a, r) => a + r.dy, 0);
-    // Warp trigger: strong downward velocity, must be past slide 2, and
-    // not already warping.
-    if (!warping && dy > 0 && sum > 2400) {
-      const slideH = window.innerHeight;
-      if (currentY > slideH * 1.2) triggerWarp();
+  }
+  function velocitySum() {
+    return recent.reduce((a, r) => a + r.dy, 0);
+  }
+
+  function feed(dy) {
+    if (animating) return;
+    noteVelocity(dy);
+    if (dy > 0) { bufDown += dy; bufUp = 0; }
+    else        { bufUp += -dy; bufDown = 0; }
+    pingBufTimer();
+    if (bufDown > BUF_THRESH) {
+      resetBuf();
+      // Hard flick downward past slide 2 → warp instead of single step
+      if (velocitySum() > 2200 && currentIdx >= 2) triggerWarp();
+      else tryAdvance(1);
+    } else if (bufUp > BUF_THRESH) {
+      resetBuf();
+      tryAdvance(-1);
     }
   }
 
+  // ---- wheel ----
   function handleWheel(e) {
-    if (warping) { e.preventDefault(); return; }
     e.preventDefault();
-    targetY += e.deltaY;
-    clampLead();
-    noteInput(e.deltaY);
+    feed(e.deltaY);
   }
   window.addEventListener('wheel', handleWheel, { passive: false });
-  // Spline canvas captures pointer events so it can react to the mouse;
-  // forward wheel/touch to the scroller in capture-phase so the page
-  // still scrolls while the cursor is over the hero.
+  // Spline canvas can swallow wheel events; capture and forward.
   const spline = document.querySelector('.hero__spline');
   if (spline) {
     spline.addEventListener('wheel', handleWheel, { passive: false, capture: true });
-    let splineTouchY = null;
-    spline.addEventListener('touchstart', (e) => { splineTouchY = e.touches[0].clientY; }, { passive: true, capture: true });
-    spline.addEventListener('touchmove', (e) => {
-      if (splineTouchY == null) return;
-      const y = e.touches[0].clientY;
-      const dy = splineTouchY - y;
-      splineTouchY = y;
-      if (warping) return;
-      targetY += dy * 1.6; clampLead(); noteInput(dy);
-    }, { passive: true, capture: true });
-    spline.addEventListener('touchend', () => { splineTouchY = null; }, { passive: true, capture: true });
   }
 
-  // Touch
-  let lastTouchY = null;
-  window.addEventListener('touchstart', (e) => { lastTouchY = e.touches[0].clientY; }, { passive: true });
-  window.addEventListener('touchmove', (e) => {
-    if (lastTouchY == null) return;
-    const y = e.touches[0].clientY;
-    const dy = lastTouchY - y;
-    lastTouchY = y;
-    if (warping) return;
-    targetY += dy * 1.6;
-    clampLead();
-    noteInput(dy);
+  // ---- touch (iOS) — full swipe gesture support ----
+  // Touch swipe drives the same animation, with a velocity-aware threshold
+  // so a small finger nudge doesn't advance.
+  let tStartY = null, tStartT = 0, tMoved = 0;
+  // touchmove must be non-passive to preventDefault; otherwise Safari scrolls
+  // the page natively in parallel with our animations.
+  document.body.addEventListener('touchstart', (e) => {
+    if (animating) return;
+    tStartY = e.touches[0].clientY;
+    tStartT = performance.now();
+    tMoved = 0;
   }, { passive: true });
-  window.addEventListener('touchend', () => { lastTouchY = null; }, { passive: true });
+  document.body.addEventListener('touchmove', (e) => {
+    if (tStartY == null) return;
+    if (animating) { e.preventDefault(); return; }
+    const y = e.touches[0].clientY;
+    tMoved = tStartY - y;
+    e.preventDefault();
+  }, { passive: false });
+  document.body.addEventListener('touchend', () => {
+    if (tStartY == null) return;
+    const dt = performance.now() - tStartT;
+    const vel = Math.abs(tMoved) / Math.max(1, dt); // px/ms
+    // Strong fling: trigger warp (downward only, past slide 2)
+    if (tMoved > 0 && vel > 1.6 && currentIdx >= 2) {
+      tStartY = null; tMoved = 0;
+      triggerWarp();
+      return;
+    }
+    if (Math.abs(tMoved) > 38 || vel > 0.35) {
+      tryAdvance(tMoved > 0 ? 1 : -1);
+    }
+    tStartY = null; tMoved = 0;
+  }, { passive: true });
 
-  // Keyboard
+  // ---- keyboard ----
   window.addEventListener('keydown', (e) => {
     if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
-    const slideH = window.innerHeight;
-    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
-      e.preventDefault();
-      const next = (slides.find((s) => s.offsetTop > currentY + 4) || slides[slides.length - 1]).offsetTop;
-      targetY = next; lastInputAt = performance.now();
-    } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
-      e.preventDefault();
-      const prevs = slides.filter((s) => s.offsetTop < currentY - 4);
-      const prev = prevs.length ? prevs[prevs.length - 1].offsetTop : 0;
-      targetY = prev; lastInputAt = performance.now();
-    } else if (e.key === 'Home') { e.preventDefault(); targetY = 0; lastInputAt = performance.now(); }
-      else if (e.key === 'End')  { e.preventDefault(); targetY = maxScroll(); lastInputAt = performance.now(); }
+    if (animating) return;
+    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); tryAdvance(1); }
+    else if (['ArrowUp', 'PageUp'].includes(e.key))     { e.preventDefault(); tryAdvance(-1); }
+    else if (e.key === 'Home')                          { e.preventDefault(); goToSlide(0); }
+    else if (e.key === 'End')                           { e.preventDefault(); goToSlide(slides.length - 1); }
   });
 
-  // Programmatic scroll API for nav/dot clicks
+  // ---- programmatic ----
   window.__ottoScrollTo = (el) => {
     if (!el) return;
-    targetY = Math.min(maxScroll(), el.offsetTop);
-    lastInputAt = performance.now();
+    const idx = slides.indexOf(el.closest ? el.closest('[data-snap]') || el : el);
+    if (idx >= 0) goToSlide(idx);
+    else animateScroll(el.offsetTop || 0, 800);
   };
 
-  // Anchor link interception
+  // ---- anchor link interception ----
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -2002,41 +2109,28 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
     if (!href || href === '#') return;
     const target = document.querySelector(href);
     if (!target) return;
-    const slide = target.closest('[data-snap]') || target;
     e.preventDefault();
-    window.__ottoScrollTo(slide);
+    window.__ottoScrollTo(target);
   });
 
-  // Warp sequence — fast-scroll easter egg
+  // ---- track currentIdx if user lands here via deep-link or refresh ----
+  window.addEventListener('load', () => {
+    currentIdx = indexAt(window.scrollY);
+  });
+  currentIdx = indexAt(window.scrollY);
+
+  // ---- warp sequence ----
   function triggerWarp() {
-    warping = true;
+    if (animating) return;
+    // Restart the dot-ray animation by toggling the class on a fresh frame
+    document.body.classList.remove('is-warp');
+    void document.body.offsetWidth;
     document.body.classList.add('is-warp');
-    warpEl.classList.add('is-on');
-    const start = currentY;
-    const last = slides[slides.length - 1];
-    const end = last.offsetTop;
-    const dur = 720;
-    const t0 = performance.now();
-    const ease = (t) => {
-      // cubic-bezier(0.85, 0, 0.15, 1) approximation
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    };
-    function step(now) {
-      const t = Math.min(1, (now - t0) / dur);
-      const v = start + (end - start) * ease(t);
-      targetY = v;
-      currentY = v;
-      window.scrollTo(0, v);
-      if (t < 1) requestAnimationFrame(step);
-      else {
-        setTimeout(() => {
-          warpEl.classList.remove('is-on');
-          document.body.classList.remove('is-warp');
-          warping = false;
-        }, 240);
-      }
-    }
-    requestAnimationFrame(step);
+    currentIdx = slides.length - 1;
+    pastDeck = false;
+    const end = slides[slides.length - 1].offsetTop;
+    animateScroll(Math.max(0, end), 820);
+    setTimeout(() => { document.body.classList.remove('is-warp'); }, 1300);
   }
 })();
 
@@ -2137,6 +2231,42 @@ document.getElementById('faq-list').addEventListener('click', (e) => {
     ticker.insertBefore(row, ticker.firstChild);
     while (ticker.children.length > 5) ticker.removeChild(ticker.lastChild);
   }, 5000);
+})();
+
+/* =========================================================================
+   Mobile nav — hamburger toggles a full-screen sheet. Sheet closes on
+   link click. The sheet links each get a per-item delay via --ni.
+   ========================================================================= */
+(function mobileNav() {
+  const burger = document.getElementById('navburger');
+  const sheet = document.getElementById('navsheet');
+  if (!burger || !sheet) return;
+  [...sheet.children].forEach((c, i) => c.style.setProperty('--ni', i));
+  function close() { sheet.classList.remove('is-open'); burger.setAttribute('aria-expanded', 'false'); sheet.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+  function open()  { sheet.classList.add('is-open');    burger.setAttribute('aria-expanded', 'true');  sheet.setAttribute('aria-hidden', 'false'); }
+  burger.addEventListener('click', () => {
+    if (sheet.classList.contains('is-open')) close(); else open();
+  });
+  sheet.addEventListener('click', (e) => {
+    if (e.target.closest('a')) close();
+  });
+  // ESC closes
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sheet.classList.contains('is-open')) close();
+  });
+})();
+
+/* =========================================================================
+   On small viewports, skip the Spline scene — it's a ~1MB asset that
+   tanks first paint on phones. Fall back to the CSS "pools" backdrop.
+   ========================================================================= */
+(function mobileSplineOff() {
+  if (window.matchMedia('(max-width: 700px)').matches) {
+    const hero = document.getElementById('hero');
+    if (hero) hero.setAttribute('data-bg', 'pools');
+    const sv = document.querySelector('.hero__spline');
+    if (sv) sv.remove();
+  }
 })();
 
 /* =========================================================================
