@@ -18,13 +18,9 @@
 </head>
 <body>
 
-<!-- Global background video — two stacked clips for a seamless cross-fade
-     loop. JS swaps which one is "primary" ~0.6s before the active video
-     ends so neither hits its own loop seam. -->
+<!-- Global background video -->
 <div class="bg-video">
-  <video class="bg-video__a is-on" autoplay muted playsinline webkit-playsinline disablepictureinpicture preload="auto"
-    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
-  <video class="bg-video__b" muted playsinline webkit-playsinline disablepictureinpicture preload="auto"
+  <video autoplay loop muted playsinline
     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
   <div class="bg-video__veil"></div>
 </div>
@@ -416,63 +412,6 @@
     onScroll();
   })();
 
-  // Seamless cross-fade loop. Two stacked <video> elements play the same
-  // clip; the inactive one is queued at currentTime 0. Roughly 0.6s
-  // before the active video ends, we kick off the inactive one and
-  // swap their .is-on classes — CSS opacity transitions handle the
-  // crossfade. Neither video ever hits its own loop seam.
-  (function crossfadeLoop(){
-    const a = document.querySelector('.bg-video__a');
-    const b = document.querySelector('.bg-video__b');
-    if (!a || !b) return;
-    a.loop = false; b.loop = false;
-    let active = a, queued = b;
-    let switching = false;
-
-    function ready(v){ return v.readyState >= 2 && isFinite(v.duration) && v.duration > 0; }
-
-    queued.addEventListener('loadedmetadata', () => {
-      try { queued.currentTime = 0; } catch (e) {}
-      queued.pause();
-    }, { once: true });
-
-    function tick(){
-      if (!ready(active)) { requestAnimationFrame(tick); return; }
-      const r = active.duration - active.currentTime;
-      if (!switching && r < 0.6) {
-        switching = true;
-        if (ready(queued)) {
-          try { queued.currentTime = 0; } catch (e) {}
-          const p = queued.play();
-          if (p && p.catch) p.catch(()=>{});
-          // Crossfade on the next frame so the play() call has started.
-          requestAnimationFrame(() => {
-            active.classList.remove('is-on');
-            queued.classList.add('is-on');
-          });
-          // After the fade completes, rewind the now-inactive video and
-          // swap the active / queued references.
-          setTimeout(() => {
-            try { active.pause(); active.currentTime = 0; } catch (e) {}
-            const tmp = active; active = queued; queued = tmp;
-            switching = false;
-          }, 700);
-        } else {
-          switching = false;
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-    if (ready(a)) tick();
-    else a.addEventListener('loadedmetadata', tick, { once: true });
-
-    // Defensive re-kick — iOS Safari can drop playback when the tab
-    // backgrounds, on low-power mode, or after a memory blip.
-    const kickActive = () => { const p = active.play(); if (p && p.catch) p.catch(()=>{}); };
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) kickActive(); });
-    window.addEventListener('pageshow', kickActive);
-    window.addEventListener('focus', kickActive);
-  })();
 </script>
 </body>
 </html>
