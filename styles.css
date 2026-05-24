@@ -1606,7 +1606,7 @@ html.page-mode .btn--outline {
   inset: 0;
 }
 /* When a URL is supplied, hide the placeholder so the scene shows alone. */
-.hero-spline--inline > spline-viewer[url]:not([url=""]) + .spline-placeholder {
+.hero-spline--inline > spline-viewer[data-spline-url]:not([data-spline-url=""]) + .spline-placeholder {
   display: none;
 }
 
@@ -1636,6 +1636,43 @@ html.page-mode .btn--outline {
   color: var(--brand);
   font-weight: 600;
   letter-spacing: 0.08em;
+}
+
+/* Reduced-motion / fallback hero for the cinematic homepage.
+   Hidden by default; revealed when JS detects prefers-reduced-motion
+   and adds .reduce-motion to <html>, or by the @media query as a
+   safety net for browsers that block JS. */
+.hero-fallback {
+  display: none;
+  position: relative;
+  z-index: 2;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: clamp(120px, 18vh, 200px) 24px clamp(64px, 10vh, 120px);
+  text-align: center;
+}
+.hero-fallback h1 {
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  font-weight: 700; line-height: 1.02; letter-spacing: -0.04em;
+  margin: 0 0 18px;
+}
+.hero-fallback p {
+  color: var(--muted);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.6;
+  max-width: 56ch;
+  margin: 0 auto 28px;
+}
+.hero-fallback .cta-row {
+  display: inline-flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+}
+html.reduce-motion .hero-spline,
+html.reduce-motion .hero-spline--full,
+html.reduce-motion .hero-spline--inline { display: none !important; }
+html.reduce-motion .hero-fallback { display: block; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-spline, .hero-spline--full, .hero-spline--inline { display: none !important; }
+  .hero-fallback { display: block; }
 }
 
 /* =========================================================================

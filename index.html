@@ -11,8 +11,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="modulepreload" href="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js" crossorigin>
 <script>document.documentElement.classList.add('page-mode')</script>
 <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js"></script>
+<script defer src="spline.js"></script>
 </head>
 <body>
 
@@ -65,14 +67,34 @@
 
 <main class="page page--cinematic">
 
-  <!-- HERO — interactive Spline scene (provides its own headline + CTA) -->
+  <!-- HERO — interactive Spline scene (provides its own headline + CTA).
+       Loads only when scrolled into view; pauses when scrolled past.
+       Static fallback below renders for prefers-reduced-motion users. -->
   <section class="page__hero page__hero--cinematic" aria-label="The Growthway — interactive hero">
     <div class="hero-spline hero-spline--full">
       <spline-viewer
-        url="https://prod.spline.design/lANFAwamxrzIdsIa/scene.splinecode"
+        data-spline-url="https://prod.spline.design/lANFAwamxrzIdsIa/scene.splinecode"
         loading-anim
         events-target="global">
       </spline-viewer>
+    </div>
+    <div class="hero-fallback">
+      <h1>Your books.<br/><span class="shiny">Revitalised.</span></h1>
+      <p>
+        The Growthway is a live, AI-assisted bookkeeping platform for independent
+        restaurants and pubs. It pulls in sales, codes invoices, and reconciles
+        the bank — then a qualified bookkeeper signs off the month, by name, by hand.
+      </p>
+      <div class="cta-row">
+        <a href="book-a-call.html" class="apple-btn">
+          <span>Book a call</span>
+          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+        </a>
+        <a href="how-it-works.html" class="ghost-btn">
+          <span>How it works</span>
+          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+        </a>
+      </div>
     </div>
   </section>
 

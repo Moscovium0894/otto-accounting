@@ -11,8 +11,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="modulepreload" href="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js" crossorigin>
 <script>document.documentElement.classList.add('page-mode')</script>
 <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js"></script>
+<script defer src="spline.js"></script>
 </head>
 <body>
 
@@ -68,7 +70,7 @@
              Suggested scene: a slowly rotating faceted gem or stack of
              three floating glass crystals tinted ember orange
              ("Crystal Cluster" / "Faceted Gem" / "Glass Stack"). -->
-        <spline-viewer url="" loading-anim events-target="global"></spline-viewer>
+        <spline-viewer data-spline-url="" loading-anim events-target="global"></spline-viewer>
         <div class="spline-placeholder"><strong>Spline · Pricing</strong><span>Rotating faceted gem / glass crystals</span></div>
       </div>
     </div>

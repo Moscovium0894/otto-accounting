@@ -11,8 +11,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="modulepreload" href="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js" crossorigin>
 <script>document.documentElement.classList.add('page-mode')</script>
 <script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js"></script>
+<script defer src="spline.js"></script>
 </head>
 <body>
 
@@ -69,7 +71,7 @@
         <!-- TODO: paste the .splinecode URL for this page's scene below.
              Suggested scene: an animated 3D monogram / typography piece
              ("Liquid Type" or "Floating Logo Mark") in ember orange. -->
-        <spline-viewer url="" loading-anim events-target="global"></spline-viewer>
+        <spline-viewer data-spline-url="" loading-anim events-target="global"></spline-viewer>
         <div class="spline-placeholder"><strong>Spline · About</strong><span>Animated monogram / liquid type</span></div>
       </div>
     </div>
