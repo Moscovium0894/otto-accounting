@@ -216,7 +216,6 @@ img, svg, video { display: block; max-width: 100%; }
 }
 .apple-btn:hover  { background: rgba(255,255,255,0.9); }
 .apple-btn:active { transform: scale(0.98); }
-.apple-btn .apple-mark { width: 14px; height: 14px; }
 .apple-btn .chevron    { width: 14px; height: 14px; transition: transform 200ms ease; }
 .apple-btn:hover .chevron { transform: translateX(2px); }
 
