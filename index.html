@@ -9,7 +9,10 @@
 <title>The Growthway — AI-native bookkeeping for restaurants</title>
 <meta name="description" content="The Growthway is a live, AI-assisted bookkeeping platform for independent restaurants and pubs. Real numbers, every morning, signed by a real bookkeeper." />
 
-<script>(function(){try{if(matchMedia('(max-width:740px)').matches||(matchMedia('(hover:none)').matches&&matchMedia('(pointer:coarse)').matches)){document.documentElement.classList.add('is-mobile');}}catch(e){}})();</script>
+<script>(function(){
+  document.documentElement.classList.add('js');
+  try{if(matchMedia('(max-width:740px)').matches||(matchMedia('(hover:none)').matches&&matchMedia('(pointer:coarse)').matches)){document.documentElement.classList.add('is-mobile');}}catch(e){}
+})();</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -467,10 +470,8 @@
       const d = el.getAttribute('data-delay');
       if (d) el.style.transitionDelay = d + 'ms';
     });
-    if (!('IntersectionObserver' in window)) {
-      els.forEach(el => el.classList.add('is-on'));
-      return;
-    }
+    const revealAll = () => els.forEach(el => el.classList.add('is-on'));
+    if (!('IntersectionObserver' in window)) { revealAll(); return; }
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -480,6 +481,10 @@
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
     els.forEach(el => io.observe(el));
+    // Safety net: if anything goes wrong (IO never fires, browser quirk,
+    // fast scroll past content), force everything visible after 2.5s so
+    // the page is never permanently blank below the fold.
+    setTimeout(revealAll, 2500);
   })();
 
   // Count-up for metric numbers (data-to="N" data-suffix="...")

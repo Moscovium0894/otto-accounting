@@ -1532,7 +1532,11 @@ html.page-mode .btn--outline {
    transition-delay).
    ========================================================================= */
 
-[data-anim] {
+/* Resting states ONLY apply when JS has confirmed it's running
+   (`html.js` is added at the top of <head>). If JS fails for any
+   reason, every element stays at its natural visible state — no risk
+   of a permanently blank page. */
+html.js [data-anim] {
   will-change: transform, opacity;
   transition:
     opacity 800ms var(--ease-out),
@@ -1541,34 +1545,34 @@ html.page-mode .btn--outline {
 }
 
 /* fade-up — gentle rise + fade */
-[data-anim="fade-up"]         { opacity: 0; transform: translateY(24px); }
-[data-anim="fade-up"].is-on   { opacity: 1; transform: none; }
+html.js [data-anim="fade-up"]         { opacity: 0; transform: translateY(24px); }
+html.js [data-anim="fade-up"].is-on   { opacity: 1; transform: none; }
 
 /* rise — larger upward translate, used for headlines */
-[data-anim="rise"]            { opacity: 0; transform: translateY(40px); }
-[data-anim="rise"].is-on      { opacity: 1; transform: none; }
+html.js [data-anim="rise"]            { opacity: 0; transform: translateY(40px); }
+html.js [data-anim="rise"].is-on      { opacity: 1; transform: none; }
 
 /* rise-scale — rises and scales up; for big cards */
-[data-anim="rise-scale"]      { opacity: 0; transform: translateY(80px) scale(.94); }
-[data-anim="rise-scale"].is-on{ opacity: 1; transform: none; }
+html.js [data-anim="rise-scale"]      { opacity: 0; transform: translateY(80px) scale(.94); }
+html.js [data-anim="rise-scale"].is-on{ opacity: 1; transform: none; }
 
 /* slide-left / slide-right — for side panels in the dashmock and triage rows */
-[data-anim="slide-left"]      { opacity: 0; transform: translateX(-50px); }
-[data-anim="slide-left"].is-on{ opacity: 1; transform: none; }
-[data-anim="slide-right"]     { opacity: 0; transform: translateX(50px); }
-[data-anim="slide-right"].is-on{opacity: 1; transform: none; }
+html.js [data-anim="slide-left"]      { opacity: 0; transform: translateX(-50px); }
+html.js [data-anim="slide-left"].is-on{ opacity: 1; transform: none; }
+html.js [data-anim="slide-right"]     { opacity: 0; transform: translateX(50px); }
+html.js [data-anim="slide-right"].is-on{opacity: 1; transform: none; }
 
 /* pop — scale up from 0.85 with a slight overshoot via spring easing */
-[data-anim="pop"]             { opacity: 0; transform: scale(.85); }
-[data-anim="pop"].is-on       { opacity: 1; transform: none; }
+html.js [data-anim="pop"]             { opacity: 0; transform: scale(.85); }
+html.js [data-anim="pop"].is-on       { opacity: 1; transform: none; }
 
 /* tilt-in — testimonial cards land with a slight rotation */
-[data-anim="tilt-in"]         { opacity: 0; transform: translateY(40px) rotate(-2deg); }
-[data-anim="tilt-in"].is-on   { opacity: 1; transform: none; }
+html.js [data-anim="tilt-in"]         { opacity: 0; transform: translateY(40px) rotate(-2deg); }
+html.js [data-anim="tilt-in"].is-on   { opacity: 1; transform: none; }
 
 /* count-up — the metric numbers; container animates, JS handles the count */
-[data-anim="count-up"]        { opacity: 0; transform: translateY(20px); }
-[data-anim="count-up"].is-on  { opacity: 1; transform: none; }
+html.js [data-anim="count-up"]        { opacity: 0; transform: translateY(20px); }
+html.js [data-anim="count-up"].is-on  { opacity: 1; transform: none; }
 
 
 /* =========================================================================
