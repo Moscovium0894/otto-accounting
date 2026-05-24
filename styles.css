@@ -434,7 +434,9 @@ img, svg, video { display: block; max-width: 100%; }
 .hero__line { display: block; }
 
 /* "Revitalised" — animated chrome sheen */
-.hero__h1 .shiny {
+.hero__h1 .shiny,
+.page__h1 .shiny,
+.shiny {
   background-image: linear-gradient(to right,
     #091020  0%,
     #0B2551  12.5%,
