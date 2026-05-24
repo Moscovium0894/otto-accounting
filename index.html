@@ -397,19 +397,37 @@
     });
   })();
 
-  // Nav style on scroll (deck or document)
+  // Nav style on scroll — document scrolls now, so always listen on window
   (function(){
     const nav = document.getElementById('topnav');
-    const deck = document.getElementById('deck');
-    const scroller = (deck && getComputedStyle(deck).overflowY === 'scroll') ? deck : window;
-    function onScroll(){
-      const y = scroller === window ? window.scrollY : deck.scrollTop;
-      nav.classList.toggle('is-scrolled', y > 60);
-    }
-    scroller.addEventListener('scroll', onScroll, { passive: true });
+    const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 60);
+    window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   })();
 
+  // Scroll-triggered entry animations. Each slide gets `.in-view` when
+  // its top crosses ~25% of the viewport from the bottom — that's when
+  // the inner staggered animations kick off (see "9. SCROLL-TRIGGERED
+  // ANIMATIONS" in styles.css). Hero slide starts already in-view so
+  // the first paint isn't blank.
+  (function(){
+    const slides = document.querySelectorAll('.snap-slide');
+    if (!slides.length || !('IntersectionObserver' in window)) {
+      slides.forEach(s => s.classList.add('in-view'));
+      return;
+    }
+    // First slide is already on screen — show it immediately.
+    slides[0].classList.add('in-view');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in-view');
+          io.unobserve(e.target);   // one-shot reveal, don't re-animate on scroll back
+        }
+      });
+    }, { rootMargin: '0px 0px -20% 0px', threshold: 0.05 });
+    slides.forEach((s, i) => { if (i > 0) io.observe(s); });
+  })();
 </script>
 </body>
 </html>

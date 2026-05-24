@@ -63,21 +63,16 @@ html, body {
 }
 /* Dark fallback on <html> as the deepest paint behind the fixed video.
    Body transparent so the video shows through any translucent chrome.
-   CRITICAL: scroll lives on <html> — only document-level scrolling lets
-   iOS Safari collapse its bottom toolbar from the opaque "expanded"
-   container into the floating glass pill. Sub-pages already scroll the
-   document; this gives the index the same behaviour so the grey box
-   around the URL bar disappears the moment the user starts scrolling. */
+   Natural document scroll (no snap) — content cards animate as they
+   enter view to give the deck a "snap" feeling without the jolt. */
 html {
   height: auto;
   min-height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
   background: var(--bg);
-  scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
   scrollbar-width: none;
 }
 html::-webkit-scrollbar { display: none; }
@@ -150,11 +145,11 @@ img, svg, video { display: block; max-width: 100%; }
 /* ---- Deck — layout group only; scrolling lives on <html> ---- */
 #deck { position: relative; }
 
+/* Slide — fills the viewport so the deck still reads as cards, but
+   without snap. Inner content animates in on enter (see below). */
 .snap-slide {
   position: relative;
-  height: 100dvh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1343,17 +1338,13 @@ html.page-mode .btn--outline {
   .triage__head, .chips { display: none; }
 }
 
-/* ---- Desktop (>= 1024px) — natural scrolling, no snap, larger type ---- */
+/* ---- Desktop (>= 1024px) — larger type, more breathing room ---- */
 @media (min-width: 1024px) {
-  html { scroll-snap-type: none; }
   body { min-height: 100dvh; }
 
   #deck { position: static; }
   .snap-slide {
-    height: auto;
     min-height: 100dvh;
-    scroll-snap-align: none;
-    scroll-snap-stop: normal;
     padding: 80px 0;
   }
 
@@ -1403,5 +1394,225 @@ html.page-mode .btn--outline {
 @media (prefers-reduced-motion: reduce) {
   .hero__h1 .shiny { animation: none !important; }
   .begin-pill__dot { animation: none !important; }
-  html { scroll-behavior: auto; scroll-snap-type: none; }
+  html { scroll-behavior: auto; }
+  .reveal, .reveal > * { opacity: 1 !important; transform: none !important; }
+}
+
+
+/* =========================================================================
+   9. SCROLL-TRIGGERED ANIMATIONS
+   Replaces scroll-snap. Each slide gets a `.in-view` class via
+   IntersectionObserver as it enters; staggered child animations make the
+   deck feel like cards landing rather than scrolling past. Browsers that
+   support `animation-timeline: view()` get an additional continuous
+   parallax tied to scroll progress through each slide.
+   ========================================================================= */
+
+/* Default resting state — inner content sits one step "below" / faded */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition:
+    opacity 750ms var(--ease-out),
+    transform 850ms var(--ease-spring);
+  will-change: transform, opacity;
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+/* Staggered children inside .reveal containers */
+.reveal > [data-stagger] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 800ms var(--ease-spring);
+}
+.reveal.in-view > [data-stagger] { opacity: 1; transform: none; }
+.reveal.in-view > [data-stagger="1"] { transition-delay: 80ms; }
+.reveal.in-view > [data-stagger="2"] { transition-delay: 180ms; }
+.reveal.in-view > [data-stagger="3"] { transition-delay: 280ms; }
+.reveal.in-view > [data-stagger="4"] { transition-delay: 380ms; }
+.reveal.in-view > [data-stagger="5"] { transition-delay: 480ms; }
+.reveal.in-view > [data-stagger="6"] { transition-delay: 580ms; }
+
+/* Hero — each line of the title slides up with its own stagger */
+.hero__h1 .hero__line {
+  display: block;
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 800ms var(--ease-out),
+    transform 900ms var(--ease-spring);
+}
+.snap-slide.in-view .hero__h1 .hero__line:nth-child(1) { opacity: 1; transform: none; }
+.snap-slide.in-view .hero__h1 .hero__line:nth-child(2) {
+  opacity: 1; transform: none;
+  transition-delay: 140ms;
+}
+.snap-slide.in-view .hero__sub {
+  animation: rise-fade 800ms 280ms var(--ease-out) both;
+}
+.snap-slide.in-view .hero__cta {
+  animation: rise-fade 800ms 440ms var(--ease-out) both;
+}
+.hero__sub, .hero__cta { opacity: 0; }
+.snap-slide.in-view .hero__sub,
+.snap-slide.in-view .hero__cta { opacity: 1; }
+
+@keyframes rise-fade {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Dashmock — the whole card lifts and scales in; the three panes slide
+   from three directions for a layered feel */
+.dashmock {
+  opacity: 0;
+  transform: translateY(60px) scale(0.96);
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 1000ms var(--ease-spring);
+}
+.snap-slide.in-view .dashmock { opacity: 1; transform: none; }
+.dashmock__side    { opacity: 0; transform: translateX(-20px); transition: opacity 700ms 200ms var(--ease-out), transform 800ms 200ms var(--ease-spring); }
+.dashmock__list    { opacity: 0; transform: translateY(20px);  transition: opacity 700ms 320ms var(--ease-out), transform 800ms 320ms var(--ease-spring); }
+.dashmock__reader  { opacity: 0; transform: translateX(20px);  transition: opacity 700ms 440ms var(--ease-out), transform 800ms 440ms var(--ease-spring); }
+.snap-slide.in-view .dashmock__side,
+.snap-slide.in-view .dashmock__list,
+.snap-slide.in-view .dashmock__reader { opacity: 1; transform: none; }
+
+/* Triage rows fan in one after the other */
+.triage__copy > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 700ms var(--ease-out),
+    transform 800ms var(--ease-spring);
+}
+.snap-slide.in-view .triage__copy > * { opacity: 1; transform: none; }
+.snap-slide.in-view .triage__copy > *:nth-child(1) { transition-delay:  60ms; }
+.snap-slide.in-view .triage__copy > *:nth-child(2) { transition-delay: 160ms; }
+.snap-slide.in-view .triage__copy > *:nth-child(3) { transition-delay: 260ms; }
+.snap-slide.in-view .triage__copy > *:nth-child(4) { transition-delay: 360ms; }
+
+.triage__card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 900ms 200ms var(--ease-out),
+    transform 1000ms 200ms var(--ease-spring);
+}
+.snap-slide.in-view .triage__card { opacity: 1; transform: none; }
+
+.triage__row {
+  opacity: 0;
+  transform: translateX(20px);
+  transition:
+    opacity 600ms var(--ease-out),
+    transform 700ms var(--ease-spring);
+}
+.snap-slide.in-view .triage__row { opacity: 1; transform: none; }
+.snap-slide.in-view .triage__row:nth-child(2) { transition-delay: 400ms; }
+.snap-slide.in-view .triage__row:nth-child(3) { transition-delay: 480ms; }
+.snap-slide.in-view .triage__row:nth-child(4) { transition-delay: 560ms; }
+.snap-slide.in-view .triage__row:nth-child(5) { transition-delay: 640ms; }
+
+/* Customer logos shimmer in one column at a time */
+.cloud li {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 600ms var(--ease-out),
+    transform 700ms var(--ease-spring);
+}
+.snap-slide.in-view .cloud li { opacity: 1; transform: none; }
+.snap-slide.in-view .cloud li:nth-child(1) { transition-delay:  40ms; }
+.snap-slide.in-view .cloud li:nth-child(2) { transition-delay: 110ms; }
+.snap-slide.in-view .cloud li:nth-child(3) { transition-delay: 180ms; }
+.snap-slide.in-view .cloud li:nth-child(4) { transition-delay: 250ms; }
+.snap-slide.in-view .cloud li:nth-child(5) { transition-delay: 320ms; }
+.snap-slide.in-view .cloud li:nth-child(6) { transition-delay: 390ms; }
+.snap-slide.in-view .cloud li:nth-child(7) { transition-delay: 460ms; }
+.snap-slide.in-view .cloud li:nth-child(8) { transition-delay: 530ms; }
+.snap-slide.in-view .kicker {
+  animation: rise-fade 700ms var(--ease-out) both;
+}
+
+/* Testimonial quotes rise with stagger */
+.quotes figure {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 800ms var(--ease-out),
+    transform 900ms var(--ease-spring);
+}
+.snap-slide.in-view .quotes figure:nth-child(1) { opacity: 1; transform: none; transition-delay:  60ms; }
+.snap-slide.in-view .quotes figure:nth-child(2) { opacity: 1; transform: none; transition-delay: 200ms; }
+.snap-slide.in-view .quotes figure:nth-child(3) { opacity: 1; transform: none; transition-delay: 340ms; }
+
+/* Pricing — each card rises with its own delay */
+.c3-card {
+  opacity: 0;
+  transform: translateY(50px);
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 1000ms var(--ease-spring),
+    border-color 500ms ease,
+    background 500ms ease;
+}
+.snap-slide.in-view .c3-card:nth-child(1) { opacity: 1; transform: none; transition-delay:  60ms; }
+.snap-slide.in-view .c3-card:nth-child(2) { opacity: 1; transform: none; transition-delay: 180ms; }
+.snap-slide.in-view .c3-card:nth-child(3) { opacity: 1; transform: none; transition-delay: 300ms; }
+.snap-slide.in-view .c3-toggle-wrap {
+  animation: rise-fade 800ms 480ms var(--ease-out) both;
+}
+
+/* Final CTA — heading slides up, button rises, glow pulses in */
+.final h2 {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 850ms var(--ease-out), transform 950ms var(--ease-spring);
+}
+.final p {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 700ms 220ms var(--ease-out), transform 800ms 220ms var(--ease-spring);
+}
+.final__cta {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 700ms 380ms var(--ease-out), transform 800ms 380ms var(--ease-spring);
+}
+.snap-slide.in-view .final h2,
+.snap-slide.in-view .final p,
+.snap-slide.in-view .final__cta { opacity: 1; transform: none; }
+
+/* ---- Continuous scroll-progress animations (Chrome 115+, Firefox 132+)
+   Use the modern view() timeline so each slide gets a tiny parallax as
+   it scrolls through the viewport. Safari falls back to the static
+   .in-view entry animations above. ---- */
+@supports (animation-timeline: view()) {
+  .dashmock,
+  .triage__card,
+  .quotes,
+  .c3-grid,
+  .final {
+    animation: scroll-parallax linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+  }
+  @keyframes scroll-parallax {
+    0%   { transform: translateY(40px); }
+    50%  { transform: translateY(0); }
+    100% { transform: translateY(-40px); }
+  }
+  /* Hero headline picks up a subtle parallax of its own */
+  .hero__h1 {
+    animation: hero-parallax linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 100%;
+  }
+  @keyframes hero-parallax {
+    from { transform: translateY(-20px); }
+    to   { transform: translateY(20px); }
+  }
 }
