@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script>document.documentElement.classList.add('page-mode')</script>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js"></script>
 </head>
 <body>
 
@@ -62,6 +63,14 @@
         independent kitchens already run. If your stack isn't listed,
         we'll talk about it on the setup call.
       </p>
+      <div class="hero-spline hero-spline--inline">
+        <!-- TODO: paste the .splinecode URL below.
+             Suggested scene: a 3D graph of glowing nodes with curved
+             connections lighting up in sequence ("Network Nodes" /
+             "Connection Graph" / "Constellation"). -->
+        <spline-viewer url="" loading-anim events-target="global"></spline-viewer>
+        <div class="spline-placeholder"><strong>Spline · Integrations</strong><span>Network nodes / connection graph</span></div>
+      </div>
     </div>
   </section>
 

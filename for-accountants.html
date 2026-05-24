@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script>document.documentElement.classList.add('page-mode')</script>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js"></script>
 </head>
 <body>
 
@@ -64,6 +65,13 @@
         which is the point — and hands you a tidy year-end pack instead of a
         carrier bag of receipts.
       </p>
+      <div class="hero-spline hero-spline--inline">
+        <!-- TODO: paste the .splinecode URL below.
+             Suggested scene: a rotating 3D ledger / floating stack of
+             pages or invoices ("Floating Documents" / "Paper Cascade"). -->
+        <spline-viewer url="" loading-anim events-target="global"></spline-viewer>
+        <div class="spline-placeholder"><strong>Spline · For accountants</strong><span>Floating documents / paper cascade</span></div>
+      </div>
     </div>
   </section>
 

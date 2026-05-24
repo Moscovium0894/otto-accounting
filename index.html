@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script>document.documentElement.classList.add('page-mode')</script>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.12.95/build/spline-viewer.js"></script>
 </head>
 <body>
 
@@ -62,32 +63,16 @@
   </button>
 </header>
 
-<main class="page">
+<main class="page page--cinematic">
 
-  <!-- HERO -->
-  <section class="page__hero">
-    <div class="page__hero-inner" style="text-align:center;">
-      <span class="page__eyebrow">AI-native bookkeeping</span>
-      <h1 class="page__h1" style="text-transform:none;">
-        Your books.<br/><span class="shiny">Revitalised.</span>
-      </h1>
-      <p class="page__lead" style="margin-left:auto;margin-right:auto;">
-        The Growthway is a live, AI-assisted bookkeeping platform for independent
-        restaurants and pubs. It pulls in sales, codes invoices, and reconciles
-        the bank — then a qualified bookkeeper signs off the month, by name,
-        by hand.
-      </p>
-      <div style="margin-top:32px; display:inline-flex; gap:12px; flex-wrap:wrap; justify-content:center;">
-        <a href="book-a-call.html" class="apple-btn">
-          <span>Book a call</span>
-          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
-        </a>
-        <a href="how-it-works.html" class="ghost-btn">
-          <span>How it works</span>
-          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
-        </a>
-      </div>
-      <p style="margin-top:18px; font-size:12px; color:var(--muted-2);">30-minute setup · cancel any month</p>
+  <!-- HERO — interactive Spline scene (provides its own headline + CTA) -->
+  <section class="page__hero page__hero--cinematic" aria-label="The Growthway — interactive hero">
+    <div class="hero-spline hero-spline--full">
+      <spline-viewer
+        url="https://prod.spline.design/lANFAwamxrzIdsIa/scene.splinecode"
+        loading-anim
+        events-target="global">
+      </spline-viewer>
     </div>
   </section>
 
@@ -118,10 +103,10 @@
           <div class="dashmock__labels">
             <p>Categories</p>
             <ul>
-              <li><span class="ld" style="background:#A4F4FD"></span>COGS</li>
-              <li><span class="ld" style="background:#00d2ff"></span>Wages</li>
-              <li><span class="ld" style="background:#f59e0b"></span>Rent &amp; utilities</li>
-              <li><span class="ld" style="background:#10b981"></span>Margin</li>
+              <li><span class="ld" style="background:#ff8a4c"></span>COGS</li>
+              <li><span class="ld" style="background:#ff3d00"></span>Wages</li>
+              <li><span class="ld" style="background:#febc2e"></span>Rent &amp; utilities</li>
+              <li><span class="ld" style="background:#ffb085"></span>Margin</li>
             </ul>
           </div>
         </aside>
@@ -187,7 +172,7 @@
             <span class="pill">Sales feed</span>
           </div>
           <div class="dashmock__sum">
-            <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="#A4F4FD" d="M9.94 14.34l-2.49-2.49.7-.7 1.79 1.79 4.85-4.85.7.71-5.55 5.54zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="#ff8a4c" d="M9.94 14.34l-2.49-2.49.7-.7 1.79 1.79 4.85-4.85.7.71-5.55 5.54zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             <div>
               <p class="dashmock__sum-h">Summary by The Growthway</p>
               <p>£2,148 across 184 covers. Food cost 31.4%, half a point under target. Wage cost on plan. No outliers — Sarah has signed off.</p>
