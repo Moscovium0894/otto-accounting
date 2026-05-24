@@ -145,11 +145,18 @@ img, svg, video { display: block; max-width: 100%; }
 /* ---- Deck — layout group only; scrolling lives on <html> ---- */
 #deck { position: relative; }
 
-/* Slide — fills the viewport so the deck still reads as cards, but
-   without snap. Inner content animates in on enter (see below). */
+/* Section block — natural height, plenty of breathing room. Only the
+   hero (first slide) is forced to fill the viewport. Everything else
+   flows like a long document, so the page is clearly scrollable from
+   the first paint — iOS Safari then collapses its URL toolbar into the
+   floating glass pill on the first scroll. */
 .snap-slide {
   position: relative;
+  padding: clamp(40px, 7vh, 96px) 0;
+}
+.snap-slide:first-of-type {
   min-height: 100dvh;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -499,8 +506,7 @@ img, svg, video { display: block; max-width: 100%; }
   position: relative;
   width: 100%;
   max-width: var(--max);
-  height: 100%;
-  max-height: 100%;
+  height: clamp(440px, 70vh, 640px);
   display: flex;
   flex-direction: column;
   border-radius: 16px;
@@ -1470,15 +1476,15 @@ html.page-mode .btn--outline {
    from three directions for a layered feel */
 .dashmock {
   opacity: 0;
-  transform: translateY(60px) scale(0.96);
+  transform: translateY(90px) scale(0.92);
   transition:
-    opacity 900ms var(--ease-out),
-    transform 1000ms var(--ease-spring);
+    opacity 950ms var(--ease-out),
+    transform 1100ms var(--ease-spring);
 }
 .snap-slide.in-view .dashmock { opacity: 1; transform: none; }
-.dashmock__side    { opacity: 0; transform: translateX(-20px); transition: opacity 700ms 200ms var(--ease-out), transform 800ms 200ms var(--ease-spring); }
-.dashmock__list    { opacity: 0; transform: translateY(20px);  transition: opacity 700ms 320ms var(--ease-out), transform 800ms 320ms var(--ease-spring); }
-.dashmock__reader  { opacity: 0; transform: translateX(20px);  transition: opacity 700ms 440ms var(--ease-out), transform 800ms 440ms var(--ease-spring); }
+.dashmock__side    { opacity: 0; transform: translateX(-40px); transition: opacity 700ms 280ms var(--ease-out), transform 800ms 280ms var(--ease-spring); }
+.dashmock__list    { opacity: 0; transform: translateY(30px);  transition: opacity 700ms 400ms var(--ease-out), transform 800ms 400ms var(--ease-spring); }
+.dashmock__reader  { opacity: 0; transform: translateX(40px);  transition: opacity 700ms 520ms var(--ease-out), transform 800ms 520ms var(--ease-spring); }
 .snap-slide.in-view .dashmock__side,
 .snap-slide.in-view .dashmock__list,
 .snap-slide.in-view .dashmock__reader { opacity: 1; transform: none; }
@@ -1499,7 +1505,7 @@ html.page-mode .btn--outline {
 
 .triage__card {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(70px) scale(0.95);
   transition:
     opacity 900ms 200ms var(--ease-out),
     transform 1000ms 200ms var(--ease-spring);
@@ -1555,7 +1561,7 @@ html.page-mode .btn--outline {
 /* Pricing — each card rises with its own delay */
 .c3-card {
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(80px) scale(0.95);
   transition:
     opacity 900ms var(--ease-out),
     transform 1000ms var(--ease-spring),

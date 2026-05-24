@@ -405,27 +405,25 @@
     onScroll();
   })();
 
-  // Scroll-triggered entry animations. Each slide gets `.in-view` when
-  // its top crosses ~25% of the viewport from the bottom — that's when
-  // the inner staggered animations kick off (see "9. SCROLL-TRIGGERED
-  // ANIMATIONS" in styles.css). Hero slide starts already in-view so
-  // the first paint isn't blank.
+  // Scroll-triggered entry animations. Each slide gets `.in-view` the
+  // moment any part of it appears in the bottom of the viewport, so
+  // animations fire WHILE scrolling rather than after. Hero is set
+  // in-view immediately so the first paint isn't blank.
   (function(){
     const slides = document.querySelectorAll('.snap-slide');
     if (!slides.length || !('IntersectionObserver' in window)) {
       slides.forEach(s => s.classList.add('in-view'));
       return;
     }
-    // First slide is already on screen — show it immediately.
     slides[0].classList.add('in-view');
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           e.target.classList.add('in-view');
-          io.unobserve(e.target);   // one-shot reveal, don't re-animate on scroll back
+          io.unobserve(e.target);
         }
       });
-    }, { rootMargin: '0px 0px -20% 0px', threshold: 0.05 });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
     slides.forEach((s, i) => { if (i > 0) io.observe(s); });
   })();
 </script>
