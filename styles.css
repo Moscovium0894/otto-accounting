@@ -62,10 +62,30 @@ html, body {
   letter-spacing: -0.005em;
 }
 /* Dark fallback on <html> as the deepest paint behind the fixed video.
-   Body is transparent so the video shows through any translucent browser
-   chrome. Scroll lives on the #deck container (see below). */
-html { height: 100%; overflow: hidden; background: var(--bg); }
-body { height: 100dvh; overflow: hidden; background: transparent; }
+   Body transparent so the video shows through any translucent chrome.
+   CRITICAL: scroll lives on <html> — only document-level scrolling lets
+   iOS Safari collapse its bottom toolbar from the opaque "expanded"
+   container into the floating glass pill. Sub-pages already scroll the
+   document; this gives the index the same behaviour so the grey box
+   around the URL bar disappears the moment the user starts scrolling. */
+html {
+  height: auto;
+  min-height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: var(--bg);
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar { display: none; }
+body {
+  min-height: 100dvh;
+  background: transparent;
+  overflow: visible;
+}
 
 ::selection { background: rgba(232,228,216,0.3); }
 a { color: inherit; text-decoration: none; }
@@ -127,19 +147,8 @@ img, svg, video { display: block; max-width: 100%; }
   .guide--right { left: 50%; transform: translateX(calc(-50% + 36rem)); }
 }
 
-/* ---- Deck (scroll-snap container) ---- */
-#deck {
-  position: relative;
-  height: 100dvh;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  scrollbar-width: none;
-}
-#deck::-webkit-scrollbar { display: none; }
+/* ---- Deck — layout group only; scrolling lives on <html> ---- */
+#deck { position: relative; }
 
 .snap-slide {
   position: relative;
@@ -1336,15 +1345,10 @@ html.page-mode .btn--outline {
 
 /* ---- Desktop (>= 1024px) — natural scrolling, no snap, larger type ---- */
 @media (min-width: 1024px) {
-  html, body { overflow-y: auto; overflow-x: hidden; height: auto; }
-  body { min-height: 100dvh; height: auto; }
+  html { scroll-snap-type: none; }
+  body { min-height: 100dvh; }
 
-  #deck {
-    position: static;
-    height: auto;
-    overflow: visible;
-    scroll-snap-type: none;
-  }
+  #deck { position: static; }
   .snap-slide {
     height: auto;
     min-height: 100dvh;
@@ -1399,5 +1403,5 @@ html.page-mode .btn--outline {
 @media (prefers-reduced-motion: reduce) {
   .hero__h1 .shiny { animation: none !important; }
   .begin-pill__dot { animation: none !important; }
-  #deck { scroll-behavior: auto; scroll-snap-type: none; }
+  html { scroll-behavior: auto; scroll-snap-type: none; }
 }
