@@ -142,39 +142,36 @@ img, svg, video { display: block; max-width: 100%; }
   .guide--right { left: 50%; transform: translateX(calc(-50% + 36rem)); }
 }
 
-/* ---- Deck — layout group only; scrolling lives on <html> ---- */
-#deck { position: relative; }
-
-/* Section block — natural height, plenty of breathing room. Only the
-   hero (first slide) is forced to fill the viewport. Everything else
-   flows like a long document, so the page is clearly scrollable from
-   the first paint — iOS Safari then collapses its URL toolbar into the
-   floating glass pill on the first scroll. */
-.snap-slide {
-  position: relative;
-  padding: clamp(40px, 7vh, 96px) 0;
-}
-.snap-slide:first-of-type {
-  min-height: 100dvh;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-/* Shared inner section primitive */
+/* Shared section primitive — flowing document like the sub-pages.
+   Each section is a full-width band with comfortable vertical padding
+   that scales with the viewport. The hero is the only one forced to
+   fill the screen on initial load; everything else sizes to content. */
 .section {
   width: 100%;
   max-width: var(--max);
   margin: 0 auto;
-  padding: calc(var(--nav-h) + 8px) 24px 24px;
+  padding: clamp(64px, 10vh, 128px) 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
 }
+
+/* Intro block that sits above the main content of a section
+   (eyebrow + h2). Centred on mobile, kept centred on desktop too. */
+.section__intro {
+  max-width: 44rem;
+  margin: 0 auto clamp(28px, 5vh, 48px);
+}
+.section__h2 {
+  font-size: clamp(2rem, min(5.6vw, 6dvh), 3.2rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  margin: 16px 0 0;
+}
+.section__h2 > span { display: block; }
 
 
 /* =========================================================================
@@ -291,8 +288,7 @@ img, svg, video { display: block; max-width: 100%; }
   position: fixed; top: 0; left: 0; right: 0; z-index: 90;
   display: flex; align-items: center; justify-content: space-between;
   gap: 16px;
-  max-width: var(--max); margin: 0 auto;
-  padding: 16px 24px;
+  padding: 16px clamp(20px, 4vw, 48px);
   font-size: 14px;
   transition: background 300ms ease, backdrop-filter 300ms ease;
 }
@@ -414,12 +410,15 @@ img, svg, video { display: block; max-width: 100%; }
 
 /* ---- 5.1 Hero ---- */
 .hero {
+  position: relative;
   width: 100%;
   max-width: var(--max);
   margin: 0 auto;
   padding: calc(var(--nav-h) + 8px) 24px 24px;
-  display: flex; flex-direction: column; align-items: center;
+  min-height: 100dvh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center;
+  overflow: hidden;
 }
 .hero__inner {
   max-width: 38rem;
@@ -1344,281 +1343,287 @@ html.page-mode .btn--outline {
   .triage__head, .chips { display: none; }
 }
 
-/* ---- Desktop (>= 1024px) — larger type, more breathing room ---- */
+/* ---- Desktop (>= 1024px) — full-width sections, larger type ---- */
 @media (min-width: 1024px) {
   body { min-height: 100dvh; }
-
-  #deck { position: static; }
-  .snap-slide {
-    min-height: 100dvh;
-    padding: 80px 0;
+  /* Drop the centred 72rem container — sections now go edge-to-edge.
+     The inner content keeps its own max-width and centres itself. */
+  .section,
+  .c3-pricing-section,
+  .section--final {
+    max-width: none;
+    width: 100%;
+    padding-left: clamp(48px, 6vw, 96px);
+    padding-right: clamp(48px, 6vw, 96px);
   }
 
-  .hero { max-width: 64rem; padding: 120px 24px 96px; }
-  .hero__inner { max-width: 44rem; }
-  .hero__h1 { font-size: clamp(3.5rem, 7vw, 5.5rem); line-height: 0.95; }
-  .hero__sub { max-width: 32rem; font-size: 17px; margin-top: 32px; }
+  .hero { max-width: none; padding-left: 24px; padding-right: 24px; }
+  .hero__inner { max-width: 56rem; }
+  .hero__h1 { font-size: clamp(3.5rem, 7vw, 5.8rem); line-height: 0.95; }
+  .hero__sub { max-width: 36rem; font-size: 17px; margin-top: 32px; }
 
-  .section--mockup { padding: 80px 24px 96px; }
-  .dashmock { border-radius: 22px; max-width: 78rem; height: auto; max-height: none; }
-  .dashmock__body { height: clamp(440px, 64vh, 600px); }
+  .dashmock { border-radius: 22px; max-width: none; height: clamp(480px, 70vh, 680px); }
+  .dashmock__body { height: auto; flex: 1; min-height: 0; }
 
-  .section--triage { padding: 96px 24px; }
   .triage {
     grid-template-columns: 1fr 1fr;
     gap: 80px;
-    max-width: 78rem;
+    max-width: none;
     text-align: left;
   }
   .triage__copy { align-items: flex-start; }
-  .triage__copy h2 { font-size: clamp(2.2rem, 4vw, 3.2rem); }
+  .triage__copy h2 { font-size: clamp(2.2rem, 4vw, 3.4rem); }
   .triage__copy .lead { max-width: 30rem; margin-left: 0; margin-right: 0; }
   .chips { justify-content: flex-start; }
   .triage__card { max-width: 100%; }
 
-  .section--cloud { padding: 80px 24px; }
-  .cloud { max-width: 78rem; gap: 24px 40px; }
+  .cloud { max-width: none; gap: 24px 40px; }
   .cloud li { font-size: 15px; }
 
-  .section--testimonials { padding: 96px 24px; }
-  .quotes { max-width: 78rem; gap: 20px; }
-  .quotes figure { padding: 26px; }
+  .workflow { grid-template-columns: repeat(4, 1fr); max-width: none; gap: 24px; }
+  .metrics { max-width: none; }
 
-  .c3-pricing-section { padding: 96px 24px 96px; }
-  .c3-grid { gap: 24px; grid-template-columns: repeat(3, 1fr); }
+  .quotes { max-width: none; gap: 20px; }
+  .quotes figure { padding: 32px; }
 
-  .section--final { padding: 96px 24px; }
-  .final { padding: 72px 48px; border-radius: 32px; }
-  .final h2 { font-size: clamp(2.8rem, 5vw, 4.2rem); }
-  .final p { font-size: 16px; max-width: 36rem; }
+  .c3-grid { gap: 24px; grid-template-columns: repeat(3, 1fr); max-width: none; }
+
+  .final { max-width: none; padding: 80px clamp(48px, 8vw, 120px); border-radius: 0; }
+  .final h2 { font-size: clamp(2.8rem, 5vw, 4.4rem); }
+  .final p { font-size: 17px; max-width: 40rem; }
+
+  /* Section block heights restored on desktop too — no snap-slide anymore */
+  .section__h2 { font-size: clamp(2.4rem, 4vw, 3.6rem); }
+}
+
+
+
+
+
+/* =========================================================================
+   9. NEW COMPONENTS
+   ========================================================================= */
+
+/* Hero scroll cue — a thin pulsing line below the hero CTA */
+.hero__scroll-cue {
+  position: absolute;
+  bottom: clamp(18px, 4vh, 36px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 56px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.4), transparent);
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero__scroll-cue span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, #fff, transparent);
+  animation: cue-fall 2.4s linear infinite;
+}
+@keyframes cue-fall {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* Metric strip — three big numbers underneath the dashmock */
+.section--metrics { padding-top: 0; }
+.metrics {
+  width: 100%;
+  max-width: var(--max);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  text-align: left;
+}
+@media (max-width: 740px) {
+  .metrics { grid-template-columns: 1fr; gap: 28px; }
+}
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 28px 0;
+  border-top: 1px solid var(--line);
+}
+.metric__num {
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #fff 0%, var(--accent) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.metric__suffix {
+  display: inline-block;
+  margin-left: -6px;
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  color: var(--muted);
+  font-weight: 500;
+}
+.metric__num + .metric__suffix { margin-top: -1.2em; padding-left: 0.2em; }
+.metric__label {
+  margin-top: 14px;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 26ch;
+}
+
+/* Workflow 4-step list */
+.workflow {
+  width: 100%;
+  max-width: var(--max);
+  list-style: none;
+  margin: 0; padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  text-align: left;
+  counter-reset: step;
+}
+@media (min-width: 640px)  { .workflow { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .workflow { grid-template-columns: repeat(4, 1fr); gap: 24px; } }
+.workflow li {
+  padding: 28px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  display: flex; flex-direction: column; gap: 10px;
+  transition: transform .4s var(--ease-out), border-color .4s ease, background .4s ease;
+}
+.workflow li:hover {
+  transform: translateY(-4px);
+  border-color: rgba(164,244,253,0.35);
+  background: rgba(164,244,253,0.04);
+}
+.workflow__num {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--accent);
+}
+.workflow h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: #fff;
+}
+.workflow p {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
 }
 
 
 /* =========================================================================
-   8. REDUCED MOTION
-   ========================================================================= */
-@media (prefers-reduced-motion: reduce) {
-  .hero__h1 .shiny { animation: none !important; }
-  .begin-pill__dot { animation: none !important; }
-  html { scroll-behavior: auto; }
-  .reveal, .reveal > * { opacity: 1 !important; transform: none !important; }
-}
+   10. SCROLL-TRIGGERED ANIMATIONS
 
-
-/* =========================================================================
-   9. SCROLL-TRIGGERED ANIMATIONS
-   Replaces scroll-snap. Each slide gets a `.in-view` class via
-   IntersectionObserver as it enters; staggered child animations make the
-   deck feel like cards landing rather than scrolling past. Browsers that
-   support `animation-timeline: view()` get an additional continuous
-   parallax tied to scroll progress through each slide.
+   Every element with [data-anim] starts in its resting state below.
+   IntersectionObserver flips it to .is-on as soon as it enters the
+   bottom of the viewport, and the transition runs. Delays come from
+   data-delay (milliseconds, applied inline by the script as
+   transition-delay).
    ========================================================================= */
 
-/* Default resting state — inner content sits one step "below" / faded */
-.reveal {
-  opacity: 0;
-  transform: translateY(36px);
-  transition:
-    opacity 750ms var(--ease-out),
-    transform 850ms var(--ease-spring);
+[data-anim] {
   will-change: transform, opacity;
-}
-.reveal.in-view {
-  opacity: 1;
-  transform: none;
-}
-/* Staggered children inside .reveal containers */
-.reveal > [data-stagger] {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 700ms var(--ease-out),
-    transform 800ms var(--ease-spring);
-}
-.reveal.in-view > [data-stagger] { opacity: 1; transform: none; }
-.reveal.in-view > [data-stagger="1"] { transition-delay: 80ms; }
-.reveal.in-view > [data-stagger="2"] { transition-delay: 180ms; }
-.reveal.in-view > [data-stagger="3"] { transition-delay: 280ms; }
-.reveal.in-view > [data-stagger="4"] { transition-delay: 380ms; }
-.reveal.in-view > [data-stagger="5"] { transition-delay: 480ms; }
-.reveal.in-view > [data-stagger="6"] { transition-delay: 580ms; }
-
-/* Hero — each line of the title slides up with its own stagger */
-.hero__h1 .hero__line {
-  display: block;
-  opacity: 0;
-  transform: translateY(40px);
   transition:
     opacity 800ms var(--ease-out),
-    transform 900ms var(--ease-spring);
-}
-.snap-slide.in-view .hero__h1 .hero__line:nth-child(1) { opacity: 1; transform: none; }
-.snap-slide.in-view .hero__h1 .hero__line:nth-child(2) {
-  opacity: 1; transform: none;
-  transition-delay: 140ms;
-}
-.snap-slide.in-view .hero__sub {
-  animation: rise-fade 800ms 280ms var(--ease-out) both;
-}
-.snap-slide.in-view .hero__cta {
-  animation: rise-fade 800ms 440ms var(--ease-out) both;
-}
-.hero__sub, .hero__cta { opacity: 0; }
-.snap-slide.in-view .hero__sub,
-.snap-slide.in-view .hero__cta { opacity: 1; }
-
-@keyframes rise-fade {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: none; }
+    transform 900ms var(--ease-spring),
+    filter 800ms var(--ease-out);
 }
 
-/* Dashmock — the whole card lifts and scales in; the three panes slide
-   from three directions for a layered feel */
-.dashmock {
-  opacity: 0;
-  transform: translateY(90px) scale(0.92);
-  transition:
-    opacity 950ms var(--ease-out),
-    transform 1100ms var(--ease-spring);
-}
-.snap-slide.in-view .dashmock { opacity: 1; transform: none; }
-.dashmock__side    { opacity: 0; transform: translateX(-40px); transition: opacity 700ms 280ms var(--ease-out), transform 800ms 280ms var(--ease-spring); }
-.dashmock__list    { opacity: 0; transform: translateY(30px);  transition: opacity 700ms 400ms var(--ease-out), transform 800ms 400ms var(--ease-spring); }
-.dashmock__reader  { opacity: 0; transform: translateX(40px);  transition: opacity 700ms 520ms var(--ease-out), transform 800ms 520ms var(--ease-spring); }
-.snap-slide.in-view .dashmock__side,
-.snap-slide.in-view .dashmock__list,
-.snap-slide.in-view .dashmock__reader { opacity: 1; transform: none; }
+/* fade-up — gentle rise + fade */
+[data-anim="fade-up"]         { opacity: 0; transform: translateY(24px); }
+[data-anim="fade-up"].is-on   { opacity: 1; transform: none; }
 
-/* Triage rows fan in one after the other */
-.triage__copy > * {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 700ms var(--ease-out),
-    transform 800ms var(--ease-spring);
-}
-.snap-slide.in-view .triage__copy > * { opacity: 1; transform: none; }
-.snap-slide.in-view .triage__copy > *:nth-child(1) { transition-delay:  60ms; }
-.snap-slide.in-view .triage__copy > *:nth-child(2) { transition-delay: 160ms; }
-.snap-slide.in-view .triage__copy > *:nth-child(3) { transition-delay: 260ms; }
-.snap-slide.in-view .triage__copy > *:nth-child(4) { transition-delay: 360ms; }
+/* rise — larger upward translate, used for headlines */
+[data-anim="rise"]            { opacity: 0; transform: translateY(40px); }
+[data-anim="rise"].is-on      { opacity: 1; transform: none; }
 
-.triage__card {
-  opacity: 0;
-  transform: translateY(70px) scale(0.95);
-  transition:
-    opacity 900ms 200ms var(--ease-out),
-    transform 1000ms 200ms var(--ease-spring);
-}
-.snap-slide.in-view .triage__card { opacity: 1; transform: none; }
+/* rise-scale — rises and scales up; for big cards */
+[data-anim="rise-scale"]      { opacity: 0; transform: translateY(80px) scale(.94); }
+[data-anim="rise-scale"].is-on{ opacity: 1; transform: none; }
 
-.triage__row {
-  opacity: 0;
-  transform: translateX(20px);
-  transition:
-    opacity 600ms var(--ease-out),
-    transform 700ms var(--ease-spring);
-}
-.snap-slide.in-view .triage__row { opacity: 1; transform: none; }
-.snap-slide.in-view .triage__row:nth-child(2) { transition-delay: 400ms; }
-.snap-slide.in-view .triage__row:nth-child(3) { transition-delay: 480ms; }
-.snap-slide.in-view .triage__row:nth-child(4) { transition-delay: 560ms; }
-.snap-slide.in-view .triage__row:nth-child(5) { transition-delay: 640ms; }
+/* slide-left / slide-right — for side panels in the dashmock and triage rows */
+[data-anim="slide-left"]      { opacity: 0; transform: translateX(-50px); }
+[data-anim="slide-left"].is-on{ opacity: 1; transform: none; }
+[data-anim="slide-right"]     { opacity: 0; transform: translateX(50px); }
+[data-anim="slide-right"].is-on{opacity: 1; transform: none; }
 
-/* Customer logos shimmer in one column at a time */
-.cloud li {
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 600ms var(--ease-out),
-    transform 700ms var(--ease-spring);
-}
-.snap-slide.in-view .cloud li { opacity: 1; transform: none; }
-.snap-slide.in-view .cloud li:nth-child(1) { transition-delay:  40ms; }
-.snap-slide.in-view .cloud li:nth-child(2) { transition-delay: 110ms; }
-.snap-slide.in-view .cloud li:nth-child(3) { transition-delay: 180ms; }
-.snap-slide.in-view .cloud li:nth-child(4) { transition-delay: 250ms; }
-.snap-slide.in-view .cloud li:nth-child(5) { transition-delay: 320ms; }
-.snap-slide.in-view .cloud li:nth-child(6) { transition-delay: 390ms; }
-.snap-slide.in-view .cloud li:nth-child(7) { transition-delay: 460ms; }
-.snap-slide.in-view .cloud li:nth-child(8) { transition-delay: 530ms; }
-.snap-slide.in-view .kicker {
-  animation: rise-fade 700ms var(--ease-out) both;
-}
+/* pop — scale up from 0.85 with a slight overshoot via spring easing */
+[data-anim="pop"]             { opacity: 0; transform: scale(.85); }
+[data-anim="pop"].is-on       { opacity: 1; transform: none; }
 
-/* Testimonial quotes rise with stagger */
-.quotes figure {
-  opacity: 0;
-  transform: translateY(40px);
-  transition:
-    opacity 800ms var(--ease-out),
-    transform 900ms var(--ease-spring);
-}
-.snap-slide.in-view .quotes figure:nth-child(1) { opacity: 1; transform: none; transition-delay:  60ms; }
-.snap-slide.in-view .quotes figure:nth-child(2) { opacity: 1; transform: none; transition-delay: 200ms; }
-.snap-slide.in-view .quotes figure:nth-child(3) { opacity: 1; transform: none; transition-delay: 340ms; }
+/* tilt-in — testimonial cards land with a slight rotation */
+[data-anim="tilt-in"]         { opacity: 0; transform: translateY(40px) rotate(-2deg); }
+[data-anim="tilt-in"].is-on   { opacity: 1; transform: none; }
 
-/* Pricing — each card rises with its own delay */
-.c3-card {
-  opacity: 0;
-  transform: translateY(80px) scale(0.95);
-  transition:
-    opacity 900ms var(--ease-out),
-    transform 1000ms var(--ease-spring),
-    border-color 500ms ease,
-    background 500ms ease;
-}
-.snap-slide.in-view .c3-card:nth-child(1) { opacity: 1; transform: none; transition-delay:  60ms; }
-.snap-slide.in-view .c3-card:nth-child(2) { opacity: 1; transform: none; transition-delay: 180ms; }
-.snap-slide.in-view .c3-card:nth-child(3) { opacity: 1; transform: none; transition-delay: 300ms; }
-.snap-slide.in-view .c3-toggle-wrap {
-  animation: rise-fade 800ms 480ms var(--ease-out) both;
-}
+/* count-up — the metric numbers; container animates, JS handles the count */
+[data-anim="count-up"]        { opacity: 0; transform: translateY(20px); }
+[data-anim="count-up"].is-on  { opacity: 1; transform: none; }
 
-/* Final CTA — heading slides up, button rises, glow pulses in */
-.final h2 {
-  opacity: 0; transform: translateY(40px);
-  transition: opacity 850ms var(--ease-out), transform 950ms var(--ease-spring);
-}
-.final p {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 700ms 220ms var(--ease-out), transform 800ms 220ms var(--ease-spring);
-}
-.final__cta {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 700ms 380ms var(--ease-out), transform 800ms 380ms var(--ease-spring);
-}
-.snap-slide.in-view .final h2,
-.snap-slide.in-view .final p,
-.snap-slide.in-view .final__cta { opacity: 1; transform: none; }
 
-/* ---- Continuous scroll-progress animations (Chrome 115+, Firefox 132+)
-   Use the modern view() timeline so each slide gets a tiny parallax as
-   it scrolls through the viewport. Safari falls back to the static
-   .in-view entry animations above. ---- */
+/* =========================================================================
+   11. SCROLL-PROGRESS PARALLAX (Chrome 115+ / Firefox 132+ / Safari 18+)
+   Continuous transform driven by each element's progress through the
+   viewport. Adds depth on top of the discrete entry animations above.
+   ========================================================================= */
 @supports (animation-timeline: view()) {
   .dashmock,
   .triage__card,
   .quotes,
   .c3-grid,
   .final {
-    animation: scroll-parallax linear both;
+    animation: scroll-drift linear both;
     animation-timeline: view();
     animation-range: cover 0% cover 100%;
   }
-  @keyframes scroll-parallax {
-    0%   { transform: translateY(40px); }
+  @keyframes scroll-drift {
+    0%   { transform: translateY(50px); }
     50%  { transform: translateY(0); }
-    100% { transform: translateY(-40px); }
+    100% { transform: translateY(-50px); }
   }
-  /* Hero headline picks up a subtle parallax of its own */
+
+  /* Hero title gets its own slower parallax */
   .hero__h1 {
-    animation: hero-parallax linear both;
+    animation: hero-drift linear both;
     animation-timeline: view();
     animation-range: cover 0% cover 100%;
   }
-  @keyframes hero-parallax {
-    from { transform: translateY(-20px); }
-    to   { transform: translateY(20px); }
+  @keyframes hero-drift {
+    from { transform: translateY(-28px); }
+    to   { transform: translateY(28px); }
   }
+
+  /* Background video gets a subtle parallax against the page scroll */
+  .bg-video video {
+    animation: bg-drift linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 100%;
+  }
+  @keyframes bg-drift {
+    from { transform: translate(-50%, -50%) scale(1.05); }
+    to   { transform: translate(-50%, -45%) scale(1.05); }
+  }
+}
+
+
+/* =========================================================================
+   12. REDUCED MOTION
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .hero__h1 .shiny,
+  .begin-pill__dot,
+  .hero__scroll-cue span { animation: none !important; }
+  html { scroll-behavior: auto; }
+  [data-anim] { opacity: 1 !important; transform: none !important; transition: none !important; }
 }

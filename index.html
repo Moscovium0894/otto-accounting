@@ -18,18 +18,14 @@
 </head>
 <body>
 
-<!-- Global background video -->
+<!-- Background video -->
 <div class="bg-video">
   <video autoplay loop muted playsinline
     src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_064122_c4750c0e-7476-4b44-94a2-a85a65c63bf2.mp4"></video>
   <div class="bg-video__veil"></div>
 </div>
 
-<!-- Vertical guide lines (desktop only) -->
-<div class="guide guide--left" aria-hidden="true"></div>
-<div class="guide guide--right" aria-hidden="true"></div>
-
-<!-- Global SVG noise filter for the shiny headline -->
+<!-- SVG noise filter for the shiny headline -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <filter id="c3-noise">
     <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" />
@@ -39,16 +35,14 @@
   </filter>
 </svg>
 
-<!-- =========================================================
-     NAV
-     ========================================================= -->
+<!-- NAV -->
 <header class="nav" id="topnav">
   <a class="nav__brand" href="#hero" aria-label="The Growthway — Home">
     <svg class="logo-mark" viewBox="0 0 256 256" aria-hidden="true">
       <path fill="currentColor" d="M 0 128 C 70.692 128 128 185.308 128 256 L 64 256 C 64 220.654 35.346 192 0 192 Z M 256 192 C 220.654 192 192 220.654 192 256 L 128 256 C 128 185.308 185.308 128 256 128 Z M 128 0 C 128 70.692 70.692 128 0 128 L 0 64 C 35.346 64 64 35.346 64 0 Z M 192 0 C 192 35.346 220.654 64 256 64 L 256 128 C 185.308 128 128 70.692 128 0 Z"/>
     </svg>
   </a>
-  <a class="begin-pill" href="#book" aria-label="Begin with The Growthway">
+  <a class="begin-pill" href="book-a-call.html" aria-label="Begin with The Growthway">
     <span class="begin-pill__dot" aria-hidden="true"></span>
     <span class="begin-pill__label">Begin</span>
   </a>
@@ -59,7 +53,7 @@
     <a href="pricing.html">Pricing</a>
     <a href="about.html">About</a>
   </nav>
-  <a href="#book" class="apple-btn nav__cta">
+  <a href="book-a-call.html" class="apple-btn nav__cta">
     <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
     <span>Book a call</span>
     <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
@@ -80,294 +74,354 @@
   <a href="book-a-call.html" class="apple-btn navsheet__cta"><span>Book a call</span></a>
 </div>
 
-<!-- =========================================================
-     DECK — scroll-snap container with centered cards
-     ========================================================= -->
-<main id="deck">
+<main>
 
-<!-- 1. HERO -->
-<section class="snap-slide" data-snap data-name="Hero">
-  <section class="hero" id="hero">
-    <div class="hero__inner">
-      <h1 class="hero__h1">
-        <span class="hero__line">Your books.</span>
-        <span class="hero__line shiny">Revitalised.</span>
-      </h1>
-      <p class="hero__sub">
-        The Growthway is a live, AI-assisted bookkeeping platform for independent
-        restaurants and pubs. It pulls in sales, codes invoices, and
-        reconciles the bank — then a qualified bookkeeper signs off the
-        month, by name, by hand.
-      </p>
-      <div class="hero__cta">
-        <a href="#book" class="apple-btn">
-          <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-          <span>Book a call</span>
-          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
-        </a>
-        <p class="hero__note">30-minute setup · cancel any month</p>
-      </div>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero__inner">
+    <h1 class="hero__h1">
+      <span class="hero__line" data-anim="rise">Your books.</span>
+      <span class="hero__line shiny" data-anim="rise" data-delay="120">Revitalised.</span>
+    </h1>
+    <p class="hero__sub" data-anim="fade-up" data-delay="280">
+      The Growthway is a live, AI-assisted bookkeeping platform for independent
+      restaurants and pubs. It pulls in sales, codes invoices, and
+      reconciles the bank — then a qualified bookkeeper signs off the
+      month, by name, by hand.
+    </p>
+    <div class="hero__cta" data-anim="pop" data-delay="440">
+      <a href="book-a-call.html" class="apple-btn">
+        <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span>Book a call</span>
+        <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+      </a>
+      <p class="hero__note">30-minute setup · cancel any month</p>
     </div>
-  </section>
+  </div>
+  <div class="hero__scroll-cue" aria-hidden="true">
+    <span></span>
+  </div>
 </section>
 
-<!-- 2. DASHBOARD MOCKUP -->
-<section class="snap-slide" data-snap data-name="Dashboard">
-  <section class="section section--mockup" id="how">
-    <div class="dashmock liquid-glass">
-      <div class="dashmock__bar">
-        <span class="tl tl--red"></span><span class="tl tl--amber"></span><span class="tl tl--green"></span>
-        <span class="dashmock__title">The Growthway — Brown Cow · Week to date</span>
-      </div>
-      <div class="dashmock__body">
-        <aside class="dashmock__side">
-          <button class="dashmock__compose"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="currentColor" d="M9.94 14.34l-2.49-2.49.7-.7 1.79 1.79 4.85-4.85.7.71-5.55 5.54zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Reconcile with The Growthway</button>
-          <ul class="dashmock__nav">
-            <li class="active"><span class="dot"></span>Today<em>09:14</em></li>
-            <li>Signed-off<em>3</em></li>
-            <li>Holds<em>2</em></li>
-            <li>Sales feed</li>
-            <li>Suppliers</li>
-            <li>Archive</li>
-          </ul>
-          <div class="dashmock__labels">
-            <p>Categories</p>
-            <ul>
-              <li><span class="ld" style="background:#A4F4FD"></span>COGS</li>
-              <li><span class="ld" style="background:#00d2ff"></span>Wages</li>
-              <li><span class="ld" style="background:#f59e0b"></span>Rent &amp; utilities</li>
-              <li><span class="ld" style="background:#10b981"></span>Margin</li>
-            </ul>
-          </div>
-        </aside>
-        <div class="dashmock__list">
-          <div class="dashmock__search">
-            <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm10 2-4.35-4.35"/></svg>
-            <span>Search the books</span>
-          </div>
+<!-- DASHBOARD MOCKUP -->
+<section class="section section--mockup" id="how">
+  <div class="section__intro" data-anim="fade-up">
+    <p class="eyebrow"><span class="dot"></span>How it works<em>Every morning</em></p>
+    <h2 class="section__h2">
+      <span data-anim="rise">A morning briefing,</span>
+      <span data-anim="rise" data-delay="120">not a month-end scramble.</span>
+    </h2>
+  </div>
+  <div class="dashmock liquid-glass" data-anim="rise-scale" data-delay="200">
+    <div class="dashmock__bar">
+      <span class="tl tl--red"></span><span class="tl tl--amber"></span><span class="tl tl--green"></span>
+      <span class="dashmock__title">The Growthway — Brown Cow · Week to date</span>
+    </div>
+    <div class="dashmock__body">
+      <aside class="dashmock__side" data-anim="slide-left" data-delay="380">
+        <button class="dashmock__compose"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="currentColor" d="M9.94 14.34l-2.49-2.49.7-.7 1.79 1.79 4.85-4.85.7.71-5.55 5.54zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Reconcile</button>
+        <ul class="dashmock__nav">
+          <li class="active"><span class="dot"></span>Today<em>09:14</em></li>
+          <li>Signed-off<em>3</em></li>
+          <li>Holds<em>2</em></li>
+          <li>Sales feed</li>
+          <li>Suppliers</li>
+          <li>Archive</li>
+        </ul>
+        <div class="dashmock__labels">
+          <p>Categories</p>
           <ul>
-            <li class="msg active unread">
-              <div class="msg__name">Toast EPOS</div>
-              <div class="msg__time">09:00</div>
-              <div class="msg__sub">Yesterday's takings posted</div>
-              <div class="msg__pre">£2,148.00 across 184 covers · 31.4% food cost</div>
-            </li>
-            <li class="msg unread">
-              <div class="msg__name">Bidfood</div>
-              <div class="msg__time">08:22</div>
-              <div class="msg__sub">Invoice coded — COGS / produce</div>
-              <div class="msg__pre">£612.40 · matched to last week's order</div>
-            </li>
-            <li class="msg">
-              <div class="msg__name">Barclays</div>
-              <div class="msg__time">Yesterday</div>
-              <div class="msg__sub">14 lines reconciled to the penny</div>
-              <div class="msg__pre">Bank feed cleared at 04:12</div>
-            </li>
-            <li class="msg">
-              <div class="msg__name">Sarah W.</div>
-              <div class="msg__time">Yesterday</div>
-              <div class="msg__sub">Hold released — wine supplier</div>
-              <div class="msg__pre">Coded to COGS / drinks after owner reply</div>
-            </li>
-            <li class="msg">
-              <div class="msg__name">HMRC</div>
-              <div class="msg__time">Mon</div>
-              <div class="msg__sub">VAT reminder — Q1 due 7 May</div>
-              <div class="msg__pre">Return prepared, awaiting your signoff</div>
-            </li>
-            <li class="msg">
-              <div class="msg__name">Stripe</div>
-              <div class="msg__time">Mon</div>
-              <div class="msg__sub">Card payout £4,210.00 sent</div>
-              <div class="msg__pre">Posted to bank, matched to Z-read 4–6 May</div>
-            </li>
+            <li><span class="ld" style="background:#A4F4FD"></span>COGS</li>
+            <li><span class="ld" style="background:#00d2ff"></span>Wages</li>
+            <li><span class="ld" style="background:#f59e0b"></span>Rent &amp; utilities</li>
+            <li><span class="ld" style="background:#10b981"></span>Margin</li>
           </ul>
         </div>
-        <div class="dashmock__reader">
-          <div class="dashmock__toolbar">
-            <button aria-label="Reply"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 17 4 12l5-5M20 18v-2a4 4 0 0 0-4-4H4"/></svg></button>
-            <button aria-label="Forward"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m15 17 5-5-5-5M4 18v-2a4 4 0 0 1 4-4h12"/></svg></button>
-            <button aria-label="Archive"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg></button>
-            <button aria-label="Trash"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
-            <button class="more" aria-label="More"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg></button>
-          </div>
-          <h3>Yesterday's takings posted</h3>
-          <div class="dashmock__from">
-            <span class="avatar">T</span>
-            <div>
-              <strong>Toast EPOS</strong>
-              <span> · to you · 09:00</span>
-            </div>
-            <span class="pill">Sales feed</span>
-          </div>
-          <div class="dashmock__sum">
-            <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="#A4F4FD" d="M9.94 14.34l-2.49-2.49.7-.7 1.79 1.79 4.85-4.85.7.71-5.55 5.54zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <div>
-              <p class="dashmock__sum-h">Summary by The Growthway</p>
-              <p>£2,148 across 184 covers. Food cost 31.4%, half a point under target. Wage cost on plan. No outliers — Sarah has signed off.</p>
-            </div>
-          </div>
-          <p>Yesterday was a strong Tuesday — wet sales up 9% on last week, food sales flat. Two large covers in the back room moved the average ticket up.</p>
-          <p>Eight supplier invoices have already been coded against the day. Bank reconciliation finished at 04:12. Z-read variance of £2.40 was matched to a void.</p>
-          <p class="muted">— The Growthway, on behalf of Sarah Whitlow (bookkeeper)</p>
-          <a class="attach"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m21 11-9.5 9.5a5.5 5.5 0 0 1-7.78-7.78L13.34 3.6a3.67 3.67 0 0 1 5.19 5.19l-9.62 9.62a1.83 1.83 0 0 1-2.6-2.6L15.4 7.7"/></svg> week-to-date.pdf</a>
+      </aside>
+      <div class="dashmock__list" data-anim="fade-up" data-delay="500">
+        <div class="dashmock__search">
+          <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Zm10 2-4.35-4.35"/></svg>
+          <span>Search the books</span>
         </div>
-      </div>
-    </div>
-  </section>
-</section>
-
-<!-- 3. RECONCILE / TRIAGE -->
-<section class="snap-slide" data-snap data-name="Reconcile">
-  <section class="section section--triage" id="triage">
-    <div class="triage">
-      <div class="triage__copy">
-        <p class="eyebrow"><span class="dot"></span>Reconcile<em>AI-native</em></p>
-        <h2>Close the books<br/>without closing the venue.</h2>
-        <p class="lead">
-          The Growthway reads every till receipt, supplier invoice, and bank line.
-          It codes the routine work the same way every time, holds the
-          weird ones for your bookkeeper, and hands you a signed-off
-          P&amp;L within three working days of month-end.
-        </p>
-        <div class="chips">
-          <span>Auto-code COGS</span>
-          <span>Z-read variance flags</span>
-          <span>Supplier statement match</span>
-          <span>VAT prepared</span>
-        </div>
-      </div>
-      <div class="triage__card liquid-glass">
-        <p class="triage__head">Today · 67 transactions reconciled</p>
-        <div class="triage__row liquid-glass">
-          <div><strong>Signed off</strong><span class="ct" style="color:#fff">42</span></div>
-          <p>Bidfood · Brakes · Toast Z-read · Stripe payout</p>
-        </div>
-        <div class="triage__row liquid-glass">
-          <div><strong>For review</strong><span class="ct" style="color:#e5e5e5">7</span></div>
-          <p>Cash short Thu · Wine credit note · Marcus expense</p>
-        </div>
-        <div class="triage__row liquid-glass">
-          <div><strong>On hold</strong><span class="ct" style="color:#a3a3a3">2</span></div>
-          <p>Awaiting owner — corkage on private hire</p>
-        </div>
-        <div class="triage__row liquid-glass">
-          <div><strong>Auto-archived</strong><span class="ct" style="color:#525252">16</span></div>
-          <p>Statement noise · Marketing emails · Receipts</p>
-        </div>
-      </div>
-    </div>
-  </section>
-</section>
-
-<!-- 4. LOGO CLOUD -->
-<section class="snap-slide" data-snap data-name="Customers">
-  <section class="section section--cloud" id="cloud">
-    <p class="kicker">Trusted by independent kitchens across the UK</p>
-    <ul class="cloud">
-      <li>Brown Cow</li>
-      <li>Apothecary</li>
-      <li>Hawthorn</li>
-      <li>Smith &amp; Sons</li>
-      <li>Larder</li>
-      <li>Quay</li>
-      <li>The Plough</li>
-      <li>Marrow</li>
-    </ul>
-  </section>
-</section>
-
-<!-- 5. TESTIMONIALS -->
-<section class="snap-slide" data-snap data-name="Reviews">
-  <section class="section section--testimonials" id="testimonials">
-    <div class="quotes">
-      <figure class="liquid-glass">
-        <blockquote>"The Growthway gave us our Tuesdays back. The numbers land before service and we actually act on them in the same week, not three weeks later."</blockquote>
-        <figcaption><strong>Emma Roberts</strong><span>Owner</span><span class="org">BROWN COW</span></figcaption>
-      </figure>
-      <figure class="liquid-glass">
-        <blockquote>"It catches the things a human would miss at 11pm — the tiny variance on a Z-read, the duplicated supplier invoice. And Sarah is on the other end when it doesn't."</blockquote>
-        <figcaption><strong>Daniel Mehta</strong><span>Head chef &amp; partner</span><span class="org">APOTHECARY</span></figcaption>
-      </figure>
-      <figure class="liquid-glass">
-        <blockquote>"Cleanest year-end my accountant has seen. He thanked us. That hasn't happened before."</blockquote>
-        <figcaption><strong>Aoife Byrne</strong><span>Director</span><span class="org">THE PLOUGH</span></figcaption>
-      </figure>
-    </div>
-  </section>
-</section>
-
-<!-- 6. PRICING -->
-<section class="snap-slide" data-snap data-name="Pricing">
-  <section class="c3-pricing-section" id="pricing">
-    <div class="c3-grid">
-      <article class="c3-card">
-        <p class="c3-tier-small">Single site</p>
-        <p class="c3-tier-large"><span data-price-m>£480/m</span><span data-price-y hidden>£4,800/y</span></p>
-        <p class="c3-desc">For one independent restaurant or pub. Everything you need to close a month inside three working days.</p>
-        <ul class="c3-list">
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Daily sales posted from your EPOS</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Supplier invoices auto-coded</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Bank reconciled every transaction</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Monthly P&amp;L signed by a real bookkeeper</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Quarterly VAT return prepared</li>
+        <ul>
+          <li class="msg active unread">
+            <div class="msg__name">Toast EPOS</div>
+            <div class="msg__time">09:00</div>
+            <div class="msg__sub">Yesterday's takings posted</div>
+            <div class="msg__pre">£2,148.00 across 184 covers · 31.4% food cost</div>
+          </li>
+          <li class="msg unread">
+            <div class="msg__name">Bidfood</div>
+            <div class="msg__time">08:22</div>
+            <div class="msg__sub">Invoice coded — COGS / produce</div>
+            <div class="msg__pre">£612.40 · matched to last week's order</div>
+          </li>
+          <li class="msg">
+            <div class="msg__name">Barclays</div>
+            <div class="msg__time">Yesterday</div>
+            <div class="msg__sub">14 lines reconciled to the penny</div>
+            <div class="msg__pre">Bank feed cleared at 04:12</div>
+          </li>
+          <li class="msg">
+            <div class="msg__name">Sarah W.</div>
+            <div class="msg__time">Yesterday</div>
+            <div class="msg__sub">Hold released — wine supplier</div>
+            <div class="msg__pre">Coded to COGS / drinks after owner reply</div>
+          </li>
+          <li class="msg">
+            <div class="msg__name">HMRC</div>
+            <div class="msg__time">Mon</div>
+            <div class="msg__sub">VAT reminder — Q1 due 7 May</div>
+            <div class="msg__pre">Return prepared, awaiting your signoff</div>
+          </li>
+          <li class="msg">
+            <div class="msg__name">Stripe</div>
+            <div class="msg__time">Mon</div>
+            <div class="msg__sub">Card payout £4,210.00 sent</div>
+            <div class="msg__pre">Posted to bank, matched to Z-read 4–6 May</div>
+          </li>
         </ul>
-        <a href="#book" class="c3-btn">Book a call</a>
-      </article>
-      <article class="c3-card c3-card-pro">
-        <p class="c3-tier-small">Multi-site</p>
-        <p class="c3-tier-large"><span data-price-m>£440/m</span><span data-price-y hidden>£4,400/y</span><span class="per">per site · from 3</span></p>
-        <p class="c3-desc">For groups of three or more. Consolidated reporting, group VAT, inter-site allocations included.</p>
-        <ul class="c3-list">
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Everything in Single site</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Consolidated group P&amp;L</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Inter-site cost allocations</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Group VAT prepared as one return</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Dedicated bookkeeper</li>
-        </ul>
-        <a href="#book" class="c3-btn">Book a call</a>
-      </article>
-      <article class="c3-card">
-        <p class="c3-tier-small">Group</p>
-        <p class="c3-tier-large"><span data-price-m>£380/m</span><span data-price-y hidden>£3,800/y</span><span class="per">per site · from 5</span></p>
-        <p class="c3-desc">For groups of five or more sites. Custom integrations, board pack reporting, and SLAs on signoff timing.</p>
-        <ul class="c3-list">
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Everything in Multi-site</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Custom EPOS / banking integrations</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Monthly board pack</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Signoff SLA — 48 hours of month-end</li>
-          <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Named CFO support</li>
-        </ul>
-        <a href="#book" class="c3-btn">Book a call</a>
-      </article>
-    </div>
-    <div class="c3-toggle-wrap">
-      <span class="c3-toggle-lbl">Annual billing</span>
-      <button class="c3-toggle" id="priceToggle" aria-pressed="false" aria-label="Toggle annual billing">
-        <span class="c3-toggle-knob"></span>
-      </button>
-    </div>
-  </section>
-</section>
-
-<!-- 7. FINAL CTA -->
-<section class="snap-slide" data-snap data-name="Book a call">
-  <section class="section section--final" id="book">
-    <div class="final liquid-glass">
-      <div class="final__glow" aria-hidden="true"></div>
-      <h2>Shut the laptop.<br/>Open service.</h2>
-      <p>Join the independents who treat the books like a tool — not a Sunday-night chore.</p>
-      <div class="final__cta">
-        <a href="mailto:hello@thegrowthway.co.uk?subject=Book%20a%20call" class="apple-btn">
-          <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-          <span>Book a call</span>
-          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
-        </a>
-        <a href="bookkeepers.html" class="ghost-btn">Meet your bookkeeper <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg></a>
+      </div>
+      <div class="dashmock__reader" data-anim="slide-right" data-delay="620">
+        <div class="dashmock__toolbar">
+          <button aria-label="Reply"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 17 4 12l5-5M20 18v-2a4 4 0 0 0-4-4H4"/></svg></button>
+          <button aria-label="Forward"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m15 17 5-5-5-5M4 18v-2a4 4 0 0 1 4-4h12"/></svg></button>
+          <button aria-label="Archive"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg></button>
+          <button aria-label="Trash"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+          <button class="more" aria-label="More"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg></button>
+        </div>
+        <h3>Yesterday's takings posted</h3>
+        <div class="dashmock__from">
+          <span class="avatar">T</span>
+          <div>
+            <strong>Toast EPOS</strong>
+            <span> · to you · 09:00</span>
+          </div>
+          <span class="pill">Sales feed</span>
+        </div>
+        <div class="dashmock__sum">
+          <svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="#A4F4FD" d="M9.94 14.34l-2.49-2.49.7-.7 1.79 1.79 4.85-4.85.7.71-5.55 5.54zM12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <div>
+            <p class="dashmock__sum-h">Summary by The Growthway</p>
+            <p>£2,148 across 184 covers. Food cost 31.4%, half a point under target. Wage cost on plan. No outliers — Sarah has signed off.</p>
+          </div>
+        </div>
+        <p>Yesterday was a strong Tuesday — wet sales up 9% on last week, food sales flat. Two large covers in the back room moved the average ticket up.</p>
+        <p class="muted">— The Growthway, on behalf of Sarah Whitlow (bookkeeper)</p>
+        <a class="attach"><svg viewBox="0 0 24 24" class="i" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m21 11-9.5 9.5a5.5 5.5 0 0 1-7.78-7.78L13.34 3.6a3.67 3.67 0 0 1 5.19 5.19l-9.62 9.62a1.83 1.83 0 0 1-2.6-2.6L15.4 7.7"/></svg> week-to-date.pdf</a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- METRIC STRIP -->
+<section class="section section--metrics" id="metrics">
+  <div class="metrics">
+    <div class="metric" data-anim="count-up" data-to="3" data-suffix=" days">
+      <span class="metric__num">3</span>
+      <span class="metric__suffix"> days</span>
+      <span class="metric__label">Time to first signed-off P&amp;L</span>
+    </div>
+    <div class="metric" data-anim="count-up" data-to="98" data-suffix="%" data-delay="120">
+      <span class="metric__num">98</span>
+      <span class="metric__suffix">%</span>
+      <span class="metric__label">Auto-coded transactions, no human touch</span>
+    </div>
+    <div class="metric" data-anim="count-up" data-to="100" data-suffix="%" data-delay="240">
+      <span class="metric__num">100</span>
+      <span class="metric__suffix">%</span>
+      <span class="metric__label">Signed off by a real bookkeeper, by name</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRIAGE / RECONCILE -->
+<section class="section section--triage" id="triage">
+  <div class="triage">
+    <div class="triage__copy">
+      <p class="eyebrow" data-anim="fade-up"><span class="dot"></span>Reconcile<em>AI-native</em></p>
+      <h2 data-anim="rise">Close the books<br/>without closing the venue.</h2>
+      <p class="lead" data-anim="fade-up" data-delay="160">
+        The Growthway reads every till receipt, supplier invoice, and bank line.
+        It codes the routine work the same way every time, holds the
+        weird ones for your bookkeeper, and hands you a signed-off
+        P&amp;L within three working days of month-end.
+      </p>
+      <div class="chips" data-anim="fade-up" data-delay="280">
+        <span>Auto-code COGS</span>
+        <span>Z-read variance flags</span>
+        <span>Supplier statement match</span>
+        <span>VAT prepared</span>
+      </div>
+    </div>
+    <div class="triage__card liquid-glass" data-anim="rise-scale" data-delay="200">
+      <p class="triage__head">Today · 67 transactions reconciled</p>
+      <div class="triage__row liquid-glass" data-anim="slide-right" data-delay="360">
+        <div><strong>Signed off</strong><span class="ct" style="color:#fff">42</span></div>
+        <p>Bidfood · Brakes · Toast Z-read · Stripe payout</p>
+      </div>
+      <div class="triage__row liquid-glass" data-anim="slide-right" data-delay="460">
+        <div><strong>For review</strong><span class="ct" style="color:#e5e5e5">7</span></div>
+        <p>Cash short Thu · Wine credit note · Marcus expense</p>
+      </div>
+      <div class="triage__row liquid-glass" data-anim="slide-right" data-delay="560">
+        <div><strong>On hold</strong><span class="ct" style="color:#a3a3a3">2</span></div>
+        <p>Awaiting owner — corkage on private hire</p>
+      </div>
+      <div class="triage__row liquid-glass" data-anim="slide-right" data-delay="660">
+        <div><strong>Auto-archived</strong><span class="ct" style="color:#525252">16</span></div>
+        <p>Statement noise · Marketing emails · Receipts</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW STEPS -->
+<section class="section section--workflow" id="workflow">
+  <div class="section__intro" data-anim="fade-up">
+    <p class="eyebrow"><span class="dot"></span>Setup<em>30 minutes</em></p>
+    <h2 class="section__h2">
+      <span data-anim="rise">Live by Friday.</span>
+      <span data-anim="rise" data-delay="120">Signed off by month-end.</span>
+    </h2>
+  </div>
+  <ol class="workflow">
+    <li data-anim="fade-up" data-delay="100">
+      <span class="workflow__num">01</span>
+      <h3>Book a call</h3>
+      <p>30 minutes with one of our co-founders. We connect your EPOS, bank, and key suppliers on the call.</p>
+    </li>
+    <li data-anim="fade-up" data-delay="220">
+      <span class="workflow__num">02</span>
+      <h3>Meet your bookkeeper</h3>
+      <p>One of six qualified bookkeepers is assigned and writes to you within a working day. Same person, every month.</p>
+    </li>
+    <li data-anim="fade-up" data-delay="340">
+      <span class="workflow__num">03</span>
+      <h3>The Growthway runs</h3>
+      <p>Daily sales post overnight. Invoices auto-code. Bank lines reconcile by 04:12. You get a morning briefing.</p>
+    </li>
+    <li data-anim="fade-up" data-delay="460">
+      <span class="workflow__num">04</span>
+      <h3>Signed-off P&amp;L</h3>
+      <p>Within three working days of month-end. By name. By hand. Your accountant will thank you.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- LOGO CLOUD -->
+<section class="section section--cloud" id="cloud">
+  <p class="kicker" data-anim="fade-up">Trusted by independent kitchens across the UK</p>
+  <ul class="cloud">
+    <li data-anim="rise" data-delay="40">Brown Cow</li>
+    <li data-anim="rise" data-delay="110">Apothecary</li>
+    <li data-anim="rise" data-delay="180">Hawthorn</li>
+    <li data-anim="rise" data-delay="250">Smith &amp; Sons</li>
+    <li data-anim="rise" data-delay="320">Larder</li>
+    <li data-anim="rise" data-delay="390">Quay</li>
+    <li data-anim="rise" data-delay="460">The Plough</li>
+    <li data-anim="rise" data-delay="530">Marrow</li>
+  </ul>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section section--testimonials" id="testimonials">
+  <div class="section__intro" data-anim="fade-up">
+    <p class="eyebrow"><span class="dot"></span>Reviews<em>Independents</em></p>
+    <h2 class="section__h2">
+      <span data-anim="rise">What kitchens say</span>
+      <span data-anim="rise" data-delay="120">after a quarter with us.</span>
+    </h2>
+  </div>
+  <div class="quotes">
+    <figure class="liquid-glass" data-anim="tilt-in" data-delay="100">
+      <blockquote>"The Growthway gave us our Tuesdays back. The numbers land before service and we actually act on them in the same week, not three weeks later."</blockquote>
+      <figcaption><strong>Emma Roberts</strong><span>Owner</span><span class="org">BROWN COW</span></figcaption>
+    </figure>
+    <figure class="liquid-glass" data-anim="tilt-in" data-delay="240">
+      <blockquote>"It catches the things a human would miss at 11pm — the tiny variance on a Z-read, the duplicated supplier invoice. And Sarah is on the other end when it doesn't."</blockquote>
+      <figcaption><strong>Daniel Mehta</strong><span>Head chef &amp; partner</span><span class="org">APOTHECARY</span></figcaption>
+    </figure>
+    <figure class="liquid-glass" data-anim="tilt-in" data-delay="380">
+      <blockquote>"Cleanest year-end my accountant has seen. He thanked us. That hasn't happened before."</blockquote>
+      <figcaption><strong>Aoife Byrne</strong><span>Director</span><span class="org">THE PLOUGH</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="c3-pricing-section" id="pricing">
+  <div class="section__intro" data-anim="fade-up">
+    <p class="eyebrow"><span class="dot"></span>Pricing<em>Flat per site</em></p>
+    <h2 class="section__h2">
+      <span data-anim="rise">One price.</span>
+      <span data-anim="rise" data-delay="120">Cancel any month.</span>
+    </h2>
+  </div>
+  <div class="c3-grid">
+    <article class="c3-card" data-anim="rise-scale" data-delay="100">
+      <p class="c3-tier-small">Single site</p>
+      <p class="c3-tier-large"><span data-price-m>£480/m</span><span data-price-y hidden>£4,800/y</span></p>
+      <p class="c3-desc">For one independent restaurant or pub. Everything you need to close a month inside three working days.</p>
+      <ul class="c3-list">
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Daily sales posted from your EPOS</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Supplier invoices auto-coded</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Bank reconciled every transaction</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Monthly P&amp;L signed by a real bookkeeper</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Quarterly VAT return prepared</li>
+      </ul>
+      <a href="book-a-call.html" class="c3-btn">Book a call</a>
+    </article>
+    <article class="c3-card c3-card-pro" data-anim="rise-scale" data-delay="220">
+      <p class="c3-tier-small">Multi-site</p>
+      <p class="c3-tier-large"><span data-price-m>£440/m</span><span data-price-y hidden>£4,400/y</span><span class="per">per site · from 3</span></p>
+      <p class="c3-desc">For groups of three or more. Consolidated reporting, group VAT, inter-site allocations included.</p>
+      <ul class="c3-list">
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Everything in Single site</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Consolidated group P&amp;L</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Inter-site cost allocations</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Group VAT prepared as one return</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Dedicated bookkeeper</li>
+      </ul>
+      <a href="book-a-call.html" class="c3-btn">Book a call</a>
+    </article>
+    <article class="c3-card" data-anim="rise-scale" data-delay="340">
+      <p class="c3-tier-small">Group</p>
+      <p class="c3-tier-large"><span data-price-m>£380/m</span><span data-price-y hidden>£3,800/y</span><span class="per">per site · from 5</span></p>
+      <p class="c3-desc">For groups of five or more sites. Custom integrations, board pack reporting, and SLAs on signoff timing.</p>
+      <ul class="c3-list">
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Everything in Multi-site</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Custom EPOS / banking integrations</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Monthly board pack</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Signoff SLA — 48 hours of month-end</li>
+        <li><span class="c3-check"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12l5 5L20 7"/></svg></span>Named CFO support</li>
+      </ul>
+      <a href="book-a-call.html" class="c3-btn">Book a call</a>
+    </article>
+  </div>
+  <div class="c3-toggle-wrap" data-anim="fade-up" data-delay="500">
+    <span class="c3-toggle-lbl">Annual billing</span>
+    <button class="c3-toggle" id="priceToggle" aria-pressed="false" aria-label="Toggle annual billing">
+      <span class="c3-toggle-knob"></span>
+    </button>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section section--final" id="book">
+  <div class="final liquid-glass" data-anim="rise-scale">
+    <div class="final__glow" aria-hidden="true"></div>
+    <h2 data-anim="rise"><span>Shut the laptop.</span><br/><span data-anim="rise" data-delay="120">Open service.</span></h2>
+    <p data-anim="fade-up" data-delay="240">Join the independents who treat the books like a tool — not a Sunday-night chore.</p>
+    <div class="final__cta" data-anim="pop" data-delay="380">
+      <a href="book-a-call.html" class="apple-btn">
+        <svg class="apple-mark" viewBox="0 0 384 512" aria-hidden="true"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span>Book a call</span>
+        <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+      </a>
+      <a href="bookkeepers.html" class="ghost-btn">Meet your bookkeeper <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg></a>
+    </div>
+  </div>
 </section>
 
 </main>
@@ -397,7 +451,7 @@
     });
   })();
 
-  // Nav style on scroll — document scrolls now, so always listen on window
+  // Nav background on scroll
   (function(){
     const nav = document.getElementById('topnav');
     const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 60);
@@ -405,26 +459,60 @@
     onScroll();
   })();
 
-  // Scroll-triggered entry animations. Each slide gets `.in-view` the
-  // moment any part of it appears in the bottom of the viewport, so
-  // animations fire WHILE scrolling rather than after. Hero is set
-  // in-view immediately so the first paint isn't blank.
+  // Scroll-triggered animations. Every element with [data-anim] starts in
+  // its resting state (offset + faded). An IntersectionObserver flips it
+  // to .is-on as soon as it enters the bottom of the viewport, which the
+  // CSS animates. Per-element delay via [data-delay] in milliseconds.
   (function(){
-    const slides = document.querySelectorAll('.snap-slide');
-    if (!slides.length || !('IntersectionObserver' in window)) {
-      slides.forEach(s => s.classList.add('in-view'));
+    const els = document.querySelectorAll('[data-anim]');
+    if (!els.length) return;
+    els.forEach(el => {
+      const d = el.getAttribute('data-delay');
+      if (d) el.style.transitionDelay = d + 'ms';
+    });
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('is-on'));
       return;
     }
-    slides[0].classList.add('in-view');
     const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          e.target.classList.add('in-view');
+          e.target.classList.add('is-on');
           io.unobserve(e.target);
         }
       });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
-    slides.forEach((s, i) => { if (i > 0) io.observe(s); });
+    els.forEach(el => io.observe(el));
+  })();
+
+  // Count-up for metric numbers (data-to="N" data-suffix="...")
+  (function(){
+    const els = document.querySelectorAll('[data-anim="count-up"]');
+    if (!els.length) return;
+    const animate = (el) => {
+      const num = el.querySelector('.metric__num');
+      if (!num) return;
+      const to = parseFloat(el.getAttribute('data-to')) || 0;
+      const dur = 1400;
+      const start = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        num.textContent = Math.round(to * eased);
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const d = parseInt(e.target.getAttribute('data-delay') || '0', 10);
+          setTimeout(() => animate(e.target), d);
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
+    els.forEach(el => io.observe(el));
   })();
 </script>
 </body>
